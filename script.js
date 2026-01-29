@@ -1,18 +1,16 @@
-document.getElementById('leadForm').addEventListener('submit', e => {
+document.getElementById('leadForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const name = name.value;
-  const phone = phone.value;
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
   const problem = document.getElementById('problem').value;
 
   const text =
-    `Заявка с сайта (курьер бесплатно)\n` +
-    `Имя: ${name}\n` +
-    `Телефон: ${phone}\n` +
-    `Проблема: ${problem}`;
+    'Заявка с сайта (курьер бесплатно)\n' +
+    'Имя: ' + name + '\n' +
+    'Телефон: ' + phone + '\n' +
+    'Проблема: ' + problem;
 
-  window.open(
-    'https://t.me/share/url?text=' + encodeURIComponent(text),
-    '_blank'
-  );
+  const url = 'https://t.me/share/url?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
 });
