@@ -3,519 +3,362 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>В ремонте — ремонт любой техники | Ростов-на-Дону</title>
-  <meta name="description" content="Ремонт техники в Ростове-на-Дону: смартфоны, ноутбуки/ПК, телевизоры, приставки, кофемашины, Dyson. Адрес: ул. Ткачева, 22. Telegram: @vremonte161" />
-  <meta name="theme-color" content="#0b1024" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <title>В ремонте — сервисный центр | Ткачева 22, Заводская 25</title>
+  <meta name="description" content="В ремонте — ремонт телефонов, ноутбуков, ТВ, компьютеров, кофемашин, Dyson. Ткачева 22, Заводская 25. 8 (925) 515-61-61. Акция: курьер бесплатно при обращении с сайта." />
+  <style>
+    :root{
+      --bg:#0b0f19;
+      --card:#11182a;
+      --text:#eaf0ff;
+      --muted:#a9b4d0;
+      --line:rgba(255,255,255,.10);
+      --accent:#6ee7ff;
+      --accent2:#a78bfa;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius:22px;
+      --max:1120px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at 20% -10%, rgba(110,231,255,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 0%, rgba(167,139,250,.16), transparent 60%),
+        var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:18px}
+    header{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter: blur(12px);
+      background: rgba(11,15,25,.65);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 0;
+    }
+    .logo{display:flex;align-items:center;gap:10px;font-weight:900}
+    .badge{
+      width:34px;height:34px;border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 30px rgba(110,231,255,.18);
+    }
+    .menu{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-weight:650}
+    .menu a:hover{color:var(--text)}
+    .ctaRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .pill{
+      padding:10px 14px;border-radius:999px;border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      font-weight:750;
+    }
+    .btn{
+      padding:10px 14px;border-radius:999px;border:1px solid rgba(110,231,255,.35);
+      background: linear-gradient(135deg, rgba(110,231,255,.18), rgba(167,139,250,.14));
+      font-weight:900;
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    }
+    .btn:hover{filter:brightness(1.06)}
+    section{padding:26px 0}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .heroGrid{display:grid;gap:14px;grid-template-columns: 1.15fr .85fr;align-items:stretch}
+    @media (max-width: 900px){ .heroGrid{grid-template-columns:1fr} }
+    .heroMain{padding:26px}
+    h1{margin:0 0 10px;font-size:44px;line-height:1.05}
+    @media (max-width: 520px){ h1{font-size:34px} }
+    .lead{color:var(--muted);font-size:16px;line-height:1.65;margin:0 0 14px}
+    .banner{
+      margin-top:14px;
+      padding:14px 16px;border-radius:18px;
+      background: linear-gradient(90deg, rgba(110,231,255,.14), rgba(167,139,250,.12));
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:850;
+    }
+    .kpiRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .kpi{
+      flex:1 1 150px;
+      padding:14px 16px;border-radius:18px;
+      background: rgba(0,0,0,.22);
+      border:1px solid var(--line);
+    }
+    .kpi b{display:block;font-size:19px}
+    .kpi span{color:var(--muted);font-weight:650}
+    .heroSide{padding:18px}
+    .miniTitle{font-weight:900;margin:0 0 10px;font-size:16px}
+    .li{
+      padding:14px;border-radius:16px;
+      background: rgba(0,0,0,.22);
+      border:1px solid var(--line);
+      margin-bottom:10px;
+    }
+    .li b{display:block}
+    .li small{color:var(--muted);font-weight:650}
+    .secTitle{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .secTitle h2{margin:0;font-size:26px}
+    .secTitle p{margin:0;color:var(--muted);font-weight:650}
+    .grid4{display:grid;gap:12px;grid-template-columns:repeat(4,1fr)}
+    @media (max-width: 900px){ .grid4{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width: 520px){ .grid4{grid-template-columns:1fr} }
+    .tile{
+      padding:16px;border-radius:20px;
+      background: rgba(0,0,0,.22);
+      border:1px solid var(--line);
+    }
+    .tile b{display:block;margin-bottom:6px}
+    .tile span{color:var(--muted);font-weight:650}
+    .grid2{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+    @media (max-width: 900px){ .grid2{grid-template-columns:1fr} }
+    .serviceItem{
+      display:flex;gap:12px;align-items:flex-start;
+      padding:16px;border-radius:20px;background: rgba(0,0,0,.22);border:1px solid var(--line);
+    }
+    .dot{width:12px;height:12px;border-radius:6px;background: linear-gradient(135deg, var(--accent), var(--accent2));margin-top:6px;flex:0 0 auto}
+    .serviceItem b{display:block}
+    .serviceItem small{color:var(--muted);font-weight:650}
+    .promo{
+      padding:18px;border-radius:22px;
+      background: linear-gradient(180deg, rgba(110,231,255,.12), rgba(0,0,0,.20));
+      border:1px solid rgba(110,231,255,.22);
+    }
+    .branches{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+    @media (max-width: 900px){ .branches{grid-template-columns:1fr} }
+    .branch{
+      padding:18px;border-radius:22px;background: rgba(0,0,0,.22);border:1px solid var(--line);
+    }
+    .branch .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .meta{color:var(--muted);font-weight:650;margin-top:8px}
+    footer{padding:26px 0 40px;border-top:1px solid var(--line);color:var(--muted)}
+    .form{
+      display:grid;gap:10px;
+      padding:16px;border-radius:22px;background: rgba(0,0,0,.22);border:1px solid var(--line);
+    }
+    input, textarea{
+      width:100%;padding:12px 14px;border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    textarea{min-height:90px;resize:vertical}
+    .small{font-size:12px;color:var(--muted);font-weight:650}
+  </style>
 </head>
-
 <body>
-  <!-- Sticky top bar -->
-  <header class="topbar" id="topbar">
-    <div class="container topbar__row">
-      <a class="brand" href="#top" aria-label="В ремонте">
-        <span class="brand__mark"></span>
-        <span class="brand__text">В ремонте</span>
-      </a>
 
-      <nav class="nav" id="nav">
-        <a href="#services">Услуги</a>
-        <a href="#how">Как работаем</a>
-        <a href="#prices">Цены</a>
-        <a href="#find">Как нас найти</a>
-        <a href="#faq">FAQ</a>
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <div class="logo">
+        <div class="badge"></div>
+        <div>
+          <div style="font-size:15px;line-height:1;font-weight:950">В ремонте</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:750">сервисный центр</div>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="#devices">Устройства</a>
+        <a href="#services">Топ-услуги</a>
+        <a href="#promo">Акция</a>
+        <a href="#points">Адреса</a>
+        <a href="#contacts">Контакты</a>
       </nav>
 
-      <div class="topbar__cta">
-        <a class="pill pill--ghost" href="tel:+79255156161">Позвонить</a>
-        <a class="pill" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">Telegram</a>
-        <button class="burger" id="burger" aria-label="Меню">
-          <span></span><span></span><span></span>
-        </button>
+      <div class="ctaRow">
+        <a class="pill" href="tel:+79255156161">8 (925) 515-61-61</a>
+        <a class="btn" href="#contacts">Оставить заявку</a>
       </div>
     </div>
+  </div>
+</header>
 
-    <!-- mobile menu -->
-    <div class="mnav" id="mnav" hidden>
-      <div class="container mnav__panel">
-        <a href="#services" class="mnav__link">Услуги</a>
-        <a href="#how" class="mnav__link">Как работаем</a>
-        <a href="#prices" class="mnav__link">Цены</a>
-        <a href="#find" class="mnav__link">Как нас найти</a>
-        <a href="#faq" class="mnav__link">FAQ</a>
-        <div class="mnav__actions">
-          <a class="btn btn--soft btn--wide" href="tel:+79255156161">📞 Позвонить</a>
-          <a class="btn btn--soft btn--wide" href="https://wa.me/79255156161" target="_blank" rel="noreferrer">💬 WhatsApp</a>
-          <a class="btn btn--wide" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">✈️ Telegram</a>
+<main class="wrap">
+
+  <section class="hero" id="top">
+    <div class="heroGrid">
+      <div class="card heroMain">
+        <h1>Ремонт техники в день обращения</h1>
+        <p class="lead">
+          Телефоны, ноутбуки, компьютеры, ТВ, кофемашины, Dyson и другое.
+          Диагностика → согласуем цену → делаем ремонт → проверка и гарантия.
+        </p>
+
+        <div class="ctaRow" style="justify-content:flex-start;margin-top:10px">
+          <a class="btn" href="https://t.me/vremonte161" target="_blank" rel="noopener">Написать в Telegram</a>
+          <a class="pill" href="tel:+79255156161">Позвонить</a>
+          <a class="pill" href="#points">Адреса</a>
         </div>
+
+        <div class="banner">🔥 Акция: при обращении с сайта — курьер бесплатно</div>
+
+        <div class="kpiRow">
+          <div class="kpi"><b>Быстро</b><span>типовые ремонты — от 30 минут</span></div>
+          <div class="kpi"><b>Гарантия</b><span>на работу и запчасти</span></div>
+          <div class="kpi"><b>Честно</b><span>цена до начала ремонта</span></div>
+        </div>
+      </div>
+
+      <div class="card heroSide">
+        <p class="miniTitle">Почему выбирают нас</p>
+        <div class="li"><b>Запчасти в наличии</b><small>частые позиции — сразу в работу</small></div>
+        <div class="li"><b>Сложные ремонты</b><small>плата, питание, восстановление</small></div>
+        <div class="li"><b>Две точки</b><small>Ткачева 22 • Заводская 25</small></div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <!-- Floating quick actions -->
-  <div class="float">
-    <a class="float__btn" href="tel:+79255156161" aria-label="Позвонить">📞</a>
-    <a class="float__btn" href="https://wa.me/79255156161" target="_blank" rel="noreferrer" aria-label="WhatsApp">💬</a>
-    <a class="float__btn float__btn--main" href="https://t.me/vremonte161" target="_blank" rel="noreferrer" aria-label="Telegram">✈️</a>
+  <section id="devices">
+    <div class="secTitle">
+      <h2>Что ремонтируем</h2>
+      <p>если вашей техники нет в списке — всё равно пишите</p>
+    </div>
+    <div class="grid4">
+      <div class="tile"><b>Телефоны</b><span>iPhone/Android: дисплей, АКБ, разъёмы</span></div>
+      <div class="tile"><b>Ноутбуки / ПК</b><span>чистка, апгрейд, ремонт, ОС</span></div>
+      <div class="tile"><b>ТВ / приставки</b><span>диагностика, восстановление, питание</span></div>
+      <div class="tile"><b>Бытовая техника</b><span>кофемашины, Dyson и другое</span></div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="secTitle">
+      <h2>Топ-услуги</h2>
+      <p>самое частое у клиентов</p>
+    </div>
+    <div class="grid2">
+      <div class="serviceItem"><div class="dot"></div><div><b>Замена дисплея / стекла</b><small>оригинал и качественные аналоги</small></div></div>
+      <div class="serviceItem"><div class="dot"></div><div><b>Замена аккумулятора</b><small>телефоны, ноутбуки, планшеты</small></div></div>
+      <div class="serviceItem"><div class="dot"></div><div><b>Ремонт разъёма зарядки</b><small>Type-C / Lightning, восстановление контактов</small></div></div>
+      <div class="serviceItem"><div class="dot"></div><div><b>Восстановление после воды</b><small>чистка, диагностика, пайка при необходимости</small></div></div>
+      <div class="serviceItem"><div class="dot"></div><div><b>Пайка / ремонт платы</b><small>питание, контроллеры, микросхемы</small></div></div>
+      <div class="serviceItem"><div class="dot"></div><div><b>Установка / восстановление ОС</b><small>Windows, прошивки, перенос данных</small></div></div>
+    </div>
+    <div class="small" style="margin-top:10px">
+      * Цены примерные — всё индивидуально и зависит от модели/состояния.
+    </div>
+  </section>
+
+  <section id="promo">
+    <div class="secTitle">
+      <h2>Акция</h2>
+      <p>прямо сейчас</p>
+    </div>
+    <div class="promo">
+      <b style="font-size:18px">При обращении с сайта — курьер бесплатно</b>
+      <div class="meta">Оставьте заявку ниже — мы свяжемся, уточним адрес и согласуем время.</div>
+    </div>
+  </section>
+
+  <section id="points">
+    <div class="secTitle">
+      <h2>Адреса</h2>
+      <p>можно добавить ссылки на карты</p>
+    </div>
+
+    <div class="branches">
+      <div class="branch">
+        <div class="row">
+          <div>
+            <b>Точка №1</b>
+            <div class="meta">Ткачева 22</div>
+          </div>
+          <a class="pill" href="tel:+79255156161">Позвонить</a>
+        </div>
+        <div class="meta">График: ежедневно (впиши свой)</div>
+        <div class="meta">Карта: вставь ссылку на Яндекс/Google карты в кнопку ниже</div>
+        <a class="btn" style="display:inline-block;margin-top:10px" href="#" onclick="alert('Вставь ссылку на карту вместо #');return false;">Открыть карту</a>
+      </div>
+
+      <div class="branch">
+        <div class="row">
+          <div>
+            <b>Точка №2</b>
+            <div class="meta">Заводская 25</div>
+          </div>
+          <a class="pill" href="tel:+79255156161">Позвонить</a>
+        </div>
+        <div class="meta">График: ежедневно (впиши свой)</div>
+        <div class="meta">Карта: вставь ссылку на Яндекс/Google карты в кнопку ниже</div>
+        <a class="btn" style="display:inline-block;margin-top:10px" href="#" onclick="alert('Вставь ссылку на карту вместо #');return false;">Открыть карту</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacts">
+    <div class="secTitle">
+      <h2>Контакты и заявка</h2>
+      <p>сразу помечаем “с сайта”</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card" style="padding:18px">
+        <b style="font-size:18px">Связь</b>
+        <div class="meta" style="margin-top:10px">
+          Телефон: <a class="pill" style="display:inline-block;margin-top:8px" href="tel:+79255156161">8 (925) 515-61-61</a><br/>
+          Telegram: <a class="pill" style="display:inline-block;margin-top:8px" href="https://t.me/vremonte161" target="_blank" rel="noopener">@vremonte161</a><br/>
+          Адреса: <span class="pill" style="display:inline-block;margin-top:8px">Ткачева 22</span>
+          <span class="pill" style="display:inline-block;margin-top:8px">Заводская 25</span>
+        </div>
+        <div class="small" style="margin-top:12px">
+          ⚡ Заявки “с сайта” участвуют в акции: курьер бесплатно.
+        </div>
+      </div>
+
+      <form class="form" onsubmit="sendToTelegram(event)">
+        <b style="font-size:18px">Оставить заявку</b>
+        <input id="name" placeholder="Ваше имя" required />
+        <input id="phone" placeholder="Телефон для связи" required />
+        <input id="device" placeholder="Устройство (например: iPhone 14 / ноутбук / ТВ)" />
+        <textarea id="problem" placeholder="Опишите проблему (что случилось, когда, после чего)"></textarea>
+        <button class="btn" type="submit">Отправить</button>
+        <div class="small">Откроется Telegram с готовым сообщением (пометка: “Заявка с сайта”).</div>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div>
+      <b style="color:var(--text)">В ремонте</b>
+      <div class="small" style="margin-top:6px">Сервисный центр • Ткачева 22 • Заводская 25</div>
+    </div>
+    <div class="small">© <span id="y"></span></div>
   </div>
+</footer>
 
-  <main id="top">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="container hero__grid">
-        <div class="hero__left reveal">
-          <div class="chip">Ростов-на-Дону • ул. Ткачева, 22</div>
-          <h1>
-            Ремонтируем <span class="grad">любую технику</span><br />
-            красиво, быстро и по делу
-          </h1>
-          <p class="lead">
-            Смартфоны • ноутбуки/ПК • телевизоры • приставки • кофемашины • Dyson и другое.
-            Цены примерные — всё индивидуально после диагностики.
-          </p>
+<script>
+  document.getElementById('y').textContent = new Date().getFullYear();
 
-          <div class="hero__cta">
-            <a class="btn btn--xl" href="tel:+79255156161">📞 8 (925) 515-61-61</a>
-            <a class="btn btn--xl btn--soft" href="https://wa.me/79255156161" target="_blank" rel="noreferrer">💬 WhatsApp</a>
-            <a class="btn btn--xl btn--soft" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">✈️ Telegram @vremonte161</a>
-          </div>
+  function sendToTelegram(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const device = document.getElementById('device').value.trim();
+    const problem = document.getElementById('problem').value.trim();
 
-          <div class="mini">
-            <button class="mini__btn" data-template="price">💸 Узнать цену</button>
-            <button class="mini__btn" data-template="time">⏱️ Узнать срок</button>
-            <button class="mini__btn" data-template="pickup">🚗 Можно курьером?</button>
-            <button class="mini__btn" data-template="water">💧 После воды</button>
-          </div>
+    const text =
+      `Заявка с сайта (акция: курьер бесплатно)%0A` +
+      `Имя: ${encodeURIComponent(name)}%0A` +
+      `Телефон: ${encodeURIComponent(phone)}%0A` +
+      (device ? `Устройство: ${encodeURIComponent(device)}%0A` : ``) +
+      (problem ? `Проблема: ${encodeURIComponent(problem)}%0A` : ``) +
+      `Адреса сервиса: Ткачева 22 / Заводская 25`;
 
-          <div class="stats">
-            <div class="stat"><b>⚡ Срочно</b><span>если возможно — сегодня</span></div>
-            <div class="stat"><b>🧠 Сложно</b><span>пайка/питание/влага</span></div>
-            <div class="stat"><b>🛡️ Гарантия</b><span>на работы и запчасти</span></div>
-          </div>
-        </div>
+    // Можно поменять на чат/бота, если будет. Сейчас — системный "поделиться" в ТГ.
+    const url = `https://t.me/share/url?url=&text=${text}`;
+    window.open(url, '_blank');
+  }
+</script>
 
-        <div class="hero__right reveal">
-          <div class="glass">
-            <div class="glass__head">
-              <div>
-                <div class="glass__title">Заявка за 15 секунд</div>
-                <div class="glass__sub">Сформируем сообщение и откроем Telegram.</div>
-              </div>
-              <span class="badge">Online</span>
-            </div>
-
-            <form class="form" id="leadForm">
-              <label class="field">
-                <span>Устройство</span>
-                <input name="device" placeholder="Напр.: iPhone 13 / ТВ Philips / ноутбук Lenovo" required />
-              </label>
-              <label class="field">
-                <span>Проблема</span>
-                <input name="issue" placeholder="Напр.: не заряжается / нет изображения / перегрев" required />
-              </label>
-              <div class="row">
-                <label class="field">
-                  <span>Срочность</span>
-                  <select name="urgent">
-                    <option>Не срочно</option>
-                    <option>Сегодня</option>
-                    <option>Срочно</option>
-                  </select>
-                </label>
-                <label class="field">
-                  <span>Контакт</span>
-                  <input name="contact" placeholder="Телефон или @telegram (по желанию)" />
-                </label>
-              </div>
-
-              <button class="btn btn--wide" type="submit">Отправить в Telegram</button>
-
-              <div class="hint">
-                Или напиши напрямую:
-                <a href="https://t.me/vremonte161" target="_blank" rel="noreferrer">@vremonte161</a>
-              </div>
-            </form>
-
-            <div class="trust">
-              <div class="trust__item">✅ Согласуем цену</div>
-              <div class="trust__item">✅ Тестируем перед выдачей</div>
-              <div class="trust__item">✅ Фото/видео отчёт по просьбе</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero__bg"></div>
-    </section>
-
-    <!-- SERVICES -->
-    <section class="section" id="services">
-      <div class="container">
-        <div class="head reveal">
-          <h2>Услуги</h2>
-          <p>Собрали основные направления. Если твоего нет — всё равно напиши.</p>
-        </div>
-
-        <div class="services reveal">
-          <article class="svc">
-            <div class="svc__top">
-              <div class="svc__icon">📱</div>
-              <div class="svc__title">Смартфоны</div>
-            </div>
-            <ul class="list">
-              <li>Замена дисплея / стекла (по модели)</li>
-              <li>Аккумулятор, разъём, динамик, микрофон</li>
-              <li>Камеры, кнопки, корпусные элементы</li>
-              <li>После влаги: диагностика и восстановление</li>
-            </ul>
-            <div class="svc__actions">
-              <button class="btn btn--soft btn--small" data-service="phone">Узнать цену</button>
-              <a class="btn btn--small" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">Написать</a>
-            </div>
-          </article>
-
-          <article class="svc">
-            <div class="svc__top">
-              <div class="svc__icon">💻</div>
-              <div class="svc__title">Ноутбуки / ПК</div>
-            </div>
-            <ul class="list">
-              <li>Чистка, термопаста, профилактика охлаждения</li>
-              <li>SSD, Windows, восстановление загрузки</li>
-              <li>BIOS/UEFI настройка, прошивка (по ситуации)</li>
-              <li>Питание, разъёмы, ремонт плат (если требуется)</li>
-            </ul>
-            <div class="svc__actions">
-              <button class="btn btn--soft btn--small" data-service="pc">Узнать цену</button>
-              <a class="btn btn--small" href="tel:+79255156161">Позвонить</a>
-            </div>
-          </article>
-
-          <article class="svc">
-            <div class="svc__top">
-              <div class="svc__icon">📺</div>
-              <div class="svc__title">Телевизоры</div>
-            </div>
-            <ul class="list">
-              <li>Нет изображения / полосы / рябь</li>
-              <li>Подсветка, питание, разъёмы</li>
-              <li>Плата, цепи сигнала (диагностика)</li>
-              <li>Настройка, подключение, консультация</li>
-            </ul>
-            <div class="svc__actions">
-              <button class="btn btn--soft btn--small" data-service="tv">Узнать цену</button>
-              <a class="btn btn--small" href="#find">Как нас найти</a>
-            </div>
-          </article>
-
-          <article class="svc">
-            <div class="svc__top">
-              <div class="svc__icon">🎮</div>
-              <div class="svc__title">Приставки</div>
-            </div>
-            <ul class="list">
-              <li>Перегрев, шум, чистка и обслуживание</li>
-              <li>Safe Mode/ошибки/не запускается</li>
-              <li>Питание, разъёмы, восстановление</li>
-              <li>Тест в играх перед выдачей</li>
-            </ul>
-            <div class="svc__actions">
-              <button class="btn btn--soft btn--small" data-service="ps">Узнать цену</button>
-              <a class="btn btn--small" href="https://wa.me/79255156161" target="_blank" rel="noreferrer">WhatsApp</a>
-            </div>
-          </article>
-
-          <article class="svc">
-            <div class="svc__top">
-              <div class="svc__icon">☕</div>
-              <div class="svc__title">Кофемашины</div>
-            </div>
-            <ul class="list">
-              <li>Протечки, помпа, ошибки</li>
-              <li>Чистка, обслуживание, профилактика</li>
-              <li>Датчики/контакты, питание</li>
-              <li>Рекомендации по уходу</li>
-            </ul>
-            <div class="svc__actions">
-              <button class="btn btn--soft btn--small" data-service="coffee">Узнать цену</button>
-              <a class="btn btn--small" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">Telegram</a>
-            </div>
-          </article>
-
-          <article class="svc">
-            <div class="svc__top">
-              <div class="svc__icon">🌀</div>
-              <div class="svc__title">Dyson / бытовая техника</div>
-            </div>
-            <ul class="list">
-              <li>Питание, контакты, ошибки</li>
-              <li>Профилактика/чистка, восстановление</li>
-              <li>Диагностика платы (по ситуации)</li>
-              <li>Подбор запчастей</li>
-            </ul>
-            <div class="svc__actions">
-              <button class="btn btn--soft btn--small" data-service="dyson">Узнать цену</button>
-              <a class="btn btn--small" href="tel:+79255156161">Позвонить</a>
-            </div>
-          </article>
-        </div>
-
-        <div class="bigcta reveal">
-          <div>
-            <h3>Не уверен, что именно сломалось?</h3>
-            <p>Скинь фото/видео в Telegram — быстро скажем, что можно сделать и сколько примерно стоит.</p>
-          </div>
-          <div class="bigcta__btns">
-            <a class="btn" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">✈️ Написать в Telegram</a>
-            <a class="btn btn--soft" href="tel:+79255156161">📞 Позвонить</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- HOW -->
-    <section class="section section--alt" id="how">
-      <div class="container">
-        <div class="head reveal">
-          <h2>Как мы работаем</h2>
-          <p>Прозрачно и без сюрпризов: сначала диагностика и согласование, потом ремонт.</p>
-        </div>
-
-        <div class="steps reveal">
-          <div class="step">
-            <div class="step__num">1</div>
-            <div class="step__body">
-              <b>Заявка</b>
-              <span>Пишешь в Telegram/WhatsApp или звонишь</span>
-              <div class="step__actions">
-                <a class="btn btn--soft btn--small" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">Telegram</a>
-                <a class="btn btn--soft btn--small" href="https://wa.me/79255156161" target="_blank" rel="noreferrer">WhatsApp</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step__num">2</div>
-            <div class="step__body">
-              <b>Диагностика</b>
-              <span>Определяем причину и варианты ремонта</span>
-              <button class="btn btn--soft btn--small" data-template="price">Узнать ориентир</button>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step__num">3</div>
-            <div class="step__body">
-              <b>Согласование</b>
-              <span>Озвучиваем цену/сроки до начала работ</span>
-              <button class="btn btn--soft btn--small" data-template="time">Узнать сроки</button>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step__num">4</div>
-            <div class="step__body">
-              <b>Ремонт + тест</b>
-              <span>Проверяем всё перед выдачей</span>
-              <a class="btn btn--soft btn--small" href="#faq">Гарантия / FAQ</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="banner reveal">
-          <div class="banner__left">
-            <b>Адрес</b>
-            <span>Ростов-на-Дону, ул. Ткачева, 22</span>
-          </div>
-          <div class="banner__right">
-            <a class="btn btn--small" href="#find">Как пройти</a>
-            <a class="btn btn--soft btn--small" href="https://yandex.ru/maps/?text=%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C%20%D1%83%D0%BB.%20%D0%A2%D0%BA%D0%B0%D1%87%D0%B5%D0%B2%D0%B0%2022" target="_blank" rel="noreferrer">Открыть в Яндекс.Картах</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRICES -->
-    <section class="section" id="prices">
-      <div class="container">
-        <div class="head reveal">
-          <h2>Цены</h2>
-          <p>Ориентиры. Финальная стоимость зависит от модели, запчастей и сложности.</p>
-        </div>
-
-        <div class="prices reveal">
-          <div class="price">
-            <b>Диагностика</b>
-            <span class="price__big">от 0 ₽*</span>
-            <small>*зависит от случая</small>
-            <button class="btn btn--soft btn--small" data-template="price">Спросить цену</button>
-          </div>
-
-          <div class="price">
-            <b>Чистка / профилактика</b>
-            <span class="price__big">от 1 000 ₽</span>
-            <small>ПК/ноут/приставки</small>
-            <button class="btn btn--soft btn--small" data-service="pc">Уточнить</button>
-          </div>
-
-          <div class="price">
-            <b>Разъёмы / питание</b>
-            <span class="price__big">от 1 500 ₽</span>
-            <small>по устройству</small>
-            <button class="btn btn--soft btn--small" data-service="phone">Уточнить</button>
-          </div>
-
-          <div class="price">
-            <b>Экран / матрица</b>
-            <span class="price__big">индивидуально</span>
-            <small>по модели</small>
-            <button class="btn btn--soft btn--small" data-template="price">Спросить</button>
-          </div>
-        </div>
-
-        <div class="callout reveal">
-          <div>
-            <h3>Хочешь точную цену?</h3>
-            <p>Напиши модель устройства и проблему — ответим быстро.</p>
-          </div>
-          <div class="callout__btns">
-            <a class="btn" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">Написать в Telegram</a>
-            <a class="btn btn--soft" href="tel:+79255156161">Позвонить</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FIND -->
-    <section class="section section--alt" id="find">
-      <div class="container">
-        <div class="head reveal">
-          <h2>Как нас найти</h2>
-          <p>Ростов-на-Дону, ул. Ткачева, 22</p>
-        </div>
-
-        <div class="find reveal">
-          <div class="find__photos">
-            <button class="ph" data-photo="img/find-1.jpg" aria-label="Фото 1">
-              <img src="img/find-1.jpg" alt="Вывеска" loading="lazy">
-              <span>Вывеска</span>
-            </button>
-            <button class="ph" data-photo="img/find-2.jpg" aria-label="Фото 2">
-              <img src="img/find-2.jpg" alt="Вход" loading="lazy">
-              <span>Вход</span>
-            </button>
-            <button class="ph" data-photo="img/find-3.jpg" aria-label="Фото 3">
-              <img src="img/find-3.jpg" alt="Как пройти" loading="lazy">
-              <span>Ориентир</span>
-            </button>
-
-            <div class="find__card">
-              <b>Контакты</b>
-              <div class="find__row"><small>Телефон</small><a href="tel:+79255156161">8 (925) 515-61-61</a></div>
-              <div class="find__row"><small>Telegram</small><a href="https://t.me/vremonte161" target="_blank" rel="noreferrer">@vremonte161</a></div>
-              <div class="find__row"><small>Адрес</small><span>ул. Ткачева, 22</span></div>
-              <div class="find__btns">
-                <a class="btn btn--small" href="tel:+79255156161">Позвонить</a>
-                <a class="btn btn--soft btn--small" href="https://yandex.ru/maps/?text=%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C%20%D1%83%D0%BB.%20%D0%A2%D0%BA%D0%B0%D1%87%D0%B5%D0%B2%D0%B0%2022" target="_blank" rel="noreferrer">Маршрут</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="find__map">
-            <iframe
-              title="Яндекс карта — Ткачева 22"
-              src="https://yandex.ru/map-widget/v1/?mode=search&text=%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C%20%D1%83%D0%BB.%20%D0%A2%D0%BA%D0%B0%D1%87%D0%B5%D0%B2%D0%B0%2022&z=16"
-              loading="lazy"
-              frameborder="0">
-            </iframe>
-
-            <div class="map__bar">
-              <a class="btn btn--small" href="https://yandex.ru/profile/229488310920?lang=ru" target="_blank" rel="noreferrer">⭐ Отзывы на Яндекс</a>
-              <a class="btn btn--soft btn--small" href="https://yandex.ru/profile/229488310920?lang=ru" target="_blank" rel="noreferrer">✍️ Оставить отзыв</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section" id="faq">
-      <div class="container">
-        <div class="head reveal">
-          <h2>FAQ</h2>
-          <p>Коротко отвечаем на самые частые вопросы.</p>
-        </div>
-
-        <div class="faq reveal" id="faqList">
-          <div class="qa">
-            <button class="qa__q">Сколько стоит ремонт?</button>
-            <div class="qa__a">
-              Цена зависит от модели и поломки. Напиши модель + проблему — дадим ориентир и варианты.
-            </div>
-          </div>
-
-          <div class="qa">
-            <button class="qa__q">Сколько по времени?</button>
-            <div class="qa__a">
-              Иногда можно сделать в день обращения, иногда нужно время на запчасть/диагностику. Согласуем заранее.
-            </div>
-          </div>
-
-          <div class="qa">
-            <button class="qa__q">Есть гарантия?</button>
-            <div class="qa__a">
-              Да, даём гарантию на работы и установленные запчасти (условия зависят от вида ремонта).
-            </div>
-          </div>
-
-          <div class="qa">
-            <button class="qa__q">Если техника после воды?</button>
-            <div class="qa__a">
-              Чем быстрее принести — тем лучше. Сначала диагностика, чистка/восстановление. Гарантия — по результату.
-            </div>
-          </div>
-
-          <div class="qa">
-            <button class="qa__q">Можно ли без визита — консультация по фото?</button>
-            <div class="qa__a">
-              Да. Скинь фото/видео и модель — подскажем, что вероятнее всего и сколько примерно.
-            </div>
-          </div>
-        </div>
-
-        <div class="footercta reveal" id="contacts">
-          <div>
-            <h3>Готовы помочь</h3>
-            <p>Самый быстрый вариант — Telegram @vremonte161. Можно сразу фото/видео.</p>
-          </div>
-          <div class="footercta__btns">
-            <a class="btn" href="https://t.me/vremonte161" target="_blank" rel="noreferrer">Написать в Telegram</a>
-            <a class="btn btn--soft" href="https://wa.me/79255156161" target="_blank" rel="noreferrer">WhatsApp</a>
-            <a class="btn btn--soft" href="tel:+79255156161">Позвонить</a>
-          </div>
-        </div>
-
-        <footer class="footer">
-          <div>© <span id="year"></span> «В ремонте»</div>
-          <div class="footer__links">
-            <a href="#services">Услуги</a>
-            <a href="#find">Адрес</a>
-            <a href="https://yandex.ru/profile/229488310920?lang=ru" target="_blank" rel="noreferrer">Отзывы</a>
-          </div>
-        </footer>
-      </div>
-    </section>
-  </main>
-
-  <!-- Photo modal -->
-  <div class="modal" id="modal" aria-hidden="true">
-    <button class="modal__close" id="modalClose" aria-label="Закрыть">✕</button>
-    <img class="modal__img" id="modalImg" alt="Фото" />
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
