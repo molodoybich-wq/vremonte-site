@@ -1,91 +1,130 @@
-// Mobile menu
-const burger = document.getElementById("burger");
-const nav = document.getElementById("nav");
-if (burger && nav) {
-  burger.addEventListener("click", () => nav.classList.toggle("is-open"));
-  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("is-open")));
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0b0f16;
+  color:#fff;
 }
 
-// Smooth anchor (nice)
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener("click", (e) => {
-    const id = a.getAttribute("href");
-    if (!id || id === "#") return;
-    const el = document.querySelector(id);
-    if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-});
-
-// Reveal animations
-const revealEls = document.querySelectorAll(".reveal");
-const io = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) entry.target.classList.add("is-in");
-  });
-}, { threshold: 0.12 });
-
-revealEls.forEach(el => io.observe(el));
-
-// Year
-document.getElementById("year").textContent = new Date().getFullYear();
-
-// Lead form -> Telegram share
-const leadForm = document.getElementById("leadForm");
-if (leadForm) {
-  leadForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const data = new FormData(leadForm);
-    const what = (data.get("what") || "").toString().trim();
-    const contact = (data.get("contact") || "").toString().trim();
-    const comment = (data.get("comment") || "").toString().trim();
-
-    const msg =
-      `Заявка с сайта%0A` +
-      `Что сломалось: ${encodeURIComponent(what)}%0A` +
-      `Контакт: ${encodeURIComponent(contact || "не указали")}%0A` +
-      `Комментарий: ${encodeURIComponent(comment || "—")}`;
-
-    // Share dialog (works in browser)
-    const url = `https://t.me/share/url?text=${msg}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-    leadForm.reset();
-  });
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
 }
 
-// Gallery lightbox
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightboxImg");
-const lightboxClose = document.getElementById("lightboxClose");
-
-function openLightbox(src) {
-  if (!lightbox || !lightboxImg) return;
-  lightboxImg.src = src;
-  lightbox.classList.add("is-open");
-  lightbox.setAttribute("aria-hidden", "false");
+/* КНОПКИ */
+.cta-bar{
+  position:sticky;
+  top:0;
+  background:#000c;
+  padding:10px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  z-index:10;
+}
+.cta{
+  padding:12px 18px;
+  border-radius:22px;
+  border:1px solid #555;
+  color:#fff;
+  text-decoration:none;
+  font-size:15px;
+}
+.primary{
+  background:#3b6cff;
+  border:none;
 }
 
-function closeLightbox() {
-  if (!lightbox) return;
-  lightbox.classList.remove("is-open");
-  lightbox.setAttribute("aria-hidden", "true");
-  if (lightboxImg) lightboxImg.src = "";
+/* HERO */
+.hero{
+  text-align:center;
+  padding:70px 20px;
+}
+.hero h1{
+  font-size:42px;
+  margin-bottom:10px;
 }
 
-document.querySelectorAll(".work").forEach((card) => {
-  card.addEventListener("click", () => {
-    const src = card.getAttribute("data-img");
-    if (src) openLightbox(src);
-  });
-});
+/* СЕКЦИИ */
+.section{
+  padding:50px 0;
+}
+.section h2{
+  font-size:28px;
+  margin-bottom:20px;
+}
 
-if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
-if (lightbox) {
-  lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeLightbox();
-  });
+/* КАРТОЧКИ */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+}
+.card{
+  padding:20px;
+  background:#151b28;
+  border-radius:18px;
+  text-align:center;
+  font-size:16px;
+}
+
+/* КАК НАС НАЙТИ */
+.address{
+  opacity:.8;
+}
+
+.find-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
+}
+.photos{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.photos img{
+  width:100%;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  border-radius:14px;
+}
+.map iframe{
+  width:100%;
+  height:360px;
+  border:0;
+  border-radius:18px;
+}
+
+/* КНОПКА ОТЗЫВОВ */
+.reviews-btn{
+  display:inline-block;
+  margin-top:25px;
+  padding:14px 22px;
+  background:#3b6cff;
+  border-radius:24px;
+  color:#fff;
+  text-decoration:none;
+  font-size:16px;
+}
+
+/* ФУТЕР */
+.footer{
+  text-align:center;
+  padding:30px;
+  background:#000;
+  color:#aaa;
+  font-size:14px;
+}
+
+/* АДАПТИВ */
+@media(max-width:800px){
+  .find-grid{
+    grid-template-columns:1fr;
+  }
+  .photos{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
