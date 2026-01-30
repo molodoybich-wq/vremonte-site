@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Документы для клиентов | В ремонте</title>
+  <link rel="stylesheet" href="styles.css?v=3"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="index.html">В ремонте</a>
+      <div class="topbar__actions">
+        <a class="pill" href="tel:+79255156161">📞 8 925 515‑61‑61</a>
+        <a class="pill" href="https://t.me/vremonte161" target="_blank" rel="noopener">Telegram</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="head">
+        <div>
+          <h1 style="margin:0 0 8px">Документы для клиентов</h1>
+          <p class="muted" style="margin:0 0 18px">Можно открыть, скачать и распечатать.</p>
+        </div>
+      </div>
+
+      <div class="services">
+        <div class="service">
+          <h3>Договор на оказание услуг</h3>
+          <p>Шаблон договора, который выдаём клиентам при оформлении.</p>
+          <a class="btn btn--small" href="docs/dogovor.pdf" target="_blank" rel="noopener">Открыть PDF</a>
+          <a class="btn btn--soft btn--small" href="docs/dogovor.pdf" download>Скачать</a>
+        </div>
+
+        <div class="service">
+          <h3>Акт выполненных работ</h3>
+          <p>Шаблон акта выполненных работ.</p>
+          <a class="btn btn--small" href="docs/akt.pdf" target="_blank" rel="noopener">Открыть PDF</a>
+          <a class="btn btn--soft btn--small" href="docs/akt.pdf" download>Скачать</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div>© <span id="year"></span> «В ремонте»</div>
+    <div class="footer__links">
+      <a href="index.html#services">Услуги</a>
+      <a href="index.html#find">Контакты</a>
+      <a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>
+      <a href="offer.html" target="_blank" rel="noopener">Публичная оферта</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
