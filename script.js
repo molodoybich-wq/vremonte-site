@@ -186,3 +186,21 @@
     toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
   }
 })();
+// Отправка формы (пример)
+document.getElementById('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Твой код обработки формы...
+
+  // Отправка цели в Метрику
+  if (typeof ym !== 'undefined') {
+    ym(00000000, 'reachGoal', 'FORM_SUBMIT'); // Замени 00000000!
+  }
+});
+
+// Открытие модального окна (если есть)
+document.querySelector('.modal-trigger').addEventListener('click', function() {
+  if (typeof ym !== 'undefined') {
+    ym(00000000, 'reachGoal', 'MODAL_OPEN');
+  }
+});
