@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>В ремонте — ремонт техники в Ростове‑на‑Дону</title>
+  <meta name="description" content="Ремонт телефонов, ноутбуков, ПК, ТВ, кофемашин, принтеров, Dyson и другой техники. Бесплатная диагностика, гарантия, честная оценка стоимости." />
+
+  <link rel="icon" href="favicon.png" />
+
+  <!-- OpenGraph -->
+  <meta property="og:title" content="В ремонте — ремонт техники" />
+  <meta property="og:description" content="Быстро, аккуратно и с гарантией. Ткачева 22 и Заводская 25." />
+  <meta property="og:type" content="website" />
+
+  <!-- Cache busting (меняй цифру при каждом апдейте) -->
+  <link rel="stylesheet" href="styles.css?v=20260131-16" />
+</head>
+
+<body>
+  <!-- Top strip -->
+  <div class="topstrip">
+    <div class="container topstrip__inner">
+      <a class="badge" href="https://yandex.ru/maps/?text=%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C%20%D1%83%D0%BB.%20%D0%A2%D0%BA%D0%B0%D1%87%D1%91%D0%B2%D0%B0%2C%2022" target="_blank" rel="noopener">
+        📍 Ткачева 22
+      </a>
+      <div class="topstrip__right">
+        <a class="topstrip__tel" href="tel:+79255156161">+7 925 515‑61‑61</a>
+        <span class="dot">•</span>
+        <span class="muted">Ежедневно 10:00–20:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a class="brand" href="#top" aria-label="На главную">
+        <span class="brand__mark">VR</span>
+        <span class="brand__text">
+          <span class="brand__name">В ремонте</span>
+          <span class="brand__sub">сервисный центр • Ростов‑на‑Дону</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Меню">
+        <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav">
+          <span></span><span></span><span></span>
+        </button>
+
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#services">Услуги</a></li>
+          <li><a class="nav__link" href="#prices">Цены</a></li>
+          <li><a class="nav__link" href="#how">Как работаем</a></li>
+          <li><a class="nav__link" href="#reviews">Отзывы</a></li>
+          <li class="nav__drop">
+            <button class="nav__link nav__btn" type="button" data-drop-btn="contacts">
+              Контакты <span class="chev">▾</span>
+            </button>
+            <div class="drop" data-drop="contacts" role="dialog" aria-label="Контакты">
+              <div class="drop__grid">
+                <div class="drop__card">
+                  <div class="drop__title">Адрес приёма</div>
+                  <a class="drop__big" href="https://yandex.ru/maps/?text=%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C%20%D1%83%D0%BB.%20%D0%A2%D0%BA%D0%B0%D1%87%D1%91%D0%B2%D0%B0%2C%2022" target="_blank" rel="noopener">ул. Ткачёва, 22</a>
+                  <div class="muted">Маршрут в 1 клик</div>
+                </div>
+                <div class="drop__card">
+                  <div class="drop__title">Цех сложного ремонта</div>
+                  <a class="drop__big" href="https://yandex.ru/maps/?text=%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C%20%D0%97%D0%B0%D0%B2%D0%BE%D0%B4%D1%81%D0%BA%D0%B0%D1%8F%2C%2025" target="_blank" rel="noopener">Заводская, 25</a>
+                  <div class="muted">Крупная техника и сложные случаи</div>
+                </div>
+                <div class="drop__card">
+                  <div class="drop__title">Связь</div>
+                  <div class="chips">
+                    <a class="chip" href="tel:+79255156161">📞 Позвонить</a>
+                    <a class="chip" href="https://t.me/vremonte161" target="_blank" rel="noopener">💬 Telegram</a>
+                    <a class="chip" href="https://wa.me/79255156161" target="_blank" rel="noopener">🟢 WhatsApp</a>
+                    <a class="chip chip--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">🟣 MAX</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header__cta">
+        <a class="btn btn--ghost hide-sm" href="#lead">Узнать стоимость</a>
+        <a class="btn btn--primary" href="tel:+79255156161">Позвонить</a>
+      </div>
+    </div>
+
+    <!-- Mobile nav panel -->
+    <div class="mnav" id="mnav" hidden>
+      <a class="mnav__link" href="#services">Услуги</a>
+      <a class="mnav__link" href="#prices">Цены</a>
+      <a class="mnav__link" href="#how">Как работаем</a>
+      <a class="mnav__link" href="#reviews">Отзывы</a>
+      <a class="mnav__link" href="#contacts">Контакты</a>
+      <div class="mnav__actions">
+        <a class="btn btn--soft" href="tel:+79255156161">📞 Позвонить</a>
+        <a class="btn btn--soft" href="https://t.me/vremonte161" target="_blank" rel="noopener">💬 Telegram</a>
+        <a class="btn btn--soft" href="https://wa.me/79255156161" target="_blank" rel="noopener">🟢 WhatsApp</a>
+        <a class="btn btn--soft btn--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">🟣 MAX</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__left">
+        <div class="hero__pill">
+          <span class="pill__dot"></span>
+          Бесплатная диагностика • гарантия • честная цена до работ
+        </div>
+
+        <h1 class="hero__title">Мощный ремонт техники без лишних слов</h1>
+        <p class="hero__lead">
+          Берёмся за сложные случаи, объясняем по‑человечески, фиксируем всё в документах.
+          Телефоны, ноутбуки, ПК, ТВ, кофемашины, принтеры, Dyson и другая техника.
+        </p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#lead">Рассчитать стоимость</a>
+          <button class="btn btn--ghost" type="button" data-open-device>Выбрать устройство</button>
+        </div>
+
+        <div class="trust">
+          <div class="trust__item"><div class="trust__top">0 ₽</div><div class="muted">Диагностика</div></div>
+          <div class="trust__item"><div class="trust__top">от 30 мин</div><div class="muted">Срочно</div></div>
+          <div class="trust__item"><div class="trust__top">Гарантия</div><div class="muted">на работы</div></div>
+        </div>
+      </div>
+
+      <div class="hero__right">
+        <div class="card card--glow">
+          <div class="card__kicker">Быстрый заказ</div>
+          <div class="card__title">Ответим в мессенджере</div>
+          <div class="card__text muted">Заполни 3 поля — мы скажем цену и сроки.</div>
+
+          <form class="mini" id="quickForm">
+            <label class="field">
+              <span class="field__label">Устройство</span>
+              <input id="leadDevice" name="device" placeholder="например: iPhone 13 / ноутбук / ТВ" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span class="field__label">Что случилось</span>
+              <input id="leadProblem" name="problem" placeholder="не включается / разбит дисплей / шумит" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span class="field__label">Контакт (необязательно)</span>
+              <input id="leadContact" name="contact" placeholder="телефон или @ник" autocomplete="off" />
+            </label>
+
+            <div class="mini__row">
+              <select id="leadUrgency" class="select" name="urgency" aria-label="Срочность">
+                <option value="">Срочность: не важно</option>
+                <option>Нужно срочно</option>
+                <option>Сегодня/завтра</option>
+                <option>Можно подождать</option>
+              </select>
+              <button class="btn btn--primary" type="button" data-send="tg">Отправить</button>
+            </div>
+
+            <div class="mini__actions">
+              <button class="btn btn--soft" type="button" data-send="wa">WhatsApp</button>
+              <button class="btn btn--soft btn--max" type="button" data-send="max">MAX</button>
+            </div>
+
+            <p class="consent">
+              Нажимая кнопку “Отправить”, вы принимаете
+              <a href="privacy.html">Политику конфиденциальности</a>.
+            </p>
+          </form>
+        </div>
+
+        <div class="hero__note">
+          <div class="note">
+            <div class="note__icon">✓</div>
+            <div>
+              <div class="note__title">Предварительно сообщаем цену</div>
+              <div class="muted">Без сюрпризов — согласуем всё заранее</div>
+            </div>
+          </div>
+          <div class="note">
+            <div class="note__icon">✓</div>
+            <div>
+              <div class="note__title">Акт и договор</div>
+              <div class="muted">Выдаём документы для клиента</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2">Что ремонтируем</h2>
+        <p class="muted">Всё, что чаще всего ломается — и то, что «никто не берёт».</p>
+      </div>
+
+      <div class="grid grid--services">
+        <div class="svc">
+          <div class="svc__top">📱 Телефоны</div>
+          <div class="svc__list">
+            <span>Дисплей</span><span>Аккумулятор</span><span>Разъёмы</span><span>Камеры</span><span>После падения</span>
+          </div>
+          <a class="svc__cta" href="#prices">Смотреть цены →</a>
+        </div>
+
+        <div class="svc">
+          <div class="svc__top">💻 ПК и ноутбуки</div>
+          <div class="svc__list">
+            <span>Чистка/термопаста</span><span>Матрица</span><span>Клавиатура</span><span>SSD/Windows</span><span>BIOS</span>
+          </div>
+          <a class="svc__cta" href="#lead">Спросить стоимость →</a>
+        </div>
+
+        <div class="svc">
+          <div class="svc__top">📺 Телевизоры</div>
+          <div class="svc__list">
+            <span>Подсветка</span><span>Питание</span><span>Нет изображения</span><span>Полосы</span><span>Диагностика</span>
+          </div>
+          <a class="svc__cta" href="#lead">Записаться →</a>
+        </div>
+
+        <div class="svc">
+          <div class="svc__top">☕ Кофемашины</div>
+          <div class="svc__list">
+            <span>Не подаёт воду</span><span>Течёт</span><span>Не греет</span><span>Ошибки</span><span>Чистка</span>
+          </div>
+          <a class="svc__cta" href="#lead">Запросить цену →</a>
+        </div>
+
+        <div class="svc">
+          <div class="svc__top">🖨️ Принтеры</div>
+          <div class="svc__list">
+            <span>Не печатает</span><span>Зажёвывает</span><span>Чистка</span><span>Ролики</span><span>Диагностика</span>
+          </div>
+          <a class="svc__cta" href="#lead">Запросить цену →</a>
+        </div>
+
+        <div class="svc">
+          <div class="svc__top">🌪️ Dyson</div>
+          <div class="svc__list">
+            <span>Не тянет</span><span>Шумит</span><span>Аккум</span><span>Плата</span><span>Чистка</span>
+          </div>
+          <a class="svc__cta" href="#lead">Запросить цену →</a>
+        </div>
+      </div>
+
+      <div class="cta-line">
+        <div>
+          <div class="cta-line__title">Нужно быстро понять — берёмся или нет?</div>
+          <div class="muted">Опиши модель и проблему — ответим и дадим диапазон цены.</div>
+        </div>
+        <a class="btn btn--primary" href="#lead">Написать мастеру</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prices -->
+  <section class="section section--alt" id="prices">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2">Цены</h2>
+        <p class="muted">Цены ориентировочные: итог зависит от модели и состояния устройства.</p>
+      </div>
+
+      <div class="grid grid--prices" id="pricesGrid">
+        <div class="pricecard">
+          <div class="pricecard__top">📱 iPhone X / XS / XR</div>
+          <div class="pricecard__row"><span>Дисплей (копия)</span><b>6 750 ₽</b></div>
+          <div class="pricecard__row"><span>Дисплей (ориг.)</span><b>7 800 ₽</b></div>
+          <div class="pricecard__note muted">Для точной цены — модель/год и фото.</div>
+        </div>
+
+        <div class="pricecard">
+          <div class="pricecard__top">📱 iPhone 14 / 16 / 17</div>
+          <div class="pricecard__row"><span>Диагностика</span><b>0 ₽</b></div>
+          <div class="pricecard__row"><span>Оценка стоимости</span><b>до начала работ</b></div>
+          <div class="pricecard__note muted">Напиши модель и проблему — дадим диапазон.</div>
+        </div>
+
+        <div class="pricecard">
+          <div class="pricecard__top">💻 Ноутбук / ПК</div>
+          <div class="pricecard__row"><span>Чистка + термопаста</span><b>от 1 490 ₽</b></div>
+          <div class="pricecard__row"><span>Установка Windows</span><b>от 1 490 ₽</b></div>
+          <div class="pricecard__note muted">Сроки и стоимость — после диагностики.</div>
+        </div>
+
+        <div class="pricecard">
+          <div class="pricecard__top">📺 ТВ</div>
+          <div class="pricecard__row"><span>Диагностика</span><b>0 ₽*</b></div>
+          <div class="pricecard__row"><span>Ремонт подсветки</span><b>по модели</b></div>
+          <div class="pricecard__note muted">*если ремонт выполняется у нас.</div>
+        </div>
+      </div>
+
+      <div class="hint">
+        <div class="hint__icon">i</div>
+        <div class="hint__text">
+          Хотите прайс «как у больших сетей» с выбором модели и поиском? Мы уже добавили подбор устройства — нажмите
+          <b>«Выбрать устройство»</b> вверху.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How we work -->
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2">Как работаем</h2>
+        <p class="muted">Структура как у топ‑сервисов: быстро, прозрачно, без лишних шагов.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__n">1</div>
+          <div class="step__t">Диагностика</div>
+          <div class="muted">Проверяем и объясняем причины поломки.</div>
+        </div>
+        <div class="step">
+          <div class="step__n">2</div>
+          <div class="step__t">Согласование цены</div>
+          <div class="muted">Озвучиваем стоимость и сроки до начала работ.</div>
+        </div>
+        <div class="step">
+          <div class="step__n">3</div>
+          <div class="step__t">Ремонт</div>
+          <div class="muted">Аккуратно, с нормальными расходниками и контролем качества.</div>
+        </div>
+        <div class="step">
+          <div class="step__n">4</div>
+          <div class="step__t">Выдача + гарантия</div>
+          <div class="muted">Оформляем документы и даём рекомендации.</div>
+        </div>
+      </div>
+
+      <div class="grid grid--features">
+        <div class="feat">
+          <div class="feat__icon">⚡</div>
+          <div>
+            <div class="feat__t">Срочные ремонты</div>
+            <div class="muted">Часто делаем в день обращения.</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat__icon">🧾</div>
+          <div>
+            <div class="feat__t">Акты и договор</div>
+            <div class="muted">Чёткая фиксация работ и условий.</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat__icon">🧠</div>
+          <div>
+            <div class="feat__t">Сложные случаи</div>
+            <div class="muted">Плата, цепи питания, «после других сервисов».</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat__icon">🔒</div>
+          <div>
+            <div class="feat__t">Конфиденциальность</div>
+            <div class="muted">Данные клиента — по правилам и по закону.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lead form -->
+  <section class="section section--alt" id="lead">
+    <div class="container">
+      <div class="lead">
+        <div class="lead__left">
+          <h2 class="h2">Узнать стоимость</h2>
+          <p class="muted">Опиши проблему — мы ответим, что делать, сколько стоит и сколько по времени.</p>
+
+          <div class="lead__mini">
+            <div class="lead__box">
+              <div class="lead__boxT">Связь</div>
+              <div class="lead__chips">
+                <a class="chip" href="tel:+79255156161">📞 +7 925 515‑61‑61</a>
+                <a class="chip" href="https://t.me/vremonte161" target="_blank" rel="noopener">Telegram</a>
+                <a class="chip" href="https://wa.me/79255156161" target="_blank" rel="noopener">WhatsApp</a>
+                <a class="chip chip--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">MAX</a>
+              </div>
+            </div>
+
+            <div class="lead__box">
+              <div class="lead__boxT">Услуги (быстро)</div>
+              <button class="btn btn--ghost btn--sm" type="button" data-open-services>Открыть список</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="lead__right">
+          <form class="form" id="leadForm">
+            <div class="form__row">
+              <label class="field">
+                <span class="field__label">Устройство</span>
+                <input id="leadDevice2" placeholder="Например: Samsung A52 / Lenovo / LG 55" autocomplete="off" />
+              </label>
+              <label class="field">
+                <span class="field__label">Срочность</span>
+                <select id="leadUrgency2" class="select">
+                  <option value="">Не важно</option>
+                  <option>Срочно</option>
+                  <option>Сегодня/завтра</option>
+                  <option>Можно подождать</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="field">
+              <span class="field__label">Описание проблемы</span>
+              <textarea id="leadProblem2" rows="4" placeholder="Что произошло? После чего началось? Что уже пробовали?"></textarea>
+            </label>
+
+            <label class="field">
+              <span class="field__label">Контакт (телефон / @ник)</span>
+              <input id="leadContact2" placeholder="Чтобы мы могли уточнить детали" autocomplete="off" />
+            </label>
+
+            <div class="form__actions">
+              <button class="btn btn--primary" type="button" data-send2="tg">Отправить в Telegram</button>
+              <button class="btn btn--soft" type="button" data-send2="wa">WhatsApp</button>
+              <button class="btn btn--soft btn--max" type="button" data-send2="max">MAX</button>
+            </div>
+
+            <p class="consent">
+              Нажимая кнопку “Отправить”, вы принимаете
+              <a href="privacy.html">Политику конфиденциальности</a>.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="section" id="reviews">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2">Отзывы</h2>
+        <p class="muted">Блок отзывов можно подключить/заменить под Яндекс (у тебя уже была версия — оставим по твоему сценарию).</p>
+      </div>
+
+      <div class="reviewwall">
+        <div class="reviewcard">
+          <div class="reviewcard__top">
+            <div class="avatar">А</div>
+            <div>
+              <div class="reviewcard__name">Андрей</div>
+              <div class="muted">Дисплей, iPhone</div>
+            </div>
+          </div>
+          <div class="reviewcard__text">Сделали быстро, всё объяснили, цена как договорились. Рекомендую.</div>
+        </div>
+
+        <div class="reviewcard">
+          <div class="reviewcard__top">
+            <div class="avatar">М</div>
+            <div>
+              <div class="reviewcard__name">Мария</div>
+              <div class="muted">Ноутбук</div>
+            </div>
+          </div>
+          <div class="reviewcard__text">Почистили и поменяли термопасту — перестал греться и шуметь.</div>
+        </div>
+
+        <div class="reviewcard">
+          <div class="reviewcard__top">
+            <div class="avatar">С</div>
+            <div>
+              <div class="reviewcard__name">Сергей</div>
+              <div class="muted">TV</div>
+            </div>
+          </div>
+          <div class="reviewcard__text">Диагностика бесплатно, ремонт подсветки сделали аккуратно.</div>
+        </div>
+      </div>
+
+      <div class="cta-line">
+        <div>
+          <div class="cta-line__title">Нужен ответ прямо сейчас?</div>
+          <div class="muted">Напиши в любой мессенджер — мы подскажем.</div>
+        </div>
+        <div class="cta-line__btns">
+          <a class="btn btn--soft" href="https://t.me/vremonte161" target="_blank" rel="noopener">Telegram</a>
+          <a class="btn btn--soft" href="https://wa.me/79255156161" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn--soft btn--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">MAX</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contacts / map -->
+  <section class="section section--alt" id="contacts">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2">Как нас найти</h2>
+        <p class="muted">Два адреса: приём и цех сложного ремонта.</p>
+      </div>
+
+      <div class="grid grid--contacts">
+        <div class="contactcard">
+          <div class="contactcard__t">Ткачева 22</div>
+          <div class="muted">Приём техники • консультации</div>
+          <a class="btn btn--soft" href="https://yandex.ru/maps/org/singa_servis" target="_blank" rel="noopener">Открыть в Яндекс.Картах</a>
+        </div>
+        <div class="contactcard">
+          <div class="contactcard__t">Заводская 25</div>
+          <div class="muted">Сложный ремонт • крупная техника</div>
+          <a class="btn btn--soft" href="https://yandex.ru/maps/?text=%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C%20%D0%97%D0%B0%D0%B2%D0%BE%D0%B4%D1%81%D0%BA%D0%B0%D1%8F%2C%2025" target="_blank" rel="noopener">Открыть в Яндекс.Картах</a>
+        </div>
+      </div>
+
+      <div class="mapwrap">
+        <iframe
+          title="Карта — Синга‑сервис"
+          src="https://yandex.ru/map-widget/v1/?ll=39.703000%2C47.236000&z=14&text=%D0%A1%D0%B8%D0%BD%D0%B3%D0%B0-%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20%D0%A2%D0%BA%D0%B0%D1%87%D1%91%D0%B2%D0%B0%2022"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="mapwrap__line">
+          <a class="btn btn--ghost" href="https://yandex.ru/maps/org/singa_servis" target="_blank" rel="noopener">Яндекс.Карты (Синга‑сервис)</a>
+          <a class="btn btn--ghost" href="docs.html">Документы для клиентов</a>
+          <a class="btn btn--ghost" href="offer.html">Публичная оферта</a>
+          <a class="btn btn--ghost" href="privacy.html">Политика</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2">FAQ</h2>
+        <p class="muted">Частые вопросы — коротко и по делу.</p>
+      </div>
+
+      <div class="faq" id="faqList">
+        <div class="qa">
+          <button class="qa__q" type="button">Диагностика точно бесплатная?</button>
+          <div class="qa__a">Да, диагностика бесплатна. В отдельных случаях (редкие модели/сложные дефекты) мы заранее предупредим о нюансах.</div>
+        </div>
+        <div class="qa">
+          <button class="qa__q" type="button">Сколько времени занимает ремонт?</button>
+          <div class="qa__a">Зависит от проблемы и наличия запчастей. Часто — в день обращения. Срок согласуем после диагностики.</div>
+        </div>
+        <div class="qa">
+          <button class="qa__q" type="button">Даете гарантию?</button>
+          <div class="qa__a">Да. На работы и запчасти — фиксируем в документах (акт/договор).</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="footer__brand">В ремонте</div>
+        <div class="muted">Ремонт техники • Ростов‑на‑Дону</div>
+        <div class="muted">© <span id="year"></span></div>
+      </div>
+
+      <div>
+        <div class="footer__t">Контакты</div>
+        <a class="footer__a" href="tel:+79255156161">+7 925 515‑61‑61</a>
+        <a class="footer__a" href="https://t.me/vremonte161" target="_blank" rel="noopener">Telegram</a>
+        <a class="footer__a" href="https://wa.me/79255156161" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="footer__a" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">MAX</a>
+      </div>
+
+      <div>
+        <div class="footer__t">Документы</div>
+        <a class="footer__a" href="privacy.html">Политика конфиденциальности</a>
+        <a class="footer__a" href="offer.html">Публичная оферта</a>
+        <a class="footer__a" href="docs.html">Договор и акт</a>
+        <a class="footer__a" href="cookie-policy.html">Cookie</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating contact buttons -->
+  <div class="float">
+    <a class="float__btn" href="tel:+79255156161" aria-label="Позвонить">📞</a>
+    <a class="float__btn" href="https://wa.me/79255156161" target="_blank" rel="noopener" aria-label="WhatsApp">🟢</a>
+    <a class="float__btn" href="https://t.me/vremonte161" target="_blank" rel="noopener" aria-label="Telegram">💬</a>
+    <a class="float__btn float__btn--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener" aria-label="MAX">🟣</a>
+  </div>
+
+  <!-- Cookie banner -->
+  <div class="cookie" id="cookieBanner" role="dialog" aria-label="Cookie">
+    <div class="cookie__inner">
+      <div class="cookie__text">
+        Мы используем cookies для корректной работы сайта. Подробнее — в <a href="cookie-policy.html">политике cookies</a>.
+      </div>
+      <div class="cookie__actions">
+        <button class="btn btn--soft" id="cookieClose" type="button">Позже</button>
+        <button class="btn btn--primary" id="cookieAccept" type="button">Принять</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UI modal -->
+  <div class="modal" id="uiModal" aria-hidden="true">
+    <div class="modal__back" data-close="1"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Окно">
+      <button class="modal__close" type="button" data-close="1" aria-label="Закрыть">✕</button>
+      <div class="modal__content" id="uiModalContent"></div>
+    </div>
+  </div>
+
+  <script src="script.js?v=20260131-16"></script>
+</body>
+</html>
