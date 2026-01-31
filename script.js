@@ -1,278 +1,738 @@
 (() => {
   "use strict";
 
+  // Mark JS enabled (used by CSS for reveal fallback)
+  document.documentElement.classList.add("js");
+
+  // ====== CONFIG ======
   const LINKS = {
     phone: "tel:+79255156161",
+    tgUser: "vremonte161",
     tg: "https://t.me/vremonte161",
-    wa: "https://wa.me/79255156161",
-    max: "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8",
+    wa: "https://wa.me/message/BMMLIHWUSQRHC1",
+    max: "https://max.ru/u/f9LHodD0cOLtKrUPwUO1eMRcfm0zwTD3C78xZc-I54h1b5NlXuetri89BNg",
   };
 
-  const $ = (s, r=document) => r.querySelector(s);
-  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  // ====== Helpers ======
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-  // Year
-  const y = $("#year");
-  if (y) y.textContent = String(new Date().getFullYear());
-
-  // Mobile menu
-  const burger = $("#burger");
-  const mnav = $("#mnav");
-  function setMenu(open){
-    if (!burger || !mnav) return;
-    burger.setAttribute("aria-expanded", String(open));
-    mnav.hidden = !open;
-    document.body.classList.toggle("menu-open", open);
-  }
-  burger?.addEventListener("click", () => setMenu(mnav?.hidden));
-  mnav?.addEventListener("click", (e) => {
-    if (e.target.closest(".mnav__a")) setMenu(false);
-  });
-
-  // Dropdowns (desktop)
-  const dropBtns = $$('[data-dropdown]');
-  function closeAllDrops(){
-    dropBtns.forEach(b=>{
-      const id = b.getAttribute('data-dropdown');
-      const p = id ? document.querySelector(`[data-drop="${id}"]`) : null;
-      b.setAttribute('aria-expanded','false');
-      p?.classList.remove('open');
-    });
-  }
-  dropBtns.forEach(btn=>{
-    btn.setAttribute('aria-expanded','false');
-    btn.addEventListener('click', (e)=>{
-      e.preventDefault();
-      const id = btn.getAttribute('data-dropdown');
-      const panel = id ? document.querySelector(`[data-drop="${id}"]`) : null;
-      if (!panel) return;
-      const open = !panel.classList.contains('open');
-      closeAllDrops();
-      panel.classList.toggle('open', open);
-      btn.setAttribute('aria-expanded', String(open));
-    });
-  });
-  document.addEventListener('click', (e)=>{
-    const t = e.target;
-    if (t.closest('.nav__drop')) return;
-    closeAllDrops();
-  });
-
-  // Smooth anchors
-  document.addEventListener('click', (e)=>{
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute('href');
-    if (!id || id === '#') return;
-    const el = document.querySelector(id);
-    if (!el) return;
-    e.preventDefault();
-    closeAllDrops();
-    setMenu(false);
-    el.scrollIntoView({behavior:'smooth', block:'start'});
-  });
-
-  // Reveal
-  const reveal = $$('.reveal');
-  if ('IntersectionObserver' in window){
-    const io = new IntersectionObserver((entries)=>{
-      for (const en of entries){
-        if (en.isIntersecting) en.target.classList.add('in');
-      }
-    }, {threshold: 0.12});
-    reveal.forEach(el=>io.observe(el));
-  } else {
-    reveal.forEach(el=>el.classList.add('in'));
+  function escHtml(s){
+    return String(s || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
 
-  // UI modal
-  const uiModal = $('#uiModal');
-  const uiModalContent = $('#uiModalContent');
-  function openModal(html){
-    if (!uiModal || !uiModalContent) return;
-    uiModalContent.innerHTML = html;
-    uiModal.classList.add('open');
-    uiModal.setAttribute('aria-hidden','false');
-    document.body.classList.add('modal-open');
-  }
-  function closeModal(){
-    if (!uiModal) return;
-    uiModal.classList.remove('open');
-    uiModal.setAttribute('aria-hidden','true');
-    document.body.classList.remove('modal-open');
-  }
-  document.addEventListener('click', (e)=>{
-    const t = e.target;
-    if (t?.dataset?.close === '1') closeModal();
-  });
-  document.addEventListener('keydown', (e)=>{
-    if (e.key === 'Escape'){ closeModal(); closeAllDrops(); setMenu(false);} 
-  });
-
-  // Device picker with search
-  const deviceData = [
-    {cat:'Телефоны', items:[
-      'iPhone (все модели)','Samsung Galaxy','Xiaomi / Redmi','Realme','Honor / Huawei','OnePlus','Google Pixel','Другой телефон'
-    ]},
-    {cat:'Компьютеры', items:[
-      'Ноутбук','ПК / системный блок','Моноблок','MacBook / iMac','Игровая приставка','Другая техника'
-    ]},
-    {cat:'Техника', items:[
-      'Телевизор','Кофемашина','Принтер / МФУ','Пылесос Dyson','Роутер / Wi‑Fi','Другая электроника'
-    ]},
-  ];
-
-  function renderDeviceModal(targetInputId){
-    const flat = deviceData.flatMap(g => g.items.map(it => ({cat:g.cat, name:it})));
-    const html = `
-      <div class="modalTitle">Выберите устройство</div>
-      <div class="modalSub">Начните вводить — список будет фильтроваться</div>
-      <input class="modalSearch" id="deviceSearch" placeholder="Например: iPhone, ноутбук, телевизор…" autocomplete="off" />
-      <div class="modalList" id="deviceList">
-        ${flat.map(x => `<button class="pick" type="button" data-pick="${escapeHtml(x.name)}">${escapeHtml(x.name)} <span class="muted">· ${escapeHtml(x.cat)}</span></button>`).join('')}
-      </div>
-      <div class="modalHint">Нужного пункта нет? Выберите «Другая…» и напишите модель в поле проблемы.</div>
-    `;
-    openModal(html);
-
-    const search = $('#deviceSearch');
-    const list = $('#deviceList');
-    const target = document.getElementById(targetInputId);
-
-    function applyFilter(){
-      const q = (search?.value || '').trim().toLowerCase();
-      $$('button.pick', list).forEach(b => {
-        const name = (b.getAttribute('data-pick') || '').toLowerCase();
-        b.style.display = (!q || name.includes(q)) ? '' : 'none';
-      });
-    }
-
-    search?.addEventListener('input', applyFilter);
-    list?.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button.pick');
-      if (!btn) return;
-      const val = btn.getAttribute('data-pick') || '';
-      if (target) target.value = val;
-      closeModal();
-      target?.focus();
-    });
-    search?.focus();
-  }
-
-  // Support both buttons: [data-open-device] sets data-target input id
-  $$('[data-open-device]').forEach(btn => {
-    btn.addEventListener('click', ()=>{
-      const target = btn.getAttribute('data-target') || 'leadDevice';
-      renderDeviceModal(target);
-    });
-  });
-
-  // Price accordion
-  const price = $('#priceList');
-  price?.addEventListener('click', (e)=>{
-    const q = e.target.closest('.qa__q');
-    if (!q) return;
-    q.closest('.qa')?.classList.toggle('open');
-  });
-
-  // FAQ accordion
-  const faq = $('#faqList');
-  faq?.addEventListener('click', (e)=>{
-    const q = e.target.closest('.qa__q');
-    if (!q) return;
-    q.closest('.qa')?.classList.toggle('open');
-  });
-
-  // Copy helper
-  async function copy(text){
-    try{ await navigator.clipboard.writeText(text); return true; }
-    catch(_){
-      const ta = document.createElement('textarea');
+  async function copyToClipboard(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      return true;
+    }catch(_){
+      // fallback
+      const ta = document.createElement("textarea");
       ta.value = text;
-      ta.style.position='fixed';
-      ta.style.opacity='0';
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
       document.body.appendChild(ta);
       ta.select();
-      try{ document.execCommand('copy'); }catch(_2){}
+      try{ document.execCommand("copy"); }catch(_2){}
       ta.remove();
       return true;
     }
   }
 
-  function escapeHtml(s){
-    return String(s||'')
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'",'&#039;');
+  function openTelegramWithText(text){
+    const url = `${LINKS.tg}?text=${encodeURIComponent(text || "")}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+  async function openWhatsAppWithText(text){
+    if (text) await copyToClipboard(text);
+    window.open(LINKS.wa, "_blank", "noopener,noreferrer");
+  }
+  async function openMaxWithText(text){
+    if (text) await copyToClipboard(text);
+    window.open(LINKS.max, "_blank", "noopener,noreferrer");
   }
 
-  function buildLeadMessage(){
-    const device = ($('#leadDevice')?.value || '').trim();
-    const problem = ($('#leadProblem')?.value || '').trim();
-    const urgency = $('#leadUrgency')?.value || '';
-    const contact = ($('#leadContact')?.value || '').trim();
+  // ====== Year in footer ======
+  const y = $("#year");
+  if (y) y.textContent = String(new Date().getFullYear());
 
+  // ====== Mobile menu ======
+  const burger = $("#burger");
+  const mnav = $("#mnav");
+  function setMenu(open){
+    if (!burger || !mnav) return;
+    mnav.hidden = !open;
+    burger.setAttribute("aria-expanded", String(open));
+  }
+  if (burger && mnav){
+    burger.addEventListener("click", () => setMenu(mnav.hidden));
+    mnav.addEventListener("click", (e) => { if (e.target.closest(".mnav__link")) setMenu(false); });
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+  }
+
+  // ====== Smooth anchors ======
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    const el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior:"smooth", block:"start" });
+    setMenu(false);
+  });
+
+  // ====== Reveal animation (safe) ======
+  const revealEls = $$(".reveal");
+  if ("IntersectionObserver" in window){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) en.target.classList.add("in"); });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => io.observe(el));
+  }else{
+    revealEls.forEach(el => el.classList.add("in"));
+  }
+
+  // ====== FAQ accordion ======
+  const faq = $("#faqList");
+  if (faq){
+    faq.addEventListener("click", (e) => {
+      const btn = e.target.closest(".qa__q");
+      if (!btn) return;
+      const box = btn.closest(".qa");
+      if (!box) return;
+      box.classList.toggle("open");
+    });
+  }
+
+  // ====== Photo modal (if exists) ======
+  const modal = $("#modal");
+  const modalImg = $("#modalImg");
+  const modalClose = $("#modalClose");
+  function openPhoto(src){
+    if (!modal || !modalImg) return;
+    modalImg.src = src;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+  }
+  function closePhoto(){
+    if (!modal || !modalImg) return;
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    modalImg.src = "";
+  }
+  $$("[data-photo]").forEach((b) => b.addEventListener("click", () => openPhoto(b.getAttribute("data-photo"))));
+  if (modalClose) modalClose.addEventListener("click", closePhoto);
+  if (modal) modal.addEventListener("click", (e)=>{ if (e.target === modal) closePhoto(); });
+  document.addEventListener("keydown", (e)=>{ if (e.key === "Escape") closePhoto(); });
+
+  // ====== UI Modal (create if missing) ======
+  function ensureUiModal(){
+    let uiModal = $("#uiModal");
+    let uiModalContent = $("#uiModalContent");
+    if (uiModal && uiModalContent) return { uiModal, uiModalContent };
+
+    uiModal = document.createElement("div");
+    uiModal.id = "uiModal";
+    uiModal.className = "uimodal";
+    uiModal.setAttribute("aria-hidden","true");
+    uiModal.innerHTML = `
+      <div class="uimodal__backdrop" data-close="1"></div>
+      <div class="uimodal__panel" role="dialog" aria-modal="true">
+        <button class="uimodal__close" type="button" data-close="1" aria-label="Закрыть">✕</button>
+        <div id="uiModalContent"></div>
+      </div>`;
+    document.body.appendChild(uiModal);
+    uiModalContent = $("#uiModalContent");
+    return { uiModal, uiModalContent };
+  }
+
+  function openUiModal(html){
+    const { uiModal, uiModalContent } = ensureUiModal();
+    uiModalContent.innerHTML = html;
+    uiModal.classList.add("open");
+    uiModal.setAttribute("aria-hidden","false");
+    document.body.classList.add("modal-open");
+  }
+  function closeUiModal(){
+    const uiModal = $("#uiModal");
+    if (!uiModal) return;
+    uiModal.classList.remove("open");
+    uiModal.setAttribute("aria-hidden","true");
+    document.body.classList.remove("modal-open");
+  }
+
+  // close handlers
+  document.addEventListener("click", (e)=>{
+    const uiModal = $("#uiModal");
+    if (!uiModal || !uiModal.classList.contains("open")) return;
+    const t = e.target;
+    if (t && t.dataset && t.dataset.close === "1") closeUiModal();
+  });
+  document.addEventListener("keydown", (e)=>{
+    const uiModal = $("#uiModal");
+    if (e.key === "Escape" && uiModal && uiModal.classList.contains("open")) closeUiModal();
+  });
+
+  // ====== Lead message builder ======
+  function buildLeadMessage(extra){
+    const device = $("#leadDevice")?.value?.trim() || "";
+    const problem = $("#leadProblem")?.value?.trim() || "";
+    const urgency = $("#leadUrgency")?.value || "";
+    const contact = $("#leadContact")?.value?.trim() || "";
     const parts = [];
-    parts.push('Здравствуйте! Заявка с сайта «В ремонте».');
+    parts.push("Здравствуйте! Заявка с сайта «В ремонте».");
     if (device) parts.push(`Устройство: ${device}`);
     if (problem) parts.push(`Проблема: ${problem}`);
     if (urgency) parts.push(`Срочность: ${urgency}`);
     if (contact) parts.push(`Контакт: ${contact}`);
-    parts.push('');
-    parts.push('Отправлено с сайта vremonte61.online');
-    return parts.join('\n');
+    if (extra) parts.push(extra);
+    parts.push("");
+    parts.push("Отправлено с сайта vremonte61.online");
+    return parts.join("\n");
   }
 
-  function openWithText(url, text){
-    // WhatsApp/MAX часто удобнее: сначала копируем текст, потом открываем чат
-    copy(text).finally(()=> window.open(url, '_blank', 'noopener,noreferrer'));
+  // Lead form actions
+  const leadForm = $("#leadForm");
+  if (leadForm){
+    leadForm.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      openTelegramWithText(buildLeadMessage());
+    });
+  }
+  $("#sendWhatsApp")?.addEventListener("click", ()=> openWhatsAppWithText(buildLeadMessage()));
+  $("#sendMax")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
+  $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
+
+  // ====== Static template to Telegram (fallback) ======
+  function openTemplateToTG(text){
+    openTelegramWithText(text || "Здравствуйте!");
   }
 
-  // Form submit
-  const form = $('#leadForm');
-  const channel = $('#leadChannel');
-  form?.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const text = buildLeadMessage();
-    const ch = channel?.value || 'tg';
+  // ====== Modals content ======
+  function openTimeModal(){
+    openUiModal(`
+      <h3>Срок ремонта</h3>
+      <p class="muted">Срок зависит от модели, сложности неисправности и наличия запчастей.</p>
+      <ul class="ul">
+        <li><b>Типовые работы</b> (разъём, чистка, простые замены) — часто в день обращения.</li>
+        <li><b>Средняя сложность</b> — обычно 1–3 дня.</li>
+        <li><b>Сложный ремонт / плата</b> или редкие запчасти — дольше, согласуем после диагностики.</li>
+      </ul>
+      <div class="actions">
+        <button class="btn btn--tg" type="button" data-send="tg" data-msg="time">Написать в Telegram</button>
+        <button class="btn btn--wa" type="button" data-send="wa" data-msg="time">WhatsApp</button>
+        <button class="btn btn--max" type="button" data-send="max" data-msg="time">MAX</button>
+      </div>
+    `);
+  }
 
-    if (ch === 'tg'){
-      const url = `${LINKS.tg}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    } else if (ch === 'wa'){
-      // open wa chat; message in clipboard
-      openWithText(LINKS.wa, text);
-    } else {
-      // max
-      openWithText(LINKS.max, text);
+  function openCourierModal(){
+    openUiModal(`
+      <h3>Курьер / доставка</h3>
+      <p class="muted">Заполни поля — мы сформируем сообщение и откроем выбранный мессенджер.</p>
+
+      <form class="form" id="courierForm" style="margin-top:10px">
+        <label class="field">
+          <span>Адрес забора / доставки</span>
+          <input name="addr" placeholder="Город, улица, дом, подъезд, этаж" required>
+        </label>
+        <label class="field">
+          <span>Когда удобно</span>
+          <input name="when" placeholder="Сегодня после 18:00 / Завтра 12–15" required>
+        </label>
+        <label class="field">
+          <span>Устройство</span>
+          <input name="dev" placeholder="Напр.: ТВ Samsung / iPhone 13 / кофемашина Philips" required>
+        </label>
+        <label class="field">
+          <span>Проблема</span>
+          <input name="issue" placeholder="Коротко опиши неисправность" required>
+        </label>
+        <label class="field">
+          <span>Комментарий (необязательно)</span>
+          <input name="comment" placeholder="Код домофона, ориентир, и т.д.">
+        </label>
+
+        <div class="actions">
+          <button class="btn btn--tg" type="button" data-courier-send="tg">Отправить в Telegram</button>
+          <button class="btn btn--wa" type="button" data-courier-send="wa">WhatsApp</button>
+          <button class="btn btn--max" type="button" data-courier-send="max">MAX</button>
+        </div>
+      </form>
+    `);
+  }
+
+  const MODEL_DATA = {
+    phone: {
+      title: "Телефоны",
+      // used by phone-specific renderer
+      iPhoneGroups: [
+        { name:"iPhone 6–8", items:["iPhone 6","iPhone 6 Plus","iPhone 6s","iPhone 6s Plus","iPhone SE (1)","iPhone 7","iPhone 7 Plus","iPhone 8","iPhone 8 Plus"] },
+        { name:"iPhone X–11", items:["iPhone X","iPhone XR","iPhone XS","iPhone XS Max","iPhone 11","iPhone 11 Pro","iPhone 11 Pro Max","iPhone SE (2)"] },
+        { name:"iPhone 12–13", items:["iPhone 12 mini","iPhone 12","iPhone 12 Pro","iPhone 12 Pro Max","iPhone 13 mini","iPhone 13","iPhone 13 Pro","iPhone 13 Pro Max","iPhone SE (3)"] },
+        { name:"iPhone 14–15", items:["iPhone 14","iPhone 14 Plus","iPhone 14 Pro","iPhone 14 Pro Max","iPhone 15","iPhone 15 Plus","iPhone 15 Pro","iPhone 15 Pro Max"] },
+        { name:"iPhone 16–17", items:["iPhone 16","iPhone 16 Plus","iPhone 16 Pro","iPhone 16 Pro Max","iPhone 17","iPhone 17 Plus","iPhone 17 Pro","iPhone 17 Pro Max"] },
+      ],
+      androidBrands: {
+        "Samsung": ["Galaxy A02/A03/A04","Galaxy A10/A20/A30","Galaxy A12/A13/A14","Galaxy A22/A23/A24","Galaxy A32/A33/A34","Galaxy A42/A52/A53/A54","Galaxy A72","Galaxy S20/S21/S22/S23/S24","Galaxy Note 10/20","Galaxy M12/M21/M31/M51"],
+        "Xiaomi": ["Mi 9/10/11","Xiaomi 11T/12T/13T","Xiaomi 12/13/14","Xiaomi Mix","Xiaomi (другая модель)"],
+        "Redmi": ["Redmi 9/10/11/12","Redmi Note 8/9/10/11/12/13","Redmi Note Pro (серии)","Redmi A1/A2"],
+        "POCO": ["POCO X3/X4/X5","POCO F3/F4/F5","POCO M3/M4/M5"],
+        "Honor": ["Honor 8X/9X","Honor 10/20/30/50/70/90","Honor X8/X9/X10","Honor Magic (серии)"],
+        "Huawei": ["P20/P30/P40","Mate 20/30/40","Nova (серии)","Y (серии)"],
+        "Realme": ["Realme C (серии)","Realme 7/8/9/10/11","Realme GT (серии)"],
+        "Tecno": ["Spark (серии)","Pova (серии)","Camon (серии)"],
+        "Infinix": ["Hot (серии)","Note (серии)","Zero (серии)"],
+        "OnePlus": ["OnePlus 8/9/10/11/12","Nord (серии)"],
+        "OPPO": ["A (серии)","Reno (серии)","Find (серии)"],
+        "Vivo": ["Y (серии)","V (серии)","X (серии)"],
+        "Google Pixel": ["Pixel 5/6/7/8","Pixel Pro (серии)"],
+        "Другое": ["Другая модель Android (укажу в тексте)"],
+      },
+      // fallback tabs (not used in new UI, but keep for compatibility)
+      tabs: [
+        { key:"apple", name:"Apple (iPhone)", items:["iPhone (выберу из списка)"] },
+        { key:"android", name:"Android", items:["Android (выберу из списка)"] },
+      ]
+    },
+    tv: {
+      title: "Телевизоры",
+      tabs: [
+        { key:"tv", name:"Бренды", items:["Samsung","LG","Sony","Philips","TCL","Hisense","Xiaomi","Haier","BBK","DEXP","Другое"] }
+      ]
+    },
+    coffee: {
+      title: "Кофемашины",
+      tabs: [
+        { key:"coffee", name:"Бренды", items:["DeLonghi","Philips","Saeco","Jura","Bosch","Krups","Nivona","Siemens","Melitta","Другое"] }
+      ]
+    },
+    print: {
+      title: "Принтеры",
+      tabs: [
+        { key:"print", name:"Бренды", items:["HP","Canon","Epson","Brother","Samsung","Xerox","Kyocera","Ricoh","Pantum","Другое"] }
+      ]
+    },
+    dyson: {
+      title: "Dyson / бытовая",
+      tabs: [
+        { key:"dyson", name:"Модели", items:["Dyson V6","Dyson V7","Dyson V8","Dyson V10","Dyson V11","Dyson V12","Dyson V15","Supersonic (фен)","Airwrap","Другое"] }
+      ]
+    },
+    pc: {
+      title: "ПК / ноутбуки",
+      tabs: [
+        { key:"laptop", name:"Ноутбуки", items:["ASUS","Acer","Lenovo","HP","MSI","Dell","Apple MacBook","Huawei","Honor","Другое"] },
+        { key:"pc", name:"ПК/моноблок", items:["Сборный ПК","Моноблок","Мини‑ПК","Другое"] }
+      ]
+    },
+    ps: {
+      title: "Приставки",
+      tabs: [
+        { key:"console", name:"Платформа", items:["PlayStation 4","PlayStation 5","Xbox One","Xbox Series","Nintendo Switch","Другое"] }
+      ]
+    },
+    water: { // общий список "что ремонтируем"
+      title: "Что ремонтируем",
+      tabs: [
+        { key:"phones", name:"Телефоны", items:["Apple (iPhone)","Android (Samsung/Xiaomi/… )"] },
+        { key:"tv", name:"Телевизоры", items:["Samsung","LG","Sony","Philips","TCL/Hisense","Другое"] },
+        { key:"coffee", name:"Кофемашины", items:["DeLonghi","Philips/Saeco","Jura","Bosch/Krups","Другое"] },
+        { key:"dyson", name:"Dyson/бытовая", items:["V6/V7/V8","V10/V11","V12/V15","Supersonic/Airwrap","Другое"] },
+        { key:"print", name:"Принтеры", items:["HP","Canon","Epson","Brother","Другое"] },
+        { key:"pc", name:"ПК/ноутбуки", items:["Ноутбуки","ПК/моноблок","Другое"] },
+        { key:"tablet", name:"Планшеты", items:["iPad","Samsung Tab","Huawei","Lenovo","Другое"] },
+      ]
+    }
+  };
+
+  
+  function renderPhoneModal(){
+    // Phone modal: Apple -> iPhone models; Android -> brand -> models (accordion-like)
+    const cfg = MODEL_DATA.phone;
+    const iPhoneGroups = cfg.iPhoneGroups || [];
+    const androidBrands = cfg.androidBrands || {};
+
+    const renderApple = () => {
+      const blocks = iPhoneGroups.map(g => `
+        <div class="card" style="padding:12px; margin-top:10px">
+          <b style="display:block; margin-bottom:8px">${escHtml(g.name)}</b>
+          <div class="modelgrid">
+            ${g.items.map(m => `<button type="button" class="modelitem" data-pick="${escHtml("Apple (iPhone) — " + m)}">${escHtml(m)}</button>`).join("")}
+          </div>
+        </div>
+      `).join("");
+      return `<div class="modelswrap" id="phoneList">${blocks}</div>`;
+    };
+
+    const renderAndroidBrands = () => `
+      <div class="modelswrap" id="phoneList">
+        <div class="modelgrid">
+          ${Object.keys(androidBrands).map(b => `<button type="button" class="modelitem" data-android-brand="${escHtml(b)}">${escHtml(b)}</button>`).join("")}
+        </div>
+        <div id="androidModels" style="margin-top:12px"></div>
+      </div>
+    `;
+
+    openUiModal(`
+      <h3>Телефоны</h3>
+      <p class="muted">Выбери платформу и модель — ниже появится список. Окно не «прыгает», можно листать вверх/вниз.</p>
+
+      <div class="chips" style="margin:10px 0 8px">
+        <button class="chip chip--alt" type="button" data-phone-tab="apple">Apple (iPhone)</button>
+        <button class="chip" type="button" data-phone-tab="android">Android</button>
+      </div>
+
+      <div id="phoneTabBody">
+        ${renderApple()}
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <label class="field">
+          <span>Выбрано</span>
+          <input id="mPicked" placeholder="Выбери модель выше" readonly>
+        </label>
+
+        <label class="field" style="margin-top:10px">
+          <span>Проблема</span>
+          <input id="mIssue" placeholder="Разбит дисплей / не заряжается / нет сети…" required>
+        </label>
+
+        <div class="row" style="margin-top:10px">
+          <label class="field">
+            <span>Срочность</span>
+            <select id="mUrgency">
+              <option>Не срочно</option>
+              <option>Сегодня</option>
+              <option>Срочно</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Контакт (по желанию)</span>
+            <input id="mContact" placeholder="+7... или @telegram">
+          </label>
+        </div>
+
+        <div class="actions" style="margin-top:12px">
+          <button class="btn btn--tg" type="button" data-model-send="tg" data-cat="phone">Отправить в Telegram</button>
+          <button class="btn btn--wa" type="button" data-model-send="wa" data-cat="phone">WhatsApp</button>
+          <button class="btn btn--max" type="button" data-model-send="max" data-cat="phone">MAX</button>
+        </div>
+      </div>
+    `);
+
+    // bind tab switching (delegated by doc click handler below)
+    // Android brand click handled by global delegation too.
+    function setPhoneTab(tab){
+      const body = $("#phoneTabBody");
+      if (!body) return;
+      if (tab === "android") body.innerHTML = renderAndroidBrands();
+      else body.innerHTML = renderApple();
+      // reset android models area if any
+      $("#androidModels")?.replaceChildren();
+    }
+    // store function on modal for later use
+    const panel = $(".uimodal__panel");
+    if (panel) panel.dataset.phoneTab = "apple";
+    // initial pick placeholder
+  }
+
+function renderModelsModal(categoryKey){
+    if (categoryKey === "phone") return renderPhoneModal();
+    const data = MODEL_DATA[categoryKey] || MODEL_DATA.water;
+    const tabs = data.tabs || [];
+    const tabButtons = tabs.map((t,i)=>`
+      <button class="chip ${i===0?'chip--alt':''}" type="button" data-tab="${escHtml(t.key)}">${escHtml(t.name)}</button>
+    `).join("");
+
+    const firstKey = tabs[0]?.key || "tab";
+    const listHtml = (key)=>{
+      const tab = tabs.find(t=>t.key===key) || tabs[0];
+      const items = tab?.items || [];
+      return `<div class="modelgrid">
+        ${items.map(it=>`<button type="button" class="modelitem" data-pick="${escHtml(it)}">${escHtml(it)}</button>`).join("")}
+      </div>`;
+    };
+
+    openUiModal(`
+      <h3>${escHtml(data.title)}</h3>
+      <p class="muted">Выбери категорию/бренд/модель, опиши проблему — сформируем сообщение.</p>
+
+      <div class="chips" style="margin:10px 0 8px">
+        ${tabButtons}
+      </div>
+
+      <div id="modelsList" class="modelswrap">
+        ${listHtml(firstKey)}
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <label class="field">
+          <span>Выбрано</span>
+          <input id="mPicked" placeholder="Выбери пункт выше" readonly>
+        </label>
+
+        <label class="field" style="margin-top:10px">
+          <span>Проблема</span>
+          <input id="mIssue" placeholder="Не включается / нет изображения / не заряжается…" required>
+        </label>
+
+        <div class="row" style="margin-top:10px">
+          <label class="field">
+            <span>Срочность</span>
+            <select id="mUrgency">
+              <option>Не срочно</option>
+              <option>Сегодня</option>
+              <option>Срочно</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Контакт (по желанию)</span>
+            <input id="mContact" placeholder="+7... или @telegram">
+          </label>
+        </div>
+
+        <div class="actions" style="margin-top:12px">
+          <button class="btn btn--tg" type="button" data-model-send="tg" data-cat="${escHtml(categoryKey||'water')}">Отправить в Telegram</button>
+          <button class="btn btn--wa" type="button" data-model-send="wa" data-cat="${escHtml(categoryKey||'water')}">WhatsApp</button>
+          <button class="btn btn--max" type="button" data-model-send="max" data-cat="${escHtml(categoryKey||'water')}">MAX</button>
+        </div>
+      </div>
+    `);
+  }
+
+  // ====== Modal button actions (event delegation) ======
+  document.addEventListener("click", async (e)=>{
+    // Time modal send
+    const send = e.target.closest("[data-send]");
+    if (send){
+      const type = send.getAttribute("data-send");
+      const msgKey = send.getAttribute("data-msg");
+      const msg = (msgKey === "time")
+        ? "Здравствуйте! Подскажите, пожалуйста, по срокам ремонта. Устройство: ____. Проблема: ____."
+        : "Здравствуйте!";
+      if (type === "tg") openTelegramWithText(msg);
+      if (type === "wa") await openWhatsAppWithText(msg);
+      if (type === "max") await openMaxWithText(msg);
+      return;
+    }
+
+    // Courier modal send
+    const cs = e.target.closest("[data-courier-send]");
+    if (cs){
+      const form = $("#courierForm");
+      if (!form) return;
+      const fd = new FormData(form);
+      const addr = String(fd.get("addr")||"").trim();
+      const when = String(fd.get("when")||"").trim();
+      const dev = String(fd.get("dev")||"").trim();
+      const issue = String(fd.get("issue")||"").trim();
+      const comment = String(fd.get("comment")||"").trim();
+
+      if (!addr || !when || !dev || !issue){
+        alert("Заполни обязательные поля.");
+        return;
+      }
+
+      const msg = [
+        "Здравствуйте! Нужен курьер / доставка.",
+        `Адрес: ${addr}`,
+        `Когда удобно: ${when}`,
+        `Устройство: ${dev}`,
+        `Проблема: ${issue}`,
+        comment ? `Комментарий: ${comment}` : null,
+        "",
+        "Отправлено с сайта vremonte61.online"
+      ].filter(Boolean).join("\n");
+
+      const type = cs.getAttribute("data-courier-send");
+      if (type === "tg") openTelegramWithText(msg);
+      if (type === "wa") await openWhatsAppWithText(msg);
+      if (type === "max") await openMaxWithText(msg);
+      return;
+    }
+
+    // Models tab switch
+    const tabBtn = e.target.closest("[data-tab]");
+    if (tabBtn){
+      const key = tabBtn.getAttribute("data-tab");
+      const title = $("#uiModalContent h3")?.textContent || "";
+      // find dataset by title match (simple)
+      let data = null;
+      for (const k in MODEL_DATA){
+        if (MODEL_DATA[k].title === title){ data = MODEL_DATA[k]; break; }
+      }
+      if (!data) return;
+      const tab = data.tabs.find(t=>t.key===key) || data.tabs[0];
+      const list = $("#modelsList");
+      if (!list) return;
+      list.innerHTML = `<div class="modelgrid">
+        ${(tab.items||[]).map(it=>`<button type="button" class="modelitem" data-pick="${escHtml(it)}">${escHtml(it)}</button>`).join("")}
+      </div>`;
+      // UI toggle active-ish
+      $$(".chips [data-tab]").forEach(b=>b.classList.remove("chip--alt"));
+      tabBtn.classList.add("chip--alt");
+      return;
+    }
+
+    
+    // Phone modal: switch Apple/Android tabs
+    const ptab = e.target.closest("[data-phone-tab]");
+    if (ptab){
+      const tab = ptab.getAttribute("data-phone-tab") || "apple";
+      const body = $("#phoneTabBody");
+      if (!body) return;
+      // toggle chip styles
+      $$(".chips [data-phone-tab]").forEach(b=>b.classList.remove("chip--alt"));
+      ptab.classList.add("chip--alt");
+
+      // Re-render using lightweight templates stored in renderPhoneModal scope by regenerating via openByKey route
+      // (We simply swap inner HTML based on tab, using inline helpers defined in renderPhoneModal via dataset flags)
+      // Here we rebuild minimal content to avoid modal resize jumps.
+      if (tab === "android"){
+        body.innerHTML = `<div class="modelswrap" id="phoneList">
+          <div class="modelgrid">
+            ${Object.keys(MODEL_DATA.phone.androidBrands).map(b => `<button type="button" class="modelitem" data-android-brand="${escHtml(b)}">${escHtml(b)}</button>`).join("")}
+          </div>
+          <div id="androidModels" style="margin-top:12px"></div>
+        </div>`;
+      } else {
+        body.innerHTML = `<div class="modelswrap" id="phoneList">
+          ${MODEL_DATA.phone.iPhoneGroups.map(g => `
+            <div class="card" style="padding:12px; margin-top:10px">
+              <b style="display:block; margin-bottom:8px">${escHtml(g.name)}</b>
+              <div class="modelgrid">
+                ${g.items.map(m => `<button type="button" class="modelitem" data-pick="${escHtml("Apple (iPhone) — " + m)}">${escHtml(m)}</button>`).join("")}
+              </div>
+            </div>
+          `).join("")}
+        </div>`;
+      }
+      return;
+    }
+
+    // Android brand click -> show models below (without modal jumping)
+    const ab = e.target.closest("[data-android-brand]");
+    if (ab){
+      const brand = ab.getAttribute("data-android-brand") || "";
+      const wrap = $("#androidModels");
+      if (!wrap) return;
+      const models = (MODEL_DATA.phone.androidBrands && MODEL_DATA.phone.androidBrands[brand]) ? MODEL_DATA.phone.androidBrands[brand] : [];
+      wrap.innerHTML = `
+        <div class="card" style="padding:12px">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
+            <b>${escHtml(brand)}</b>
+            <button type="button" class="btn btn--small btn--soft" data-android-back="1">Назад к брендам</button>
+          </div>
+          <div class="modelgrid" style="margin-top:10px">
+            ${models.map(m => `<button type="button" class="modelitem" data-pick="${escHtml("Android — " + brand + " — " + m)}">${escHtml(m)}</button>`).join("")}
+          </div>
+        </div>
+      `;
+      // gentle scroll to the revealed area
+      wrap.scrollIntoView({ behavior:"smooth", block:"nearest" });
+      return;
+    }
+
+    const aback = e.target.closest("[data-android-back]");
+    if (aback){
+      const wrap = $("#androidModels");
+      if (wrap) wrap.innerHTML = "";
+      return;
+    }
+
+// Pick model item
+    const pick = e.target.closest("[data-pick]");
+    if (pick){
+      const v = pick.getAttribute("data-pick") || "";
+      const inp = $("#mPicked");
+      if (inp) inp.value = v;
+      return;
+    }
+
+    // Send model request
+    const ms = e.target.closest("[data-model-send]");
+    if (ms){
+      const picked = $("#mPicked")?.value?.trim() || "";
+      const issue = $("#mIssue")?.value?.trim() || "";
+      const urgency = $("#mUrgency")?.value || "";
+      const contact = $("#mContact")?.value?.trim() || "";
+      if (!picked || !issue){
+        alert("Выбери модель/пункт и опиши проблему.");
+        return;
+      }
+      const cat = ms.getAttribute("data-cat") || "water";
+      const msg = [
+        "Здравствуйте! Хочу узнать стоимость ремонта.",
+        `Категория: ${MODEL_DATA[cat]?.title || "Техника"}`,
+        `Модель/пункт: ${picked}`,
+        `Проблема: ${issue}`,
+        urgency ? `Срочность: ${urgency}` : null,
+        contact ? `Контакт: ${contact}` : null,
+        "",
+        "Отправлено с сайта vremonte61.online"
+      ].filter(Boolean).join("\n");
+
+      const type = ms.getAttribute("data-model-send");
+      if (type === "tg") openTelegramWithText(msg);
+      if (type === "wa") await openWhatsAppWithText(msg);
+      if (type === "max") await openMaxWithText(msg);
+      return;
     }
   });
 
-  // Quick buttons (footer/mobile)
-  $$('[data-open="tg"]').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault(); window.open(LINKS.tg,'_blank','noopener,noreferrer');}));
-  $$('[data-open="wa"]').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault(); window.open(LINKS.wa,'_blank','noopener,noreferrer');}));
-  $$('[data-open="max"]').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault(); window.open(LINKS.max,'_blank','noopener,noreferrer');}));
+  // ====== Chips & buttons mapping ======
+  function openByKey(key){
+    // chips on hero
+    if (key === "time") return openTimeModal();
+    if (key === "pickup") return openCourierModal();
+    if (key === "water") return renderModelsModal("water");
+    if (key === "tv") return renderModelsModal("tv");
+    if (key === "coffee") return renderModelsModal("coffee");
+    if (key === "print") return renderModelsModal("print");
 
-  // Cookie banner
-  const cookieBanner = $('#cookieBanner');
-  const cookieAccept = $('#cookieAccept');
-  const cookieClose = $('#cookieClose');
-  function setCookieVisible(show){
-    if (!cookieBanner) return;
-    cookieBanner.classList.toggle('is-hidden', !show);
-    document.body.classList.toggle('cookie-visible', show);
+    if (key === "price"){
+      return openTemplateToTG("Здравствуйте! Хочу узнать ориентировочную стоимость ремонта.\nКатегория: ____\nМарка/модель: ____\nПроблема: ____\n\nОтправлено с сайта vremonte61.online");
+    }
   }
-  try{
-    const accepted = localStorage.getItem('cookieAccepted') === '1';
-    setCookieVisible(!accepted);
-  }catch(_){ setCookieVisible(true); }
 
-  cookieAccept?.addEventListener('click', ()=>{
-    try{ localStorage.setItem('cookieAccepted','1'); }catch(_){ }
-    setCookieVisible(false);
+  // delegate click for [data-template]
+  document.addEventListener("click", (e)=>{
+    const b = e.target.closest("[data-template]");
+    if (!b) return;
+    const key = b.getAttribute("data-template");
+    if (!key) return;
+    e.preventDefault();
+    openByKey(key);
   });
-  cookieClose?.addEventListener('click', ()=> setCookieVisible(false));
+
+  // 'Узнать цену' buttons in services (data-service)
+  document.addEventListener("click", (e)=>{
+    const b = e.target.closest("[data-service]");
+    if (!b) return;
+    const key = b.getAttribute("data-service");
+    // Instead of opening TG immediately, open models modal (as requested)
+    // Map service -> category
+    const map = { phone:"phone", pc:"pc", tv:"tv", ps:"ps", coffee:"coffee", dyson:"dyson" };
+    const cat = map[key] || "water";
+    e.preventDefault();
+    if (cat === "phone") renderPhoneModal(); else renderModelsModal(cat);
+  });
+
+  // ToTop (if exists)
+  const toTop = $("#toTop");
+  if (toTop){
+    const onScroll = () => { if (window.scrollY > 600) toTop.classList.add("show"); else toTop.classList.remove("show"); };
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+    toTop.addEventListener("click", ()=> window.scrollTo({ top:0, behavior:"smooth" }));
+  }
 
 })();
