@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#0b1022" />
+  <title>Документы для клиентов — «В ремонте»</title>
+  <meta name="description" content="Шаблоны документов для клиентов сервисного центра «В ремонте»: договор и акт выполненных работ."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=9"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__row">
+      <a class="brand" href="index.html" aria-label="На главную">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">В ремонте</span>
+      </a>
+      <div class="topbar__actions">
+        <a class="pill pill--ghost" href="tel:+79255156161">Позвонить</a>
+        <a class="pill pill--tg" href="https://t.me/vremonte161" target="_blank" rel="noopener">Telegram</a>
+        <a class="pill pill--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">MAX</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="head">
+          <div>
+            <h2>Документы для клиентов</h2>
+            <p>Шаблоны можно открыть, скачать и распечатать. Персональные данные заполняются при оформлении в сервисе.</p>
+          </div>
+          <div class="head__actions">
+            <a class="btn btn--soft btn--small" href="index.html#lead">Оставить заявку</a>
+            <a class="btn btn--small" href="index.html#find">Контакты</a>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:16px">
+          <article class="card">
+            <div class="card__top"><span class="ic">📄</span><b>Договор на оказание услуг</b></div>
+            <ul class="ul">
+              <li>описание устройства и работ</li>
+              <li>согласование цены и сроков</li>
+              <li>гарантийные условия и ответственность</li>
+            </ul>
+            <div class="card__cta">
+              <a class="btn btn--small" href="docs/dogovor.pdf" target="_blank" rel="noopener">Открыть PDF</a>
+              <a class="btn btn--soft btn--small" href="docs/dogovor.pdf" download>Скачать</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__top"><span class="ic">🧾</span><b>Акт выполненных работ</b></div>
+            <ul class="ul">
+              <li>перечень выполненных работ</li>
+              <li>установленные запчасти</li>
+              <li>итоговая стоимость и дата</li>
+            </ul>
+            <div class="card__cta">
+              <a class="btn btn--small" href="docs/akt.pdf" target="_blank" rel="noopener">Открыть PDF</a>
+              <a class="btn btn--soft btn--small" href="docs/akt.pdf" download>Скачать</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__top"><span class="ic">ℹ️</span><b>Важно</b></div>
+            <ul class="ul">
+              <li>Документы — шаблоны без персональных данных.</li>
+              <li>Можем отправить документы в Telegram / WhatsApp / MAX.</li>
+              <li>Оформление в сервисе обычно занимает 3–5 минут.</li>
+            </ul>
+            <div class="card__cta">
+              <a class="btn btn--small" href="tel:+79255156161">Позвонить</a>
+              <a class="btn btn--soft btn--small" href="https://t.me/vremonte161" target="_blank" rel="noopener">Написать</a>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>© <span id="year"></span> «В ремонте»</div>
+    <div class="footer__links">
+      <a href="index.html#services">Услуги</a>
+      <a href="index.html#find">Контакты</a>
+      <a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>
+      <a href="offer.html" target="_blank" rel="noopener">Публичная оферта</a>
+      <a href="cookie-policy.html" target="_blank" rel="noopener">Cookie</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
