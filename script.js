@@ -735,4 +735,194 @@ function renderModelsModal(categoryKey){
     toTop.addEventListener("click", ()=> window.scrollTo({ top:0, behavior:"smooth" }));
   }
 
+
+
+  // ====== Price calculator ======
+  const CALC = {
+    phone: {
+      label: "Телефон",
+      issues: {
+        "Замена дисплея": "от 2500 ₽",
+        "Замена аккумулятора": "от 1000 ₽",
+        "Не включается / перезагрузки": "после диагностики",
+        "Не заряжается / разъём": "после диагностики",
+        "Попала влага": "после диагностики",
+      }
+    },
+    pc: {
+      label: "Ноутбук / ПК",
+      issues: {
+        "Чистка + термопаста": "от 1500 ₽",
+        "Установка Windows": "от 1500 ₽",
+        "Замена SSD / апгрейд": "от 1000 ₽",
+        "Не включается": "после диагностики",
+        "Перегрев / шумит": "от 1500 ₽",
+      }
+    },
+    tv: {
+      label: "TV",
+      issues: {
+        "Подсветка": "от 3000 ₽",
+        "Плата питания": "от 2500 ₽",
+        "Нет изображения / полосы": "после диагностики",
+        "Нет звука": "после диагностики",
+      }
+    },
+    coffee: {
+      label: "Кофемашина",
+      issues: {
+        "Не подаёт воду / течёт": "от 2000 ₽",
+        "Не греет": "от 2000 ₽",
+        "Ошибка / не включается": "после диагностики",
+        "Чистка / обслуживание": "от 2000 ₽",
+      }
+    },
+    printer: {
+      label: "Принтер",
+      issues: {
+        "Не захватывает бумагу": "от 1500 ₽",
+        "Печатает полосами": "от 1500 ₽",
+        "Ошибка / не видит картридж": "после диагностики",
+        "Профилактика / чистка": "от 1500 ₽",
+      }
+    },
+    dyson: {
+      label: "Dyson",
+      issues: {
+        "Не включается / питание": "от 2000 ₽",
+        "Кнопка / контакт": "от 2000 ₽",
+        "Ошибка / мигает": "после диагностики",
+      }
+    },
+    other: {
+      label: "Другое",
+      issues: {
+        "Опишите проблему": "после диагностики",
+      }
+    }
+  };
+
+  function setupCalc(){
+    const devSel = $("#calcDevice");
+    const issueSel = $("#calcIssue");
+    const out = $("#calcResult");
+    const prefillBtn = $("#calcPrefill");
+    if(!devSel || !issueSel || !out) return;
+
+    const renderIssues = () => {
+      const key = devSel.value;
+      const issues = CALC[key]?.issues || {};
+      issueSel.innerHTML = "";
+      Object.keys(issues).forEach((name, i) => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        issueSel.appendChild(opt);
+      });
+      update();
+    };
+
+    const update = () => {
+      const key = devSel.value;
+      const issue = issueSel.value;
+      const price = (CALC[key]?.issues || {})[issue] || "после диагностики";
+      out.innerHTML = `<span class="muted">Ориентир:</span> <b>${escHtml(price)}</b> <span class="muted">• Точно скажем после диагностики</span>`;
+    };
+
+    devSel.addEventListener("change", renderIssues);
+    issueSel.addEventListener("change", update);
+    renderIssues();
+
+    prefillBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const key = devSel.value;
+      const deviceLabel = CALC[key]?.label || "Устройство";
+      const issue = issueSel.value;
+      const deviceInput = $("#leadDevice");
+      const issueInput = $("#leadProblem");
+      if(deviceInput) deviceInput.value = deviceLabel;
+      if(issueInput) issueInput.value = issue;
+      location.hash = "#lead";
+      setTimeout(() => deviceInput?.focus(), 300);
+    });
+  }
+
+  // ====== Device chooser ======
+  const CHOOSE_ISSUES = {
+    "Телефон": ["Треснул экран", "Не держит заряд", "Не заряжается", "Не включается", "Нет звука/микрофона", "Попала влага"],
+    "Ноутбук/ПК": ["Перегрев/шум", "Не включается", "Тормозит", "Нужна Windows", "Не видит диск/SSD", "Разбит экран/матрица"],
+    "Телевизор": ["Нет подсветки", "Не включается", "Нет изображения", "Полосы/артефакты", "Нет звука", "Проблемы с HDMI"],
+    "Кофемашина": ["Не подаёт воду", "Не греет", "Течёт", "Ошибки", "Чистка/обслуживание"],
+    "Принтер": ["Не захватывает бумагу", "Печатает полосами", "Ошибка/не печатает", "Не видит картридж", "Чистка/профилактика"],
+    "Dyson": ["Не включается", "Кнопка/контакт", "Ошибка/мигает", "Питание", "Слабая тяга (диагностика)"],
+    "Другое": ["Опишите проблему своими словами"]
+  };
+
+  function setupChooser(){
+    const root = $("#chooser");
+    if(!root) return;
+    const tabs = $$(".chip", root);
+    const issuesBox = $("#chooseIssues");
+    const inDev = $("#chooseDevice");
+    const inProb = $("#chooseProblem");
+    const fillBtn = $("#chooseFill");
+
+    let active = "Телефон";
+
+    const render = () => {
+      tabs.forEach(t => t.classList.toggle("is-active", t.dataset.device === active));
+      const list = CHOOSE_ISSUES[active] || [];
+      issuesBox.innerHTML = "";
+      list.forEach(label => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "issuebtn";
+        b.textContent = label;
+        b.addEventListener("click", () => {
+          inProb.value = label;
+          prefillToLead();
+        });
+        issuesBox.appendChild(b);
+      });
+      if(!inDev.value) inDev.value = active;
+      if(!inProb.value) inProb.value = "";
+    };
+
+    const prefillToLead = () => {
+      const deviceInput = $("#leadDevice");
+      const issueInput = $("#leadProblem");
+      if(deviceInput) deviceInput.value = inDev.value || active;
+      if(issueInput) issueInput.value = inProb.value || "";
+    };
+
+    tabs.forEach(t => t.addEventListener("click", () => {
+      active = t.dataset.device || active;
+      if(!inDev.value || inDev.value === "Телефон" || inDev.value === "Ноутбук/ПК" || inDev.value === "Телевизор" || inDev.value === "Кофемашина" || inDev.value === "Принтер" || inDev.value === "Dyson" || inDev.value === "Другое") {
+        inDev.value = active;
+      }
+      render();
+    }));
+
+    fillBtn?.addEventListener("click", () => {
+      prefillToLead();
+      location.hash="#lead";
+      setTimeout(() => $("#leadDevice")?.focus(), 250);
+    });
+
+    $("#chooseGo")?.addEventListener("click", () => {
+      prefillToLead();
+    });
+
+    inDev?.addEventListener("input", prefillToLead);
+    inProb?.addEventListener("input", prefillToLead);
+
+    active = "Телефон";
+    render();
+  }
+
+
+  // Init new blocks
+  setupCalc();
+  setupChooser();
+
 })();
