@@ -9,8 +9,8 @@
     phone: "tel:+79255156161",
     tgUser: "vremonte161",
     tg: "https://t.me/vremonte161",
-    wa: "https://wa.me/message/BMMLIHWUSQRHC1",
-    max: "https://max.ru/u/f9LHodD0cOLtKrUPwUO1eMRcfm0zwTD3C78xZc-I54h1b5NlXuetri89BNg",
+    vk: "https://vk.me/club235742663",
+    max: "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8",
   };
 
   // ====== Helpers ======
@@ -48,9 +48,10 @@
     const url = `${LINKS.tg}?text=${encodeURIComponent(text || "")}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
-  async function openWhatsAppWithText(text){
+  async function openVKWithText(text){
+    // VK не всегда поддерживает автоподстановку текста — копируем в буфер и открываем чат/сообщество
     if (text) await copyToClipboard(text);
-    window.open(LINKS.wa, "_blank", "noopener,noreferrer");
+    window.open(LINKS.vk, "_blank", "noopener,noreferrer");
   }
   async function openMaxWithText(text){
     if (text) await copyToClipboard(text);
@@ -88,6 +89,27 @@
     setMenu(false);
   });
 
+
+  // Issue quick chips (fills nearest "Проблема" input)
+  document.addEventListener("click", (e)=>{
+    const chip = e.target.closest("[data-issue]");
+    if (!chip) return;
+    const val = chip.getAttribute("data-issue") || chip.textContent.trim();
+    // Prefer focused input, otherwise try common ids
+    const active = document.activeElement;
+    const candidates = [
+      active && active.tagName === "INPUT" ? active : null,
+      $("#quickIssue"),
+      $("#leadProblem"),
+      $("#mIssue")
+    ].filter(Boolean);
+    const input = candidates.find(i=> i && i instanceof HTMLInputElement);
+    if (input){
+      input.value = val;
+      input.dispatchEvent(new Event("input", {bubbles:true}));
+      input.focus();
+    }
+  });
   // ====== Reveal animation (safe) ======
   const revealEls = $$(".reveal");
   if ("IntersectionObserver" in window){
@@ -203,11 +225,20 @@
   if (leadForm){
     leadForm.addEventListener("submit",(e)=>{
       e.preventDefault();
-      openTelegramWithText(buildLeadMessage());
+      openVKWithText(buildLeadMessage());
     });
   }
-  $("#sendWhatsApp")?.addEventListener("click", ()=> openWhatsAppWithText(buildLeadMessage()));
-  $("#sendMax")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
+  const leadForm2 = $("#leadForm2");
+  if (leadForm2){
+    leadForm2.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      openVKWithText(buildLeadMessage());
+    });
+  }
+      $("#sendTg")?.addEventListener("click", ()=> openTelegramWithText(buildLeadMessage()));
+  $("#sendTg2")?.addEventListener("click", ()=> openTelegramWithText(buildLeadMessage()));
+$("#sendMax")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
+  $("#sendMax2")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
   $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
 
   // ====== Static template to Telegram (fallback) ======
@@ -227,7 +258,7 @@
       </ul>
       <div class="actions">
         <button class="btn btn--tg" type="button" data-send="tg" data-msg="time">Написать в Telegram</button>
-        <button class="btn btn--wa" type="button" data-send="wa" data-msg="time">WhatsApp</button>
+        <button class="btn btn--vk" type="button" data-send="vk" data-msg="time">VK</button>
         <button class="btn btn--max" type="button" data-send="max" data-msg="time">MAX</button>
       </div>
     `);
@@ -262,7 +293,7 @@
 
         <div class="actions">
           <button class="btn btn--tg" type="button" data-courier-send="tg">Отправить в Telegram</button>
-          <button class="btn btn--wa" type="button" data-courier-send="wa">WhatsApp</button>
+          <button class="btn btn--vk" type="button" data-courier-send="vk">VK</button>
           <button class="btn btn--max" type="button" data-courier-send="max">MAX</button>
         </div>
       </form>
@@ -386,7 +417,7 @@
       <p class="muted">Выбери платформу и модель — ниже появится список. Окно не «прыгает», можно листать вверх/вниз.</p>
 
       <div class="chips" style="margin:10px 0 8px">
-        <button class="chip chip--alt" type="button" data-phone-tab="apple">Apple (iPhone)</button>
+        <button class="chip active" type="button" data-phone-tab="apple">Apple (iPhone)</button>
         <button class="chip" type="button" data-phone-tab="android">Android</button>
       </div>
 
@@ -422,7 +453,7 @@
 
         <div class="actions" style="margin-top:12px">
           <button class="btn btn--tg" type="button" data-model-send="tg" data-cat="phone">Отправить в Telegram</button>
-          <button class="btn btn--wa" type="button" data-model-send="wa" data-cat="phone">WhatsApp</button>
+          <button class="btn btn--vk" type="button" data-model-send="vk" data-cat="phone">VK</button>
           <button class="btn btn--max" type="button" data-model-send="max" data-cat="phone">MAX</button>
         </div>
       </div>
@@ -449,7 +480,7 @@ function renderModelsModal(categoryKey){
     const data = MODEL_DATA[categoryKey] || MODEL_DATA.water;
     const tabs = data.tabs || [];
     const tabButtons = tabs.map((t,i)=>`
-      <button class="chip ${i===0?'chip--alt':''}" type="button" data-tab="${escHtml(t.key)}">${escHtml(t.name)}</button>
+      <button class="chip ${i===0?'active':''}" type="button" data-tab="${escHtml(t.key)}">${escHtml(t.name)}</button>
     `).join("");
 
     const firstKey = tabs[0]?.key || "tab";
@@ -501,7 +532,7 @@ function renderModelsModal(categoryKey){
 
         <div class="actions" style="margin-top:12px">
           <button class="btn btn--tg" type="button" data-model-send="tg" data-cat="${escHtml(categoryKey||'water')}">Отправить в Telegram</button>
-          <button class="btn btn--wa" type="button" data-model-send="wa" data-cat="${escHtml(categoryKey||'water')}">WhatsApp</button>
+          <button class="btn btn--vk" type="button" data-model-send="vk" data-cat="${escHtml(categoryKey||'water')}">VK</button>
           <button class="btn btn--max" type="button" data-model-send="max" data-cat="${escHtml(categoryKey||'water')}">MAX</button>
         </div>
       </div>
@@ -519,7 +550,7 @@ function renderModelsModal(categoryKey){
         ? "Здравствуйте! Подскажите, пожалуйста, по срокам ремонта. Устройство: ____. Проблема: ____."
         : "Здравствуйте!";
       if (type === "tg") openTelegramWithText(msg);
-      if (type === "wa") await openWhatsAppWithText(msg);
+      if (type === "vk") await openVKWithText(msg);
       if (type === "max") await openMaxWithText(msg);
       return;
     }
@@ -554,7 +585,7 @@ function renderModelsModal(categoryKey){
 
       const type = cs.getAttribute("data-courier-send");
       if (type === "tg") openTelegramWithText(msg);
-      if (type === "wa") await openWhatsAppWithText(msg);
+      if (type === "vk") await openVKWithText(msg);
       if (type === "max") await openMaxWithText(msg);
       return;
     }
@@ -577,8 +608,8 @@ function renderModelsModal(categoryKey){
         ${(tab.items||[]).map(it=>`<button type="button" class="modelitem" data-pick="${escHtml(it)}">${escHtml(it)}</button>`).join("")}
       </div>`;
       // UI toggle active-ish
-      $$(".chips [data-tab]").forEach(b=>b.classList.remove("chip--alt"));
-      tabBtn.classList.add("chip--alt");
+      $$(".chips [data-tab]").forEach(b=>b.classList.remove("active"));
+      tabBtn.classList.add("active");
       return;
     }
 
@@ -590,8 +621,8 @@ function renderModelsModal(categoryKey){
       const body = $("#phoneTabBody");
       if (!body) return;
       // toggle chip styles
-      $$(".chips [data-phone-tab]").forEach(b=>b.classList.remove("chip--alt"));
-      ptab.classList.add("chip--alt");
+      $$(".chips [data-phone-tab]").forEach(b=>b.classList.remove("active"));
+      ptab.classList.add("active");
 
       // Re-render using lightweight templates stored in renderPhoneModal scope by regenerating via openByKey route
       // (We simply swap inner HTML based on tab, using inline helpers defined in renderPhoneModal via dataset flags)
@@ -682,7 +713,7 @@ function renderModelsModal(categoryKey){
 
       const type = ms.getAttribute("data-model-send");
       if (type === "tg") openTelegramWithText(msg);
-      if (type === "wa") await openWhatsAppWithText(msg);
+      if (type === "vk") await openVKWithText(msg);
       if (type === "max") await openMaxWithText(msg);
       return;
     }

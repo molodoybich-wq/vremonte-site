@@ -58,9 +58,10 @@ img{ max-width:100%; height:auto; display:block; }
 }
 .brand{ display:flex; align-items:center; gap:10px; font-weight: 1000; letter-spacing:.2px; }
 .brand__mark{
-  width:12px; height:12px; border-radius:999px;
-  background: linear-gradient(120deg, var(--a1), var(--a2), var(--a3));
-  box-shadow: 0 0 0 7px rgba(124,58,237,.14);
+  width:14px; height:14px; border-radius:6px;
+  background: linear-gradient(135deg, rgba(0,119,255,.95), rgba(124,58,237,.92));
+  border: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
 }
 .nav{ display:flex; gap: 10px; font-weight: 800; color: rgba(238,242,255,.86); }
 .nav a{ padding: 10px 12px; border-radius: 999px; }
@@ -135,13 +136,13 @@ img{ max-width:100%; height:auto; display:block; }
   background: linear-gradient(120deg, rgba(249,115,22,.22), rgba(124,58,237,.24), rgba(6,182,212,.18));
   box-shadow: 0 12px 34px rgba(0,0,0,.20);
 }
-.btn--soft{ background: rgba(255,255,255,.05); }
+.btn--soft{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22); }
 
 /* Messenger button variants */
 .btn--tg{ background: rgba(46,167,255,.14); border-color: rgba(46,167,255,.35); }
 .btn--tg:hover{ background: rgba(46,167,255,.20); border-color: rgba(46,167,255,.50); }
-.btn--wa{ background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.35); }
-.btn--wa:hover{ background: rgba(34,197,94,.20); border-color: rgba(34,197,94,.50); }
+.btn--vk{ background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.35); }
+.btn--vk:hover{ background: rgba(34,197,94,.20); border-color: rgba(34,197,94,.50); }
 .btn--max{ background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.35); }
 .btn--max:hover{ background: rgba(59,130,246,.20); border-color: rgba(59,130,246,.50); }
 
@@ -221,9 +222,9 @@ img{ max-width:100%; height:auto; display:block; }
   color: rgba(238,242,255,.86);
 }
 .pillline__dot{
-  width:8px; height:8px; border-radius:999px;
-  background: var(--a3);
-  box-shadow: 0 0 0 7px rgba(34,197,94,.12);
+  width:10px; height:10px; border-radius:4px;
+  background: linear-gradient(135deg, rgba(0,119,255,.95), rgba(124,58,237,.92));
+  box-shadow: 0 0 0 6px rgba(124,58,237,.14);
 }
 .hero__title{
   margin: 12px 0 10px;
@@ -1001,13 +1002,13 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 .wactions{ display:flex; gap: 10px; flex-wrap:wrap; }
 
 /* Form buttons colors */
-.btn--wa{
+.btn--vk{
   background: linear-gradient(90deg, rgba(34,197,94,.95), rgba(16,185,129,.92));
   border: 1px solid rgba(34,197,94,.35);
   color: #07110a;
   font-weight: 900;
 }
-.btn--wa:hover{ filter: brightness(1.05); }
+.btn--vk:hover{ filter: brightness(1.05); }
 
 .btn--maxblue{
   background: linear-gradient(90deg, rgba(46,167,255,.95), rgba(124,58,237,.85));
@@ -1034,3 +1035,99 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 .doccard__top h3{ margin: 0 0 8px; }
 .doccard__top p{ margin:0; color: rgba(238,242,255,.76); line-height:1.55; }
 .doccard__actions{ margin-top: 14px; display:flex; gap: 10px; flex-wrap:wrap; }
+
+.btn--soft:hover{ background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.30); }
+
+
+/* ===== VK button ===== */
+.btn--vk{
+  background: linear-gradient(90deg, rgba(0,119,255,.95), rgba(88,164,255,.92));
+  border: 1px solid rgba(88,164,255,.35);
+  color: #06111f;
+  font-weight: 900;
+}
+.btn--vk:hover{ filter: brightness(1.05); }
+.pill--vk{
+  background: rgba(0,119,255,.14);
+  border-color: rgba(88,164,255,.35);
+}
+.pill--vk:hover{ background: rgba(0,119,255,.20); border-color: rgba(88,164,255,.50); }
+
+/* ===== Active chips (selected state) ===== */
+.chip{
+  position: relative;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease;
+}
+.chip:active{ transform: scale(.98); }
+.chip.active{
+  color: rgba(255,255,255,.98);
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.35);
+  box-shadow: 0 0 0 1px rgba(88,164,255,.18), 0 10px 30px rgba(0,0,0,.35);
+}
+.chip.active::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius: inherit;
+  padding:1px;
+  background: conic-gradient(from 90deg, rgba(0,119,255,.0), rgba(88,164,255,.85), rgba(124,58,237,.85), rgba(0,119,255,.0));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: chipBorder 2.8s linear infinite;
+  pointer-events:none;
+  opacity:.9;
+}
+@keyframes chipBorder{ to{ transform: rotate(360deg); } }
+
+.chip.active::after{
+  content:"✓";
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform: translateY(-50%);
+  font-weight:900;
+  opacity:.9;
+}
+.chip.active{ padding-left:28px; }
+
+/* Mini chips (problem suggestions) */
+.chips--mini{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.chip--mini{
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+}
+.chip--mini:hover{ background: rgba(255,255,255,.10); }
+
+/* Lead steps hint */
+.stepshint{
+  margin-top:8px;
+  font-size: 12px;
+  color: rgba(255,255,255,.70);
+}
+
+/* Docs page helpers */
+.badges{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border-radius:999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.82);
+  font-size: 13px;
+}
+.grid2{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px; }
+@media (max-width: 860px){ .grid2{ grid-template-columns: 1fr; } }
+.card--doc h3{ margin:0 0 6px; }
+.doclist{ margin:10px 0 0; padding-left:18px; color: rgba(255,255,255,.82); }
+.doclist li{ margin:6px 0; }
+
+/* Make primary "Узнать цену" / price buttons readable */
+.btn--small{ font-weight:800; }
+
