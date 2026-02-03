@@ -1225,3 +1225,58 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 
 /* CTA row */
 .cta-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+
+
+/* Header refresh */
+.mini-bar{ display:none !important; }
+.nav-cta{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.btn--chip{
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:700;
+}
+.btn-vk{ background: rgba(86,124,255,.12); border-color: rgba(86,124,255,.28); }
+.btn-tg{ background: rgba(50,170,255,.12); border-color: rgba(50,170,255,.28); }
+.btn-max{ min-width:96px; }
+
+/* Gallery */
+.gallery{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:16px;
+  margin-top:16px;
+}
+.gcard{
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.gcard img{ width:100%; height:260px; object-fit:cover; display:block; }
+.gcard figcaption{ padding:12px 14px; color: rgba(255,255,255,.78); font-size:14px; }
+@media (max-width: 900px){
+  .gallery{ grid-template-columns: 1fr; }
+  .gcard img{ height:220px; }
+}
+
+/* FAQ */
+.faq{ display:grid; gap:10px; margin-top:12px; }
+.faq-item{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  border-radius:14px;
+  padding:10px 12px;
+}
+.faq-item summary{ cursor:pointer; font-weight:800; }
+.faq-item p{ margin:10px 0 0; color: rgba(255,255,255,.78); }
+
+/* Steps */
+.steps{ display:grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap:12px; margin-top:14px; }
+.step{ border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); border-radius:14px; padding:12px; display:flex; gap:10px; align-items:flex-start; }
+.step b{ width:28px; height:28px; border-radius:10px; background: rgba(88,140,255,.18); display:flex; align-items:center; justify-content:center; }
+.step span{ color: rgba(255,255,255,.82); font-size:14px; line-height:1.35; }
+@media (max-width: 980px){
+  .steps{ grid-template-columns: 1fr; }
+}

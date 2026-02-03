@@ -792,5 +792,35 @@ function renderModelsModal(categoryKey){
     onScroll();
     toTop.addEventListener("click", ()=> window.scrollTo({ top:0, behavior:"smooth" }));
   }
+  // Copy helpers
+  const copyBtns = document.querySelectorAll("[data-copy]");
+  if (copyBtns && copyBtns.length) {
+    const templates = {
+      courier: "Здравствуйте! Нужен курьер.\nУстройство: ____\nМодель: ____\nПроблема: ____\nАдрес забора: ____\nУдобное время: ____\nКонтактный телефон: ____"
+    };
+    copyBtns.forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const key = btn.getAttribute("data-copy");
+        const text = templates[key] || "";
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = "Скопировано ✓";
+          setTimeout(() => (btn.textContent = "Скопировать текст"), 1500);
+        } catch (e) {
+          // Fallback
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          btn.textContent = "Скопировано ✓";
+          setTimeout(() => (btn.textContent = "Скопировать текст"), 1500);
+        }
+      });
+    });
+  }
+
 
 })();
