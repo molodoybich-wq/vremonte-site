@@ -1,14 +1,41 @@
 (() => {
   "use strict";
 
+  // Mobile nav
+  const burger = document.getElementById("burger");
+  const mobileNav = document.getElementById("mobileNav");
+  if (burger && mobileNav) {
+    const close = () => {
+      burger.setAttribute("aria-expanded", "false");
+      mobileNav.setAttribute("aria-hidden", "true");
+      mobileNav.classList.remove("is-open");
+    };
+    burger.addEventListener("click", () => {
+      const isOpen = burger.getAttribute("aria-expanded") === "true";
+      if (isOpen) close();
+      else {
+        burger.setAttribute("aria-expanded", "true");
+        mobileNav.setAttribute("aria-hidden", "false");
+        mobileNav.classList.add("is-open");
+      }
+    });
+    mobileNav.addEventListener("click", (e) => {
+      if (e.target && e.target.tagName === "A") close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  }
+
+
   // Mark JS enabled (used by CSS for reveal fallback)
   document.documentElement.classList.add("js");
 
   // ====== CONFIG ======
   const LINKS = {
     phone: "tel:+79255156161",
-    tgUser: "vremonte161",
-    tg: "https://t.me/vremonte161",
+    tgUser: "vremonte761",
+    tg: "https://t.me/vremonte761",
     vk: "https://vk.me/club235742663",
     max: "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8",
   };
