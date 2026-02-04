@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="styles.css?v=202602032313" rel="stylesheet"/>
+<link href="styles.css?v=202602040001" rel="stylesheet"/>
 <link href="favicon.png" rel="apple-touch-icon"/><meta content="В ремонте — сервисный центр в Ростове-на-Дону | Ткачева 22" property="og:title"/><meta content="Ремонт телефонов, ноутбуков/ПК, ТВ, кофемашин, принтеров и техники Dyson. Бесплатная диагностика, согласование цены до ремонта. Ростов-на-Дону, ул. Ткачева, 22 и ул. Заводская, 25. Связь: Telegram, MAX." property="og:description"/><meta content="website" property="og:type"/><meta content="favicon.png" property="og:image"/><meta content="ru_RU" property="og:locale"/><meta content="summary" name="twitter:card"/><link href="https://vremonte61.online/" rel="canonical"/><meta content="index,follow" name="robots"/><meta content="https://vremonte61.online/" property="og:url"/><meta content="В ремонте" property="og:site_name"/><meta content="В ремонте — сервисный центр в Ростове-на-Дону | Ткачева 22" name="twitter:title"/><meta content="Ремонт телефонов, ноутбуков/ПК, ТВ, кофемашин, принтеров и техники Dyson. Бесплатная диагностика, согласование цены до ремонта. Ростов-на-Дону, ул. Ткачева, 22 и ул. Заводская, 25. Связь: Telegram, MAX." name="twitter:description"/><script type="application/ld+json">{ "@context": "https://schema.org", "@type": "LocalBusiness", "name": "В ремонте", "url": "https://vremonte61.online/", "telephone": "+7-925-515-61-61", "image": "https://vremonte61.online/assets/entrance.webp", "priceRange": "$$", "areaServed": { "@type": "AdministrativeArea", "name": "Ростов-на-Дону, Ростовская область" }, "address": [ { "@type": "PostalAddress", "streetAddress": "ул. Ткачева, 22", "addressLocality": "Ростов-на-Дону", "addressRegion": "Ростовская область", "addressCountry": "RU" }, { "@type": "PostalAddress", "streetAddress": "ул. Заводская, 25", "addressLocality": "Ростов-на-Дону", "addressRegion": "Ростовская область", "addressCountry": "RU" } ], "openingHoursSpecification": [ { "@type": "OpeningHoursSpecification", "dayOfWeek": [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ], "opens": "10:00", "closes": "20:00" }, { "@type": "OpeningHoursSpecification", "dayOfWeek": [ "Saturday" ], "opens": "11:00", "closes": "18:00" } ], "sameAs": [ "https://t.me/vremonte761", "https://go.2gis.com/C7Sel" ]
 }</script></head>
 <body>
@@ -121,7 +121,17 @@
 </div>
 <button class="btn btn--primary btn--wide" id="sendMax2" type="button">Отправить в MAX</button>
 <button class="btn btn--wide btn--tg" id="sendTg" type="button">Отправить в Telegram</button>
-<div class="consent">Нажимая кнопки отправки, вы принимаете <a href="privacy.html" rel="noopener" target="_blank">Политику конфиденциальности</a> и <a href="offer.html" rel="noopener" target="_blank">условия оферты</a>.</div>
+
+<label class="check" style="display:flex; gap:10px; align-items:flex-start; margin:12px 0 4px">
+  <input type="checkbox" id="pdConsent" />
+  <span style="font-size:14px; line-height:1.35; color: rgba(238,242,255,.88)">
+    Я согласен(на) на обработку персональных данных и принимаю
+    <a href="privacy.html" target="_blank" rel="noopener">Политику</a> и
+    <a href="consent.html" target="_blank" rel="noopener">Согласие</a>.
+  </span>
+</label>
+
+<div class="consent">Нажимая кнопки отправки, вы принимаете <a href="privacy.html" rel="noopener" target="_blank">Политику</a>, <a href="consent.html" rel="noopener" target="_blank">Согласие</a>, <a href="terms.html" rel="noopener" target="_blank">Пользовательское соглашение</a> и <a href="cookie-policy.html" rel="noopener" target="_blank">Cookie</a>.</div>
 <div class="hint"> Обычно отвечаем в течение <b>5–15 минут</b> • <a href="tel:+79255156161">можно позвонить</a>
 </div>
 <div class="quick">
@@ -537,7 +547,7 @@
 <button class="btn btn--primary btn--wide" id="sendMax2" type="button">Отправить в MAX</button>
 <button class="btn btn--wide btn--tg" id="sendTg" type="button">Отправить в Telegram</button>
 <button class="btn btn--wide btn--maxblue" id="sendMax2" type="button">Отправить в MAX</button>
-<div class="consent">Нажимая кнопки отправки, вы принимаете <a href="privacy.html" rel="noopener" target="_blank">Политику конфиденциальности</a> и <a href="offer.html" rel="noopener" target="_blank">условия оферты</a>.</div>
+<div class="consent">Нажимая кнопки отправки, вы принимаете <a href="privacy.html" rel="noopener" target="_blank">Политику</a>, <a href="consent.html" rel="noopener" target="_blank">Согласие</a>, <a href="terms.html" rel="noopener" target="_blank">Пользовательское соглашение</a> и <a href="cookie-policy.html" rel="noopener" target="_blank">Cookie</a>.</div>
 <div class="hint">Нажимая кнопку, вы откроете VK с готовым сообщением (текст скопируем в буфер).</div>
 </form>
 </div>
@@ -573,7 +583,7 @@
 <button class="btn btn--small btn--ghost" id="cookieClose" type="button">Закрыть</button>
 </div>
 </div>
-<script defer="" src="script.js?v=202602032313"></script>
+<script defer="" src="script.js?v=202602040001"></script>
 <!-- SEO: LocalBusiness -->
 <script type="application/ld+json"> { "@context": "https://schema.org", "@type": "LocalBusiness", "name": "В ремонте — сервисный центр", "image": "https://vremonte61.online/assets/entrance.webp", "url": "https://vremonte61.online", "telephone": "+79255156161", "address": { "@type": "PostalAddress", "streetAddress": "ул. Ткачева, 22", "addressLocality": "Ростов-на-Дону", "addressRegion": "Ростовская область", "addressCountry": "RU" }, "areaServed": ["Ростов-на-Дону", "Левенцовка", "Западный район"], "sameAs": ["https://yandex.ru/profile/229488310920?lang=ru"] }
 </script>
