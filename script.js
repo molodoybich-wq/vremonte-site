@@ -36,7 +36,7 @@
     phone: "tel:+79255156161",
     tgUser: "vremonte761",
     tg: "https://t.me/vremonte761",
-    vk: "https://vk.me/club235742663",
+    vk: "https://vk.com/vremonte161",
     max: "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8",
   };
 
@@ -823,27 +823,4 @@ function renderModelsModal(categoryKey){
   }
 
 
-})();
-// PD consent gate (disable send buttons until consent checked)
-(function(){
-  const consent = document.getElementById('pdConsent');
-  if(!consent) return;
-
-  const buttons = [
-    document.getElementById('sendTg'),
-    document.getElementById('sendMax2'),
-    document.getElementById('sendTg2'),
-    document.getElementById('sendMax')
-  ].filter(Boolean);
-
-  function apply(){
-    const ok = !!consent.checked;
-    buttons.forEach(btn=>{
-      btn.disabled = !ok;
-      btn.classList.toggle('is-disabled', !ok);
-      btn.setAttribute('aria-disabled', (!ok).toString());
-    });
-  }
-  consent.addEventListener('change', apply);
-  apply();
 })();
