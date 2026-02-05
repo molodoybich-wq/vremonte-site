@@ -1383,3 +1383,25 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 .step__btns{ margin-top:auto; display:flex; flex-wrap:wrap; gap:8px; }
 .step .btn{ white-space:nowrap; }
 
+
+
+/* Utility spacing */
+.mt-lg{ margin-top: 18px; }
+.gap-lg{ gap: 18px !important; }
+.actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 14px; }
+
+/* Two-column grids used on problem pages */
+.grid--2{ grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 900px){
+  .grid--2{ grid-template-columns: 1fr; }
+}
+
+/* Hero CTA */
+.hero__cta{ display:flex; gap: 12px; flex-wrap:wrap; align-items:center; }
+
+/* Steps alignment */
+.step{ display:flex; flex-direction:column; min-height: 220px; }
+.step h3{ margin: 10px 0 0; font-size: 18px; }
+.step__btns{ margin-top: auto; }
+
+.card--soft{ background: rgba(255,255,255,.04); }
