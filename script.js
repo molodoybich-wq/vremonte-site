@@ -824,3 +824,37 @@ function renderModelsModal(categoryKey){
 
 
 })();
+
+  // ====== Lightbox (works gallery) ======
+  const workImgs = Array.from(document.querySelectorAll(".workcard img"));
+  if (workImgs.length) {
+    const lb = document.createElement("div");
+    lb.className = "lightbox";
+    lb.innerHTML = `
+      <div class="lightbox__panel" role="dialog" aria-modal="true" aria-label="Просмотр фото">
+        <div class="lightbox__top">
+          <div class="lightbox__title">Фото процесса</div>
+          <button class="lightbox__close" type="button" aria-label="Закрыть">✕</button>
+        </div>
+        <div class="lightbox__imgwrap">
+          <img class="lightbox__img" alt="" src="" />
+        </div>
+      </div>
+    `;
+    document.body.appendChild(lb);
+    const imgEl = lb.querySelector(".lightbox__img");
+    const closeBtn = lb.querySelector(".lightbox__close");
+    const close = () => lb.classList.remove("is-open");
+    closeBtn.addEventListener("click", close);
+    lb.addEventListener("click", (e) => { if (e.target === lb) close(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+
+    workImgs.forEach((img) => {
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", () => {
+        imgEl.src = img.currentSrc || img.src;
+        imgEl.alt = img.alt || "Фото процесса";
+        lb.classList.add("is-open");
+      });
+    });
+  }
