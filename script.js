@@ -264,8 +264,9 @@
   }
       $("#sendTg")?.addEventListener("click", ()=> openTelegramWithText(buildLeadMessage()));
   $("#sendTg2")?.addEventListener("click", ()=> openTelegramWithText(buildLeadMessage()));
-document.querySelectorAll('[data-action="send-max"]').forEach(el=> el.addEventListener("click", ()=> openMaxWithText(buildLeadMessage())));
-$("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
+$("#sendMax")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
+  $("#sendMax2")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
+  $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
 
   // ====== Static template to Telegram (fallback) ======
   function openTemplateToTG(text){

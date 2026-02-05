@@ -1385,23 +1385,37 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 
 
 
-/* Utility spacing */
-.mt-lg{ margin-top: 18px; }
-.gap-lg{ gap: 18px !important; }
-.actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 14px; }
+/* --- Utilities & layout fixes (2026-02) --- */
+.mt-lg{ margin-top: 24px; }
+.mt-md{ margin-top: 16px; }
+.mb-lg{ margin-bottom: 24px; }
+.gap-lg{ gap: 18px; }
+.muted{ color: var(--muted); }
 
-/* Two-column grids used on problem pages */
-.grid--2{ grid-template-columns: repeat(2, 1fr); }
+/* Ensure sections/cards do not "collide" */
+main.section .card, main.section .cta{ margin-top: 18px; }
+main.section h2{ margin-top: 26px; }
+.faq-list{ margin-top: 12px; }
+.faq-item + .faq-item{ margin-top: 10px; }
+
+/* Process steps alignment */
+.step{ display:flex; flex-direction:column; }
+.step__btns{ margin-top:auto; display:flex; gap:10px; flex-wrap:wrap; }
+.step > button.btn, .step > a.btn{ margin-top:auto; align-self:flex-start; }
+.review__btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+
+/* Cards grid helper */
+.cards--2{ grid-template-columns: repeat(2, 1fr); }
 @media (max-width: 900px){
-  .grid--2{ grid-template-columns: 1fr; }
+  .cards--2{ grid-template-columns: 1fr; }
 }
 
-/* Hero CTA */
-.hero__cta{ display:flex; gap: 12px; flex-wrap:wrap; align-items:center; }
 
-/* Steps alignment */
-.step{ display:flex; flex-direction:column; min-height: 220px; }
-.step h3{ margin: 10px 0 0; font-size: 18px; }
-.step__btns{ margin-top: auto; }
 
-.card--soft{ background: rgba(255,255,255,.04); }
+/* ===== Mobile header fixes (vremonte) ===== */
+@media (max-width: 980px){
+  .nav-cta{ display:none !important; }
+  .nav{ display:none !important; }
+  .burger{ display:block !important; position:relative; z-index:1005; pointer-events:auto; }
+  .nav-bar{ position:sticky; top:0; z-index:1000; }
+}
