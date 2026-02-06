@@ -1587,7 +1587,7 @@ main.section h2{ margin-top: 26px; }
 
 .clientsGrid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:14px; }
 .clientCard{ border-radius:18px; border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04); overflow:hidden; display:block; }
-.clientCard img{ width:100%; height:200px; object-fit:cover; display:block; }
+.clientCard img{ width:100%; height:auto; aspect-ratio: 4 / 3; object-fit:contain; display:block; }
 @media (max-width: 980px){
   .showcase__grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
   .clientsGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
