@@ -5,27 +5,27 @@
   const burger = document.getElementById("burger");
   const mobileNav = document.getElementById("mobileNav");
   const setMenu = (open) => {
-  if (!burger || !mobileNav) return;
-  const isOpen = !!open;
-  burger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  mobileNav.setAttribute("aria-hidden", isOpen ? "false" : "true");
-  mobileNav.classList.toggle("is-open", isOpen);
-  document.body.classList.toggle("menu-open", isOpen);
-};
+    if (!burger || !mobileNav) return;
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    mobileNav.setAttribute("aria-hidden", open ? "false" : "true");
+    mobileNav.classList.toggle("is-open", !!open);
+    document.body.classList.toggle("menu-open", !!open);
+  };
   if (burger && mobileNav) {
     burger.addEventListener("click", () => {
       const isOpen = burger.getAttribute("aria-expanded") === "true";
       setMenu(!isOpen);
     });
     mobileNav.addEventListener("click", (e) => {
-      if (e.target && e.target.closest && e.target.closest("a")) setMenu(false);
+      if (e.target && e.target.tagName === "A") setMenu(false);
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") setMenu(false);
     });
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 980) setMenu(false);
-    });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 980) setMenu(false);
+  });
   }
 
   // Mark JS enabled (used by CSS for reveal fallback / no-js)
@@ -236,7 +236,8 @@
     if (extra) parts.push(extra);
     parts.push("");
     parts.push("Отправлено с сайта vremonte61.online");
-    return parts.join("\n");
+    return parts.join("
+");
   }
 
   function ensureLeadValid(formEl){
@@ -267,10 +268,8 @@
       openVKWithText(buildLeadMessage(leadForm2));
     });
   }
-  $("#sendTg")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm)) return; openTelegramWithText(buildLeadMessage(leadForm)); });
-  $("#sendVk")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; await openVKWithText(buildLeadMessage(leadForm)); });
+      $("#sendTg")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm)) return; openTelegramWithText(buildLeadMessage(leadForm)); });
   $("#sendTg2")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm2)) return; openTelegramWithText(buildLeadMessage(leadForm2)); });
-  $("#sendVk2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; await openVKWithText(buildLeadMessage(leadForm2)); });
 $("#sendMax")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm)) return; openMaxWithText(buildLeadMessage(leadForm)); });
   $("#sendMax2")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm2)) return; openMaxWithText(buildLeadMessage(leadForm2)); });
   $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));

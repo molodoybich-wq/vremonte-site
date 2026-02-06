@@ -1204,42 +1204,6 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 .mobile-nav.is-open{ display:block; }
 
 
-/* ===== Mobile menu overlay (fix for iOS/Android) ===== */
-body.menu-open{
-  overflow:hidden;
-  height:100vh;
-  touch-action:none;
-}
-@media (max-width: 980px){
-  /* make dropdown mobile nav a full-screen overlay */
-  .mobile-nav{
-    position: fixed;
-    inset: 0;
-    z-index: 2000;
-    display: none;
-    padding: 86px 16px 20px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    background: rgba(6,10,20,.97);
-    backdrop-filter: blur(14px);
-    border-top: none;
-  }
-  .mobile-nav.is-open{ display:block; }
-
-  /* keep burger above overlay */
-  .burger{ z-index: 2100; }
-
-  /* hide floating/bottom CTA when menu is open */
-  body.menu-open .floating-actions,
-  body.menu-open .bottom-buttons,
-  body.menu-open .hero-actions,
-  body.menu-open .quick-buttons,
-  body.menu-open .nav-cta{
-    display:none !important;
-  }
-}
-
-
 /* No-JS fallback: show mobile menu only on small screens */
 @media (max-width: 900px){
   .no-js .mobile-nav{ display:block; }
@@ -1587,7 +1551,7 @@ main.section h2{ margin-top: 26px; }
 
 .clientsGrid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:14px; }
 .clientCard{ border-radius:18px; border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04); overflow:hidden; display:block; }
-.clientCard img{ width:100%; height:auto; aspect-ratio: 4 / 3; object-fit:contain; display:block; }
+.clientCard img{ width:100%; height:200px; object-fit:cover; display:block; }
 @media (max-width: 980px){
   .showcase__grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
   .clientsGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -1697,3 +1661,35 @@ main.section h2{ margin-top: 26px; }
 
 /* "Наши клиенты" are static cards (not buttons) */
 .clientCard{ cursor: default; }
+
+
+
+/* ====== Mobile menu overlay fix (v20260206-2) ====== */
+@media (max-width: 980px){
+  .mobile-nav{
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    padding: 88px 16px 18px;
+    border-top: none;
+    background: rgba(6,10,20,.97);
+    backdrop-filter: blur(14px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mobile-nav.is-open{ display:block; }
+  .burger{ position: relative; z-index: 10001; }
+}
+
+body.menu-open{
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+}
+
+/* Hide floating controls when menu is open */
+body.menu-open .float,
+body.menu-open .bbar{
+  display:none !important;
+}
