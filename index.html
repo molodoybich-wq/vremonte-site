@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="no-js">
 <head>
 
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -182,7 +182,7 @@ ym(106611877, "init", {
 <form class="form" id="leadForm">
 <label class="field">
 <span>Устройство</span>
-<input id="leadDevice" name="device" placeholder="Напр.: iPhone 13 / ТВ Samsung / ноутбук Lenovo" required=""/>
+<input id="leadDevice2" name="device" placeholder="Напр.: iPhone 13 / ТВ Samsung / ноутбук Lenovo" required=""/>
 </label>
 <label class="field">
 <span>Проблема</span>
@@ -720,20 +720,19 @@ ym(106611877, "init", {
 <form class="form" id="leadForm2">
 <label class="field">
 <span>Устройство</span>
-<input id="leadDevice" name="device" placeholder="Напр.: iPhone / TV / ноутбук" required=""/>
+<input id="leadDevice2" name="device" placeholder="Напр.: iPhone / TV / ноутбук" required=""/>
 </label>
 <label class="field">
 <span>Проблема</span>
-<input id="leadProblem" name="issue" placeholder="Что не работает?" required=""/>
+<input id="leadProblem2" name="issue" placeholder="Что не работает?" required=""/>
 </label>
 <label class="field">
 <span>Контакт</span>
-<input id="leadContact" name="contact" placeholder="+7... или @telegram (по желанию)"/>
+<input id="leadContact2" name="contact" placeholder="+7... или @telegram (по желанию)"/>
 </label>
 <button class="btn btn--wide btn--tg" id="sendTg2" type="button">Отправить в Telegram</button>
 <button class="btn btn--wide btn--vk" id="sendVk2" type="button">Отправить в VK</button>
 <button class="btn btn--wide btn--max" id="sendMax2" type="button">Отправить в MAX</button>
-<button class="btn btn--wide btn--maxblue" id="sendMax2" type="button">Отправить в MAX</button>
 <div class="consent">Нажимая кнопки отправки, вы принимаете <a href="privacy.html" rel="noopener" target="_blank">Политику конфиденциальности</a> и <a href="offer.html" rel="noopener" target="_blank">условия оферты</a>.</div>
 <div class="hint">Нажимая кнопку, вы откроете VK с готовым сообщением (текст скопируем в буфер).</div>
 </form>
@@ -754,11 +753,6 @@ ym(106611877, "init", {
 </div>
 </section>
 </main>
-<!-- Photo modal -->
-<div aria-hidden="true" class="modal" id="modal">
-<button aria-label="Закрыть" class="modal__close" id="modalClose">✕</button>
-<img alt="Фото" class="modal__img" id="modalImg"/>
-</div>
 <!-- Back to top -->
 <button aria-label="Наверх" class="toTop" id="toTop">↑</button>
 <!-- Cookie / согласие -->
@@ -771,9 +765,6 @@ ym(106611877, "init", {
 </div>
 </div>
 <script defer="" src="script.js?v=202602041401"></script>
-<!-- SEO: LocalBusiness -->
-<script type="application/ld+json"> { "@context": "https://schema.org", "@type": "LocalBusiness", "name": "В ремонте — сервисный центр", "image": "https://vremonte61.online/assets/entrance.webp", "url": "https://vremonte61.online", "telephone": "+79255156161", "address": { "@type": "PostalAddress", "streetAddress": "ул. Ткачева, 22", "addressLocality": "Ростов-на-Дону", "addressRegion": "Ростовская область", "addressCountry": "RU" }, "areaServed": ["Ростов-на-Дону", "Левенцовка", "Западный район"], "sameAs": ["https://yandex.ru/profile/229488310920?lang=ru"] }
-</script>
 <!-- UI MODAL -->
 <div aria-hidden="true" class="uimodal" id="uiModal">
 <div class="uimodal__backdrop" data-close="1"></div>

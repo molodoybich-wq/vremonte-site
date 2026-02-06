@@ -1,34 +1,31 @@
 (() => {
   "use strict";
 
-  // Mobile nav
+  // Mobile nav (one source of truth)
   const burger = document.getElementById("burger");
   const mobileNav = document.getElementById("mobileNav");
+  const setMenu = (open) => {
+    if (!burger || !mobileNav) return;
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    mobileNav.setAttribute("aria-hidden", open ? "false" : "true");
+    mobileNav.classList.toggle("is-open", !!open);
+  };
   if (burger && mobileNav) {
-    const close = () => {
-      burger.setAttribute("aria-expanded", "false");
-      mobileNav.setAttribute("aria-hidden", "true");
-      mobileNav.classList.remove("is-open");
-    };
     burger.addEventListener("click", () => {
       const isOpen = burger.getAttribute("aria-expanded") === "true";
-      if (isOpen) close();
-      else {
-        burger.setAttribute("aria-expanded", "true");
-        mobileNav.setAttribute("aria-hidden", "false");
-        mobileNav.classList.add("is-open");
-      }
+      setMenu(!isOpen);
     });
     mobileNav.addEventListener("click", (e) => {
-      if (e.target && e.target.tagName === "A") close();
+      if (e.target && e.target.tagName === "A") setMenu(false);
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") close();
+      if (e.key === "Escape") setMenu(false);
     });
   }
 
-
-  // Mark JS enabled (used by CSS for reveal fallback)
+  // Mark JS enabled (used by CSS for reveal fallback / no-js)
+  document.documentElement.classList.add("js");
+  document.documentElement.classList.remove("no-js"); (used by CSS for reveal fallback)
   document.documentElement.classList.add("js");
 
   // ====== CONFIG ======
@@ -46,11 +43,11 @@
 
   function escHtml(s){
     return String(s || "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/\"/g,"&quot;")
+      .replace(/'/g,"&#039;");
   }
 
   async function copyToClipboard(text){
@@ -88,20 +85,6 @@
   // ====== Year in footer ======
   const y = $("#year");
   if (y) y.textContent = String(new Date().getFullYear());
-
-  // ====== Mobile menu ======
-  const burger = $("#burger");
-  const mnav = $("#mnav");
-  function setMenu(open){
-    if (!burger || !mnav) return;
-    mnav.hidden = !open;
-    burger.setAttribute("aria-expanded", String(open));
-  }
-  if (burger && mnav){
-    burger.addEventListener("click", () => setMenu(mnav.hidden));
-    mnav.addEventListener("click", (e) => { if (e.target.closest(".mnav__link")) setMenu(false); });
-    window.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
-  }
 
   // ====== Smooth anchors ======
   document.addEventListener("click", (e) => {
@@ -159,27 +142,6 @@
       box.classList.toggle("open");
     });
   }
-
-  // ====== Photo modal (if exists) ======
-  const modal = $("#modal");
-  const modalImg = $("#modalImg");
-  const modalClose = $("#modalClose");
-  function openPhoto(src){
-    if (!modal || !modalImg) return;
-    modalImg.src = src;
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-  }
-  function closePhoto(){
-    if (!modal || !modalImg) return;
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
-    modalImg.src = "";
-  }
-  $$("[data-photo]").forEach((b) => b.addEventListener("click", () => openPhoto(b.getAttribute("data-photo"))));
-  if (modalClose) modalClose.addEventListener("click", closePhoto);
-  if (modal) modal.addEventListener("click", (e)=>{ if (e.target === modal) closePhoto(); });
-  document.addEventListener("keydown", (e)=>{ if (e.key === "Escape") closePhoto(); });
 
   // ====== UI Modal (create if missing) ======
   function ensureUiModal(){
@@ -245,11 +207,22 @@
   });
 
   // ====== Lead message builder ======
-  function buildLeadMessage(extra){
-    const device = $("#leadDevice")?.value?.trim() || "";
-    const problem = $("#leadProblem")?.value?.trim() || "";
-    const urgency = $("#leadUrgency")?.value || "";
-    const contact = $("#leadContact")?.value?.trim() || "";
+  function buildLeadMessage(formEl, extra){
+    const getVal = (nameOrId) => {
+      if (!formEl) return "";
+      const byId = formEl.querySelector(`#${nameOrId}`);
+      if (byId && "value" in byId) return String(byId.value || "").trim();
+      const byName = formEl.querySelector(`[name="${nameOrId}"]`);
+      if (byName && "value" in byName) return String(byName.value || "").trim();
+      return "";
+    };
+
+    const device = getVal("device");
+    const problem = getVal("issue");
+    const urgencyEl = formEl.querySelector('[name="urgent"]');
+    const urgency = urgencyEl ? String(urgencyEl.value || "").trim() : "";
+    const contact = getVal("contact");
+
     const parts = [];
     parts.push("Здравствуйте! Заявка с сайта «В ремонте».");
     if (device) parts.push(`Устройство: ${device}`);
@@ -259,7 +232,19 @@
     if (extra) parts.push(extra);
     parts.push("");
     parts.push("Отправлено с сайта vremonte61.online");
-    return parts.join("\n");
+    return parts.join("
+");
+  }
+
+  function ensureLeadValid(formEl){
+    if (!formEl) return false;
+    const dev = (formEl.querySelector('[name="device"]')?.value || "").trim();
+    const iss = (formEl.querySelector('[name="issue"]')?.value || "").trim();
+    if (!dev || !iss){
+      alert("Заполни, пожалуйста: Устройство и Проблема.");
+      return false;
+    }
+    return true;
   }
 
   // Lead form actions
@@ -267,20 +252,22 @@
   if (leadForm){
     leadForm.addEventListener("submit",(e)=>{
       e.preventDefault();
-      openVKWithText(buildLeadMessage());
+      if (!ensureLeadValid(leadForm)) return;
+      openVKWithText(buildLeadMessage(leadForm));
     });
   }
   const leadForm2 = $("#leadForm2");
   if (leadForm2){
     leadForm2.addEventListener("submit",(e)=>{
       e.preventDefault();
-      openVKWithText(buildLeadMessage());
+      if (!ensureLeadValid(leadForm2)) return;
+      openVKWithText(buildLeadMessage(leadForm2));
     });
   }
-      $("#sendTg")?.addEventListener("click", ()=> openTelegramWithText(buildLeadMessage()));
-  $("#sendTg2")?.addEventListener("click", ()=> openTelegramWithText(buildLeadMessage()));
-$("#sendMax")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
-  $("#sendMax2")?.addEventListener("click", ()=> openMaxWithText(buildLeadMessage()));
+      $("#sendTg")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm)) return; openTelegramWithText(buildLeadMessage(leadForm)); });
+  $("#sendTg2")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm2)) return; openTelegramWithText(buildLeadMessage(leadForm2)); });
+$("#sendMax")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm)) return; openMaxWithText(buildLeadMessage(leadForm)); });
+  $("#sendMax2")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm2)) return; openMaxWithText(buildLeadMessage(leadForm2)); });
   $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
 
   // ====== Static template to Telegram (fallback) ======
