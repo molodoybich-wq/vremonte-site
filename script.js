@@ -36,12 +36,16 @@
   const themeToggle = document.getElementById("themeToggle");
   const THEME_KEY = "vremonte_theme";
   const applyTheme = (t) => {
-    document.body.classList.toggle("theme-dark", t === "dark");
+    const isDark = t === "dark";
+    document.body.classList.toggle("theme-dark", isDark);
+    document.documentElement.classList.toggle("theme-dark", isDark);
+    if (themeToggle) themeToggle.setAttribute("aria-pressed", String(isDark));
     // update meta theme-color for mobile browser UI
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", t === "dark" ? "#0b1022" : "#ffffff");
+    if (meta) meta.setAttribute("content", isDark ? "#0b1022" : "#fff7f3");
   };
-  const saved = localStorage.getItem(THEME_KEY);
+  let saved = null;
+  try { saved = localStorage.getItem(THEME_KEY); } catch(e) { saved = null; }
   if (saved === "dark") applyTheme("dark");
   else applyTheme("light"); // force light by default
 
@@ -49,7 +53,7 @@
     themeToggle.addEventListener("click", () => {
       const isDark = document.body.classList.contains("theme-dark");
       const next = isDark ? "light" : "dark";
-      localStorage.setItem(THEME_KEY, next);
+      try { localStorage.setItem(THEME_KEY, next); } catch(e) {}
       applyTheme(next);
     });
   }
