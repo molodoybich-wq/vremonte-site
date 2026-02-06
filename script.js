@@ -229,6 +229,21 @@
     if (e.key === "Escape" && uiModal && uiModal.classList.contains("open")) closeUiModal();
   });
 
+  // Открытие картинок (сертификаты/логотипы) в модалке
+  document.addEventListener("click", (e)=>{
+    const btn = e.target.closest?.("[data-modal-img]");
+    if (!btn) return;
+    const src = btn.getAttribute("data-modal-img");
+    const title = btn.getAttribute("data-modal-title") || "";
+    if (!src) return;
+    openUiModal(`
+      <div class="uimodal__title">${title}</div>
+      <div class="uimodal__imgwrap">
+        <img src="${src}" alt="${title}" loading="lazy" />
+      </div>
+    `);
+  });
+
   // ====== Lead message builder ======
   function buildLeadMessage(extra){
     const device = $("#leadDevice")?.value?.trim() || "";

@@ -120,9 +120,7 @@ ym(106611877, "init", {
 </div>
 <h1 class="hero__title"> Ремонт техники в <span class="grad">Ростове‑на‑Дону</span>
 </h1>
-<p class="hero__desc">Ремонт телефонов <span class="muted">(iPhone / Android)</span>, ноутбуков и ПК, телевизоров, кофемашин, принтеров, пылесосов Dyson и другой техники в <b>Ростове‑на‑Дону</b> (Левенцовка).<br/>Бесплатная диагностика при ремонте, <b>согласуем цену до начала работ</b> и выдаём устройство только после проверки.<br/><span class="hero__note">*Сроки зависят от сложности и наличия запчастей</span></p><span class="muted">(iPhone / Android)</span>, ноутбуков и ПК, телевизоров, кофемашин, принтеров, пылесосов Dyson и другой техники в <b>Ростове‑на‑Дону</b> (Левенцовка).
-<br/>Бесплатная диагностика при ремонте, <b>согласуем цену до начала работ</b> и выдаём устройство только после проверки.
-<br/><span class="hero__note">*Сроки зависят от сложности и наличия запчастей</span>
+<p class="hero__desc">Ремонт телефонов <span class="muted">(iPhone / Android)</span>, ноутбуков и ПК, телевизоров, кофемашин, принтеров, пылесосов Dyson и другой техники в <b>Ростове‑на‑Дону</b> (Левенцовка).<br/>Бесплатная диагностика при ремонте, <b>согласуем цену до начала работ</b> и выдаём устройство только после проверки.<br/><span class="hero__note">*Сроки зависят от сложности и наличия запчастей</span></p>
 <div class="hero__cta">
 <a class="btn btn--primary" href="#lead">Узнать цену</a>
 <a class="btn btn--soft" href="services.html">Все услуги</a>
@@ -137,6 +135,18 @@ ym(106611877, "init", {
 <a class="chip chip--alt" href="remont-tv.html">📺 Ремонт ТВ</a>
 <a class="chip chip--alt" href="remont-kofemashin.html">☕ Кофемашины</a>
 <a class="chip chip--alt" href="remont-printerov.html">🖨️ Принтеры</a>
+</div>
+
+<div class="heroProblems" aria-label="Популярные проблемы">
+  <div class="heroProblems__title">Популярные проблемы — <span class="muted">нажмите, чтобы открыть</span></div>
+  <div class="heroProblems__list">
+    <a class="probPill" href="net-izobrazheniya-est-zvuk.html">TV: нет изображения, есть звук</a>
+    <a class="probPill" href="est-zvuk-net-izobrazheniya.html">TV: есть звук, нет изображения</a>
+    <a class="probPill" href="net-podsvetki.html">TV: нет подсветки</a>
+    <a class="probPill" href="kofemashina-ne-vklyuchaetsya.html">Кофемашина не включается</a>
+    <a class="probPill" href="dyson-ne-vklyuchaetsya.html">Dyson не включается</a>
+    <a class="probPill" href="razbit-ekran.html">Телефон: разбит экран</a>
+  </div>
 </div>
 <div class="hero__cards">
 <div class="kpi">
@@ -201,7 +211,9 @@ ym(106611877, "init", {
 </label>
 </div>
 
-<button class="btn btn--wide btn--tg" id="sendTg" type="button">Отправить в Telegram</button><button class="btn btn--wide btn--vk" onclick="window.open('https://vk.com/vremonte161','_blank','noopener')" type="button">Отправить в VK</button>
+<button class="btn btn--wide btn--tg" id="sendTg" type="button">Отправить в Telegram</button>
+<button class="btn btn--wide btn--vk" id="sendVk" type="button">Отправить в VK</button>
+<button class="btn btn--wide btn--max" id="sendMax" type="button">Отправить в MAX</button>
 <div class="consent">Нажимая кнопки отправки, вы принимаете <a href="privacy.html" rel="noopener" target="_blank">Политику конфиденциальности</a> и <a href="offer.html" rel="noopener" target="_blank">условия оферты</a>.</div>
 <div class="hint"> Обычно отвечаем в течение <b>5–15 минут</b> • <a href="tel:+79255156161">можно позвонить</a>
 </div>
@@ -221,6 +233,62 @@ ym(106611877, "init", {
 </div>
 </div>
 <div class="hero__bg"></div>
+</section>
+
+<section class="section" id="team">
+  <div class="container">
+    <div class="head reveal">
+      <div>
+        <h2>Наши мастера</h2>
+        <p>Команда сервисного центра. Нажмите «Сертификат», чтобы посмотреть подтверждение квалификации.</p>
+      </div>
+    </div>
+
+    <div class="showcase__grid">
+      <article class="person reveal">
+        <img class="person__ava" src="assets/masters/vladislav.jpg" alt="Мастер Владислав" loading="lazy"/>
+        <div class="person__body">
+          <div class="person__name">Владислав</div>
+          <div class="person__role">Платы / ТВ / бытовая техника</div>
+          <button class="chip chip--link" data-modal-img="assets/masters/cert_vladislav.jpg" type="button">Сертификат</button>
+        </div>
+      </article>
+
+      <article class="person reveal">
+        <img class="person__ava" src="assets/masters/vasiliy.jpg" alt="Мастер Василий" loading="lazy"/>
+        <div class="person__body">
+          <div class="person__name">Василий</div>
+          <div class="person__role">Диагностика / ремонт электроники</div>
+          <button class="chip chip--link" data-modal-img="assets/masters/cert_viktor.jpg" type="button">Сертификат</button>
+        </div>
+      </article>
+
+      <article class="person reveal">
+        <img class="person__ava" src="assets/masters/artemiy.jpg" alt="Мастер Артемий" loading="lazy"/>
+        <div class="person__body">
+          <div class="person__name">Артемий</div>
+          <div class="person__role">Телефоны / ноутбуки / микропайка</div>
+          <button class="chip chip--link" data-modal-img="assets/masters/cert_artem.jpg" type="button">Сертификат</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="head reveal" style="margin-top:22px">
+      <div>
+        <h2>Наши клиенты</h2>
+        <p>Нам доверяют частные клиенты и организации. Ниже — примеры.</p>
+      </div>
+    </div>
+
+    <div class="clients__grid">
+      <button class="clientCard reveal" type="button" data-modal-img="assets/clients/clients_1.jpg">
+        <img src="assets/clients/clients_1.jpg" alt="Наши клиенты — примеры" loading="lazy"/>
+      </button>
+      <button class="clientCard reveal" type="button" data-modal-img="assets/clients/clients_2.jpg">
+        <img src="assets/clients/clients_2.jpg" alt="Наши клиенты — примеры" loading="lazy"/>
+      </button>
+    </div>
+  </div>
 </section>
 <!-- SERVICES -->
 <section class="section" id="services">
@@ -662,7 +730,9 @@ ym(106611877, "init", {
 <span>Контакт</span>
 <input id="leadContact" name="contact" placeholder="+7... или @telegram (по желанию)"/>
 </label>
-<button class="btn btn--wide btn--tg" id="sendTg2" type="button">Отправить в Telegram</button><button class="btn btn--wide btn--vk" onclick="window.open('https://vk.com/vremonte161','_blank','noopener')" type="button">Отправить в VK</button>
+<button class="btn btn--wide btn--tg" id="sendTg2" type="button">Отправить в Telegram</button>
+<button class="btn btn--wide btn--vk" id="sendVk2" type="button">Отправить в VK</button>
+<button class="btn btn--wide btn--max" id="sendMax2" type="button">Отправить в MAX</button>
 <button class="btn btn--wide btn--maxblue" id="sendMax2" type="button">Отправить в MAX</button>
 <div class="consent">Нажимая кнопки отправки, вы принимаете <a href="privacy.html" rel="noopener" target="_blank">Политику конфиденциальности</a> и <a href="offer.html" rel="noopener" target="_blank">условия оферты</a>.</div>
 <div class="hint">Нажимая кнопку, вы откроете VK с готовым сообщением (текст скопируем в буфер).</div>
