@@ -31,34 +31,7 @@
   // Mark JS enabled (used by CSS for reveal fallback)
   document.documentElement.classList.add("js");
 
-  
-  // Theme toggle (default: light)
-  const themeToggle = document.getElementById("themeToggle");
-  const THEME_KEY = "vremonte_theme";
-  const applyTheme = (t) => {
-    const isDark = t === "dark";
-    document.body.classList.toggle("theme-dark", isDark);
-    document.documentElement.classList.toggle("theme-dark", isDark);
-    if (themeToggle) themeToggle.setAttribute("aria-pressed", String(isDark));
-    // update meta theme-color for mobile browser UI
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", isDark ? "#0b1022" : "#fff7f3");
-  };
-  let saved = null;
-  try { saved = localStorage.getItem(THEME_KEY); } catch(e) { saved = null; }
-  if (saved === "dark") applyTheme("dark");
-  else applyTheme("light"); // force light by default
-
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const isDark = document.body.classList.contains("theme-dark");
-      const next = isDark ? "light" : "dark";
-      try { localStorage.setItem(THEME_KEY, next); } catch(e) {}
-      applyTheme(next);
-    });
-  }
-
-// ====== CONFIG ======
+  // ====== CONFIG ======
   const LINKS = {
     phone: "tel:+79255156161",
     tgUser: "vremonte761",
@@ -853,7 +826,7 @@ function renderModelsModal(categoryKey){
 })();
 
   // ====== Lightbox (works gallery) ======
-  const workImgs = Array.from(document.querySelectorAll(".workcard img, .workshopcard img"));
+  const workImgs = Array.from(document.querySelectorAll(".workcard img"));
   if (workImgs.length) {
     const lb = document.createElement("div");
     lb.className = "lightbox";
