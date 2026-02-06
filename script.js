@@ -25,7 +25,8 @@
 
   // Mark JS enabled (used by CSS for reveal fallback / no-js)
   document.documentElement.classList.add("js");
-  document.documentElement.classList.remove("no-js");
+  document.documentElement.classList.remove("no-js"); (used by CSS for reveal fallback)
+  document.documentElement.classList.add("js");
 
   // ====== CONFIG ======
   const LINKS = {
