@@ -1621,3 +1621,43 @@ main.section h2{ margin-top: 26px; }
 /* Hotfix: Steps layout stability */
 .steps-grid .step-card{height:auto;min-height:220px;display:flex;flex-direction:column;gap:12px;}
 .steps-grid .step-card p{overflow-wrap:anywhere;word-break:break-word;}
+
+/* ===== Patch 2026-02-06: Fix "Как работаем" layout + bottom form clickability ===== */
+#process .steps--process{ align-items:stretch; }
+#process .steps--process .step{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+  min-height: 230px;
+  padding: 18px 16px 16px;
+}
+#process .steps--process .step__n{
+  width: 36px;
+  height: 36px;
+  top: 14px;
+  left: 14px;
+}
+#process .steps--process .step b{
+  margin: 44px 0 8px;
+  font-size: 18px;
+  line-height: 1.15;
+}
+#process .steps--process .step p{
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+#process .steps--process .step__btns{ display:flex; gap:10px; flex-wrap:wrap; }
+#process .steps--process .step .btn{ align-self:flex-start; }
+
+/* Bottom lead form: ensure nothing blocks clicks */
+#lead{ position:relative; z-index: 1; }
+#lead .leadbox__right,
+#lead #leadForm2{
+  position: relative;
+  z-index: 5;
+  pointer-events: auto;
+}
+#lead #leadForm2 *{ pointer-events: auto; }
+
+/* "Наши клиенты" are static cards (not buttons) */
+.clientCard{ cursor: default; }
