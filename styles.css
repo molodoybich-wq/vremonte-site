@@ -1617,3 +1617,7 @@ main.section h2{ margin-top: 26px; }
 
 /* Prevent long links from breaking layout */
 .list a{ word-break: break-word; overflow-wrap: anywhere; }
+
+/* Hotfix: Steps layout stability */
+.steps-grid .step-card{height:auto;min-height:220px;display:flex;flex-direction:column;gap:12px;}
+.steps-grid .step-card p{overflow-wrap:anywhere;word-break:break-word;}

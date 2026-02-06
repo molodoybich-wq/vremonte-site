@@ -859,3 +859,22 @@ function renderModelsModal(categoryKey){
       });
     });
   }
+
+// Hotfix: bottom lead form handlers
+
+(function(){
+  const form = document.querySelector('.lead-bottom, #bottomLeadForm, .footer .lead-form');
+  if(!form) return;
+  const getVal = sel => (form.querySelector(sel)?.value || '').trim();
+  const buildMsg = () => {
+    const d=getVal('input[name="device"], #leadDevice2, #leadDevice');
+    const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem');
+    const c=getVal('input[name="contact"], #leadContact2, #leadContact');
+    if(!d || !p){ alert('Укажите устройство и проблему'); return null; }
+    return `Заявка с сайта\nУстройство: ${d}\nПроблема: ${p}${c?`\nКонтакт: ${c}`:''}`;
+  };
+  const bind = (cls, fn) => { const b=form.querySelector(cls); if(b) b.addEventListener('click', fn); };
+  bind('.btn-tg', ()=>{ const m=buildMsg(); if(m) window.open('https://t.me/share/url?text='+encodeURIComponent(m),'_blank'); });
+  bind('.btn-vk', ()=>{ const m=buildMsg(); if(m) window.open('https://vk.com/share.php?comment='+encodeURIComponent(m),'_blank'); });
+  bind('.btn-max', ()=>{ const m=buildMsg(); if(m) window.open('https://max.ru','_blank'); });
+})();
