@@ -1661,3 +1661,35 @@ main.section h2{ margin-top: 26px; }
 
 /* "Наши клиенты" are static cards (not buttons) */
 .clientCard{ cursor: default; }
+
+
+
+/* ====== Mobile menu overlay fix (v20260206-2) ====== */
+@media (max-width: 980px){
+  .mobile-nav{
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    padding: 88px 16px 18px;
+    border-top: none;
+    background: rgba(6,10,20,.97);
+    backdrop-filter: blur(14px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mobile-nav.is-open{ display:block; }
+  .burger{ position: relative; z-index: 10001; }
+}
+
+body.menu-open{
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+}
+
+/* Hide floating controls when menu is open */
+body.menu-open .float,
+body.menu-open .bbar{
+  display:none !important;
+}

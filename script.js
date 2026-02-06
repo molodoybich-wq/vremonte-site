@@ -9,6 +9,7 @@
     burger.setAttribute("aria-expanded", open ? "true" : "false");
     mobileNav.setAttribute("aria-hidden", open ? "false" : "true");
     mobileNav.classList.toggle("is-open", !!open);
+    document.body.classList.toggle("menu-open", !!open);
   };
   if (burger && mobileNav) {
     burger.addEventListener("click", () => {
@@ -21,6 +22,10 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") setMenu(false);
     });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 980) setMenu(false);
+  });
   }
 
   // Mark JS enabled (used by CSS for reveal fallback / no-js)
