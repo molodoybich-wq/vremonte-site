@@ -31,7 +31,30 @@
   // Mark JS enabled (used by CSS for reveal fallback)
   document.documentElement.classList.add("js");
 
-  // ====== CONFIG ======
+  
+  // Theme toggle (default: light)
+  const themeToggle = document.getElementById("themeToggle");
+  const THEME_KEY = "vremonte_theme";
+  const applyTheme = (t) => {
+    document.body.classList.toggle("theme-dark", t === "dark");
+    // update meta theme-color for mobile browser UI
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", t === "dark" ? "#0b1022" : "#ffffff");
+  };
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved === "dark") applyTheme("dark");
+  else applyTheme("light"); // force light by default
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.body.classList.contains("theme-dark");
+      const next = isDark ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
+  }
+
+// ====== CONFIG ======
   const LINKS = {
     phone: "tel:+79255156161",
     tgUser: "vremonte761",
@@ -826,7 +849,7 @@ function renderModelsModal(categoryKey){
 })();
 
   // ====== Lightbox (works gallery) ======
-  const workImgs = Array.from(document.querySelectorAll(".workcard img"));
+  const workImgs = Array.from(document.querySelectorAll(".workcard img, .workshopcard img"));
   if (workImgs.length) {
     const lb = document.createElement("div");
     lb.className = "lightbox";

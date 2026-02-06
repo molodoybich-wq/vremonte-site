@@ -1,13 +1,13 @@
 :root{
-  --bg:#0b1022;
-  --bg2:#070a16;
+  --bg:#f7f8fc;
+  --bg2:#ffffff;
 
-  --panel: rgba(255,255,255,.07);
-  --panel2: rgba(255,255,255,.05);
-  --stroke: rgba(255,255,255,.12);
+  --panel: rgba(11,16,34,.06);
+  --panel2: rgba(11,16,34,.04);
+  --stroke: rgba(11,16,34,.12);
 
-  --text:#eef2ff;
-  --muted: rgba(238,242,255,.72);
+  --text:#0b1022;
+  --muted: rgba(11,16,34,.72);
 
   --a1:#2ea7ff;
   --a2:#ff8a00;
@@ -17,10 +17,9 @@
   --brand-blue:#2ea7ff;
   --brand-dark:#0b1022;
 
-  --shadow: 0 20px 70px rgba(0,0,0,.38);
+  --shadow: 0 20px 70px rgba(0,0,0,.18);
   --r: 20px;
 }
-
 *{ box-sizing:border-box; }
 html,body{ margin:0; padding:0; }
 body{
@@ -1442,3 +1441,105 @@ main.section h2{ margin-top: 26px; }
   background: rgba(255,255,255,.06); color: rgba(255,255,255,.9); cursor:pointer; }
 .lightbox__imgwrap{ display:flex; align-items:center; justify-content:center; padding:10px; }
 .lightbox__img{ max-width:100%; max-height:78vh; border-radius:14px; }
+
+
+/* ===== Theme: dark override (toggle) ===== */
+body.theme-dark{
+  --bg:#0b1022;
+  --bg2:#070a16;
+
+  --panel: rgba(255,255,255,.07);
+  --panel2: rgba(255,255,255,.05);
+  --stroke: rgba(255,255,255,.12);
+
+  --text:#eef2ff;
+  --muted: rgba(238,242,255,.72);
+
+  --shadow: 0 20px 70px rgba(0,0,0,.38);
+}
+
+/* Make base surfaces follow vars (works for both themes) */
+body{ background: var(--bg); color: var(--text); }
+.hero, .nav-bar{ background: linear-gradient(180deg, var(--bg2), var(--bg)); }
+.card, .cta, .note, .faq-item, .workcard, .step, .review-card, .doccard, .gcard{
+  background: var(--panel2) !important;
+  border-color: var(--stroke) !important;
+}
+.muted, .lead, .sub, .note span, .note a, .faq-item p, .workcard figcaption span, .review-card p{
+  color: var(--muted) !important;
+}
+
+/* Header colors */
+.site-header{ border-bottom: 1px solid var(--stroke); }
+.site-header .nav a{ color: var(--text); opacity:.85; }
+.site-header .nav a:hover{ opacity:1; }
+.mobile-nav a{ color: var(--text); opacity:.9; }
+
+/* Buttons in light theme should stay readable */
+body:not(.theme-dark) .btn--chip{
+  background: rgba(11,16,34,.04);
+  border-color: rgba(11,16,34,.14);
+}
+body:not(.theme-dark) .btn-vk{ background: rgba(86,124,255,.12); border-color: rgba(86,124,255,.24); }
+body:not(.theme-dark) .btn-tg{ background: rgba(50,170,255,.12); border-color: rgba(50,170,255,.24); }
+body:not(.theme-dark) .btn-call{ background: rgba(11,16,34,.04); border-color: rgba(11,16,34,.14); }
+
+/* Theme toggle button */
+.theme-toggle{
+  width:42px; height:42px; border-radius:999px;
+  border:1px solid var(--stroke);
+  background: var(--panel2);
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer;
+}
+.theme-toggle:hover{ transform: translateY(-1px); }
+.theme-toggle__icon{
+  width:20px; height:20px; display:block;
+  background-image: var(--theme-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity:.9;
+}
+:root{ --theme-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22%20fill%3D%22%230b1022%22/%3E%0A%3Cg%20stroke%3D%22%230b1022%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%3E%0A%3Cline%20x1%3D%2212%22%20y1%3D%222%22%20x2%3D%2212%22%20y2%3D%225%22/%3E%0A%3Cline%20x1%3D%2212%22%20y1%3D%2219%22%20x2%3D%2212%22%20y2%3D%2222%22/%3E%0A%3Cline%20x1%3D%222%22%20y1%3D%2212%22%20x2%3D%225%22%20y2%3D%2212%22/%3E%0A%3Cline%20x1%3D%2219%22%20y1%3D%2212%22%20x2%3D%2222%22%20y2%3D%2212%22/%3E%0A%3Cline%20x1%3D%224.2%22%20y1%3D%224.2%22%20x2%3D%226.3%22%20y2%3D%226.3%22/%3E%0A%3Cline%20x1%3D%2217.7%22%20y1%3D%2217.7%22%20x2%3D%2219.8%22%20y2%3D%2219.8%22/%3E%0A%3Cline%20x1%3D%2217.7%22%20y1%3D%226.3%22%20x2%3D%2219.8%22%20y2%3D%224.2%22/%3E%0A%3Cline%20x1%3D%224.2%22%20y1%3D%2219.8%22%20x2%3D%226.3%22%20y2%3D%2217.7%22/%3E%0A%3C/g%3E%3C/svg%3E"); }
+body.theme-dark{ --theme-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%3Cpath%20fill%3D%22%23eef2ff%22%20d%3D%22M21%2014.2A8.2%208.2%200%200%201%209.8%203%207.2%207.2%200%201%200%2021%2014.2Z%22/%3E%3C/svg%3E"); }
+
+/* Workshop block */
+.workshop-grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap:12px;
+  margin-top:14px;
+}
+.workshopcard{
+  margin:0;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid var(--stroke);
+  background: var(--panel2);
+  cursor: zoom-in;
+}
+.workshopcard img{ width:100%; height:180px; object-fit:cover; display:block; }
+.workshopcard figcaption{ padding:10px 12px; font-size:13px; color: var(--muted); }
+@media (max-width: 980px){
+  .workshop-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .workshopcard img{ height:160px; }
+}
+@media (max-width: 560px){
+  .workshop-grid{ grid-template-columns: 1fr; }
+  .workshopcard img{ height:220px; }
+}
+
+/* Ensure "Как работаем" buttons never float */
+.step{ min-height: 220px; }
+.step__btns{ margin-top:auto !important; }
+
+/* Make mobile header always visible */
+@media (max-width: 980px){
+  .site-header{ display:block !important; }
+  .nav-bar{ background: rgba(255,255,255,.72); }
+  body.theme-dark .nav-bar{ background: rgba(11,16,34,.72); }
+  .mobile-nav{ background: transparent; }
+}
+
+.strip{ background: var(--panel2) !important; border-color: var(--stroke) !important; }
