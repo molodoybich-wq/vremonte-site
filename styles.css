@@ -188,23 +188,19 @@ img{ max-width:100%; height:auto; display:block; }
 /* Hero */
 .hero{ position:relative; padding: 30px 0 18px; overflow:hidden; isolation:isolate; }
 .hero__bg{
-  z-index:0;
-  position:absolute; inset:-140px;
-  /* Pedant-like big photo + deep blue overlay (your own assets) */
+  position:absolute;
+  inset:-80px;
   background:
-    linear-gradient(90deg, rgba(7,10,22,.92) 0%, rgba(7,10,22,.82) 48%, rgba(7,10,22,.60) 100%),
-    radial-gradient(900px 520px at 22% 18%, rgba(46,167,255,.20), transparent 60%),
-    radial-gradient(900px 520px at 78% 26%, rgba(124,58,237,.22), transparent 62%),
-    url("assets/entrance.webp");
-  background-size: cover;
-  background-position: center;
-  filter: saturate(1.05) contrast(1.02);
+    linear-gradient(90deg, rgba(7,12,24,.92) 0%, rgba(7,12,24,.70) 52%, rgba(7,12,24,.35) 100%),
+    url("assets/workshop-hero.webp") center/cover no-repeat;
+  filter: blur(10px) brightness(.85) saturate(1.05);
+  transform: scale(1.06);
+  z-index: 0;
   pointer-events:none;
 }
-
 .hero__grid{
   position:relative;
-  z-index:1;
+  z-index: 2;
   display:grid;
   grid-template-columns: 1.08fr .92fr;
   gap: 16px;
@@ -607,56 +603,6 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
   color:#fff;
   font-size: 18px;
   cursor:pointer;
-}
-
-
-/* Problems modal + CTA */
-.problemsCTA{
-  margin: 10px 0 8px;
-  display:flex;
-  align-items:center;
-  gap: 10px;
-  flex-wrap:wrap;
-}
-.problemsCTA__hint{
-  color: var(--muted);
-  font-weight: 900;
-  font-size: 13px;
-}
-
-.modal__overlay{
-  position:absolute; inset:0;
-  background: rgba(0,0,0,.55);
-}
-.modal__panel{
-  position:relative;
-  width: min(980px, 94vw);
-  max-height: 86vh;
-  overflow:auto;
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: linear-gradient(180deg, rgba(15,20,45,.96), rgba(10,14,32,.96));
-  box-shadow: 0 30px 90px rgba(0,0,0,.55);
-  padding: 16px;
-}
-.modal__head{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  margin-bottom: 12px;
-}
-.modal__title{ font-weight: 1000; font-size: 18px; }
-.modal__sub{ color: var(--muted); margin-top: 4px; font-size: 13px; }
-.modal__grid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-@media (max-width: 900px){
-  .modal__grid{ grid-template-columns: 1fr; }
 }
 
 /* To top */

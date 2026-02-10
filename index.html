@@ -87,7 +87,7 @@ ym(106611877, "init", {
 </noscript>
 <!-- /Yandex.Metrika counter -->
 
-<link rel="stylesheet" href="styles.css?v=20260210-2145"/>
+<link rel="stylesheet" href="styles.css?v=20260210-15"/>
 </head>
 <body>
 <!-- Sticky Header --> <header class="site-header" id="top"> <div class="nav-bar"> <div class="container container--wide nav-bar__row"> <a aria-label="В ремонте" class="brand brand--new" href="index.html"> <span aria-hidden="true" class="brand__mark"></span> <span class="brand__text"> <span class="brand__name">В</span> <span class="brand__sub">ремонте</span> </span> </a> <nav class="nav"> <a href="index.html#services">Услуги</a> <a href="index.html#devices">Устройства</a> <a href="index.html#process">Как работаем</a>
@@ -102,8 +102,6 @@ ym(106611877, "init", {
 <a aria-label="Позвонить" class="float__btn" href="tel:+79255156161">📞</a>
 <a aria-label="VK" class="float__btn" href="https://vk.com/vremonte161" rel="noopener" target="_blank">💬</a>
 <a aria-label="Telegram" class="float__btn float__btn--main" href="https://t.me/vremonte761" rel="noopener" target="_blank">✈️</a>
-<a aria-label="MAX" class="float__btn" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" rel="noopener" target="_blank">MAX</a>
-
 </div>
 <!-- Mobile bottom bar -->
 <div class="bbar" id="bbar">
@@ -114,7 +112,7 @@ ym(106611877, "init", {
 <main id="top">
 <!-- HERO -->
 <section class="hero">
-<div class="hero__bg" aria-hidden="true"></div>
+<div class="hero__bg"></div>
 <div class="container hero__grid">
 <div class="hero__left reveal">
 <div class="pillline">
@@ -140,36 +138,47 @@ ym(106611877, "init", {
 <a class="chip chip--alt" href="remont-printerov.html">🖨️ Принтеры</a>
 </div>
 
-
-<div class="problemsCTA">
-  <button class="btn btn--soft problemsCTA__btn" type="button" id="openProblems">
-    ⭐ Популярные проблемы
-  </button>
-  <span class="problemsCTA__hint">Выберите проблему — откроется подробная страница</span>
-</div>
-
-<div class="modal" id="problemsModal" aria-hidden="true">
-  <div class="modal__overlay" data-close="true"></div>
-  <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Популярные проблемы">
-    <div class="modal__head">
-      <div>
-        <div class="modal__title">Популярные проблемы</div>
-        <div class="modal__sub">Нажмите на карточку — откроется подробная страница</div>
-      </div>
-      <button class="modal__close" type="button" data-close="true" aria-label="Закрыть">✕</button>
-    </div>
-
-    <div class="modal__grid">
-      <a class="probCard" href="net-izobrazheniya-est-zvuk.html"><span class="probCard__icon">📺</span><span class="probCard__title">Нет изображения, есть звук</span><span class="probCard__meta">Телевизор</span></a>
-      <a class="probCard" href="est-zvuk-net-izobrazheniya.html"><span class="probCard__icon">📺</span><span class="probCard__title">Есть звук, нет изображения</span><span class="probCard__meta">Телевизор</span></a>
-      <a class="probCard" href="net-podsvetki.html"><span class="probCard__icon">💡</span><span class="probCard__title">Нет подсветки</span><span class="probCard__meta">Телевизор</span></a>
-      <a class="probCard" href="kofemashina-ne-vklyuchaetsya.html"><span class="probCard__icon">☕</span><span class="probCard__title">Кофемашина не включается</span><span class="probCard__meta">Кофемашины</span></a>
-      <a class="probCard" href="dyson-ne-vklyuchaetsya.html"><span class="probCard__icon">🌀</span><span class="probCard__title">Dyson не включается</span><span class="probCard__meta">Dyson</span></a>
-      <a class="probCard" href="razbit-ekran-telefona.html"><span class="probCard__icon">📱</span><span class="probCard__title">Разбит экран</span><span class="probCard__meta">Телефоны</span></a>
+<div class="heroProblems heroProblems--premium" aria-label="Популярные проблемы">
+  <div class="heroProblems__head">
+    <div>
+      <div class="heroProblems__kicker">Популярные проблемы</div>
+      <div class="heroProblems__subtitle">Нажмите на карточку — откроется подробная страница</div>
     </div>
   </div>
-</div>
 
+  <div class="heroProblems__cards">
+    <a class="probCard" href="net-izobrazheniya-est-zvuk.html">
+      <span class="probCard__icon">📺</span>
+      <span class="probCard__title">Нет изображения, есть звук</span>
+      <span class="probCard__meta">Телевизор</span>
+    </a>
+    <a class="probCard" href="est-zvuk-net-izobrazheniya.html">
+      <span class="probCard__icon">📺</span>
+      <span class="probCard__title">Есть звук, нет изображения</span>
+      <span class="probCard__meta">Телевизор</span>
+    </a>
+    <a class="probCard" href="net-podsvetki.html">
+      <span class="probCard__icon">💡</span>
+      <span class="probCard__title">Нет подсветки</span>
+      <span class="probCard__meta">Телевизор</span>
+    </a>
+    <a class="probCard" href="kofemashina-ne-vklyuchaetsya.html">
+      <span class="probCard__icon">☕</span>
+      <span class="probCard__title">Кофемашина не включается</span>
+      <span class="probCard__meta">Кофемашины</span>
+    </a>
+    <a class="probCard" href="dyson-ne-vklyuchaetsya.html">
+      <span class="probCard__icon">🌀</span>
+      <span class="probCard__title">Dyson не включается</span>
+      <span class="probCard__meta">Dyson</span>
+    </a>
+    <a class="probCard" href="razbit-ekran-telefona.html">
+      <span class="probCard__icon">📱</span>
+      <span class="probCard__title">Разбит экран</span>
+      <span class="probCard__meta">Телефоны</span>
+    </a>
+  </div>
+</div>
 
 <div class="hero__cards">
 <div class="kpi">
@@ -794,6 +803,6 @@ ym(106611877, "init", {
 <div class="uimodal__content" id="uiModalContent"></div>
 </div>
 </div>
-<script src="script.js?v=20260210-2145" defer></script>
+<script src="script.js?v=20260210-15" defer></script>
 </body>
 </html>
