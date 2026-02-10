@@ -884,3 +884,22 @@ function renderModelsModal(categoryKey){
   bind('.btn-vk', ()=>{ const m=buildMsg(); if(m) window.open('https://vk.com/share.php?comment='+encodeURIComponent(m),'_blank'); });
   bind('.btn-max', ()=>{ const m=buildMsg(); if(m) window.open('https://max.ru','_blank'); });
 })();
+
+
+
+// Popular problems modal (main page)
+(function(){
+  const openBtn = document.getElementById('openProblems');
+  const modal = document.getElementById('problemsModal');
+  if (!openBtn || !modal) return;
+
+  const close = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
+  const open = () => { modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; };
+
+  openBtn.addEventListener('click', open);
+  modal.addEventListener('click', (e) => {
+    const t = e.target;
+    if (t && (t.dataset && t.dataset.close === 'true')) close();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+})();
