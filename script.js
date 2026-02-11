@@ -902,4 +902,71 @@ function renderModelsModal(categoryKey){
     if (t && (t.dataset && t.dataset.close === 'true')) close();
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  // --- Hide "Отзывы" blocks everywhere (keep markup but don't show) ---
+  const hideReviewsEverywhere = () => {
+    // 1) Hide normal review sections by known selectors
+    document.querySelectorAll('.reviews, .section-reviews, #reviews, .reviews-section').forEach((el) => {
+      el.style.display = 'none';
+    });
+
+    // 2) Hide "inline" review blocks on service/problem pages where there is only <h2>Отзывы</h2> + content
+    const headings = Array.from(document.querySelectorAll('h2, h3'))
+      .filter((h) => (h.textContent || '').trim() === 'Отзывы');
+
+    headings.forEach((h) => {
+      // If it's already inside a dedicated reviews section, that section is hidden above.
+      const dedicated = h.closest('section');
+      if (dedicated && (dedicated.id === 'reviews' || (dedicated.className || '').toLowerCase().includes('reviews'))) {
+        dedicated.style.display = 'none';
+        return;
+      }
+
+      // Hide from the heading until the next "process" block / next main section heading
+      const nodesToHide = [h];
+      let n = h.nextSibling;
+
+      const isStopNode = (node) => {
+        if (!node || node.nodeType !== 1) return false;
+        const el = node;
+        if (el.matches('section.process-section, section#process, section[data-section="process"]')) return true;
+        if (el.matches('section.card.process-section, section.card.mt-lg.process-section')) return true;
+        if (el.matches('h2, h3')) {
+          const t = (el.textContent || '').trim();
+          if (t === 'Как проходит ремонт' || t === 'Как работаем' || t === 'Процесс ремонта') return true;
+        }
+        return false;
+      };
+
+      while (n) {
+        if (isStopNode(n)) break;
+        nodesToHide.push(n);
+        n = n.nextSibling;
+      }
+
+      nodesToHide.forEach((node) => {
+        if (node.nodeType === 1) {
+          node.style.display = 'none';
+        } else if (node.nodeType === 3) {
+          node.textContent = '';
+        }
+      });
+    });
+
+    // 3) Safety: hide leftover Yandex review CTA buttons if they slipped outside
+    document.querySelectorAll('a').forEach((a) => {
+      const t = (a.textContent || '').trim();
+      if (/Смотреть отзывы|Оставить отзыв/i.test(t) && /yandex\.ru\/maps/i.test(a.href || '')) {
+        a.style.display = 'none';
+      }
+    });
+  };
+
+  // Run now and after DOM is ready (some pages load script in <head>)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hideReviewsEverywhere);
+  } else {
+    hideReviewsEverywhere();
+  }
+
 })();
