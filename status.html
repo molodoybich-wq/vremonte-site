@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Статус ремонта — В ремонте</title>
+  <meta name="description" content="Проверка статуса ремонта по номеру заявки. Ответим в Telegram/VK/MAX."/>
+  <link rel="canonical" href="https://vremonte61.online/status.html"/>
+  <link rel="stylesheet" href="styles.css?v=20260216-qp3"/>
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="nav-bar">
+      <div class="container container--wide nav-bar__row">
+        <a class="brand brand--new" href="index.html"><span class="brand__mark"></span><span class="brand__text"><span class="brand__name">В</span> <span class="brand__sub">ремонте</span></span></a>
+        <nav class="nav">
+          <a href="services.html">Услуги</a>
+          <a href="ceny.html">Цены</a>
+          <a href="kurer.html">Курьер</a>
+          <a href="guarantee.html">Гарантия</a>
+          <a href="index.html#find">Контакты</a>
+        </nav>
+        <div class="nav-cta">
+          <a class="btn btn--chip btn-tg" href="https://t.me/vremonte761" target="_blank" rel="noopener">Telegram</a>
+          <a class="btn btn--soft btn-call" href="tel:+79255156161">Позвонить</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top:110px; padding-bottom:60px;">
+    <h1 style="margin:0 0 8px;">Статус ремонта</h1>
+    <p class="muted" style="max-width:820px;">
+      Пока это быстрый способ: вы отправляете номер заявки — мы отвечаем в мессенджере.
+      (Позже можно подключить полноценный кабинет/трекер.)
+    </p>
+
+    <div class="card" style="padding:18px; max-width:760px;">
+      <form id="statusForm" class="grid" style="display:grid; gap:12px;">
+        <label class="field">
+          <span>Номер заявки / квитанции</span>
+          <input name="order" required placeholder="Например: 1254">
+        </label>
+        <label class="field">
+          <span>Контакт (телефон или @ник)</span>
+          <input name="contact" placeholder="+7... или @telegram">
+        </label>
+        <label class="field">
+          <span>Комментарий (необязательно)</span>
+          <input name="comment" placeholder="Например: телевизор LG, сдавал вчера">
+        </label>
+
+        <div class="actions" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;">
+          <button class="btn btn--tg" type="button" data-ch="tg">Отправить в Telegram</button>
+          <button class="btn btn--vk" type="button" data-ch="vk">VK</button>
+          <button class="btn btn--max" type="button" data-ch="max">MAX</button>
+        </div>
+
+        <small class="muted">Сообщение будет подготовлено автоматически — останется нажать «Отправить» в мессенджере.</small>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // Мини-логика (без дублирования основного script.js?v=20260216-qp3)
+    const LINKS = {
+      tgUser: "vremonte761",
+      vk: "https://vk.com/vremonte161",
+      max: "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8",
+    };
+    const LEAD_ENDPOINT = ""; // если подключите воркер — вставьте сюда (как в script.js?v=20260216-qp3)
+
+    function buildMsg(){
+      const f = document.getElementById("statusForm");
+      const fd = new FormData(f);
+      const order = String(fd.get("order")||"").trim();
+      const contact = String(fd.get("contact")||"").trim();
+      const comment = String(fd.get("comment")||"").trim();
+      return [
+        "Здравствуйте! Хочу узнать статус ремонта.",
+        `Номер заявки: ${order}`,
+        contact ? `Контакт: ${contact}` : null,
+        comment ? `Комментарий: ${comment}` : null,
+        "",
+        "Отправлено с сайта vremonte61.online"
+      ].filter(Boolean).join("\n");
+    }
+
+    async function saveLead(message, channel){
+      if (!LEAD_ENDPOINT) return;
+      try{
+        await fetch(LEAD_ENDPOINT, {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ message, channel, page: location.pathname, ts: new Date().toISOString() }),
+          mode:"cors"
+        });
+      }catch(_){}
+    }
+
+    function openTg(text){
+      const url = "https://t.me/" + LINKS.tgUser + "?text=" + encodeURIComponent(text);
+      window.open(url, "_blank");
+    }
+    function openVk(text){
+      window.open(LINKS.vk, "_blank");
+      try{ navigator.clipboard.writeText(text); }catch(_){}
+      alert("Текст скопирован. Вставь его в VK и нажми «Отправить» 🙂");
+    }
+    function openMax(text){
+      window.open(LINKS.max, "_blank");
+      try{ navigator.clipboard.writeText(text); }catch(_){}
+      alert("Текст скопирован. Вставь его в MAX и нажми «Отправить» 🙂");
+    }
+
+    document.addEventListener("click", async (e)=>{
+      const b = e.target.closest("[data-ch]");
+      if (!b) return;
+      const f = document.getElementById("statusForm");
+      if (!f.reportValidity()) return;
+      const ch = b.getAttribute("data-ch");
+      const msg = buildMsg();
+      await saveLead(msg, ch);
+      if (ch === "tg") openTg(msg);
+      if (ch === "vk") openVk(msg);
+      if (ch === "max") openMax(msg);
+    });
+  </script>
+</body>
+</html>

@@ -2053,3 +2053,55 @@ select option, select optgroup{
   #quickprice .calcFields{ grid-template-columns: 1fr; }
   #cases .caseCard__media{ height: 160px; }
 }
+
+
+/* Toast (lead saved / step hint) */
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%) translateY(20px);
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(15, 20, 35, .92);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: .2px;
+  max-width: min(520px, calc(100vw - 28px));
+  box-shadow: 0 14px 30px rgba(0,0,0,.38);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+  z-index: 99999;
+}
+.toast.show{
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/* Trust bar under hero */
+.trustbar{
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.trustbar__item{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(255,255,255,.92);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+}
+.trustbar__item:hover{
+  background: rgba(255,255,255,.10);
+}

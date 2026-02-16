@@ -41,6 +41,14 @@
     max: "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8",
   };
 
+  const METRIKA_ID = 106611877;
+
+  // Lead saving (serverless webhook). Leave empty if не используете.
+  // Как работает: сайт отправляет JSON на ваш webhook, а webhook пересылает в Telegram и/или сохраняет в таблицу/CRM.
+  // Инструкции и готовые примеры: docs/telegram-leads.md
+  const LEAD_ENDPOINT = ""; // например: https://<ваш-домен>/lead
+
+
   // ====== Helpers ======
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
@@ -53,6 +61,15 @@
       .replace(/\"/g,"&quot;")
       .replace(/'/g,"&#039;");
   }
+
+
+  // ====== Analytics helpers (Yandex Metrika) ======
+  function goal(name, params){
+    try{
+      if (typeof window.ym === "function") window.ym(METRIKA_ID, "reachGoal", name, params || {});
+    }catch(_){}
+  }
+
 
   async function copyToClipboard(text){
     try{
@@ -85,6 +102,68 @@
     if (text) await copyToClipboard(text);
     window.open(LINKS.max, "_blank", "noopener,noreferrer");
   }
+
+
+  // ====== Lead save (optional) ======
+  function showToast(message){
+    let t = document.getElementById("toast");
+    if (!t){
+      t = document.createElement("div");
+      t.id = "toast";
+      t.className = "toast";
+      document.body.appendChild(t);
+    }
+    t.textContent = message;
+    t.classList.add("show");
+    window.clearTimeout(showToast._timer);
+    showToast._timer = window.setTimeout(()=>t.classList.remove("show"), 3200);
+  }
+
+  function saveLeadLocal(payload){
+    try{
+      const key = "vremonte_leads";
+      const arr = JSON.parse(localStorage.getItem(key) || "[]");
+      arr.push(payload);
+      localStorage.setItem(key, JSON.stringify(arr.slice(-200))); // keep last 200
+    }catch(_){}
+  }
+
+  async function saveLeadRemote(payload){
+    if (!LEAD_ENDPOINT) return { ok:false, skipped:true };
+    try{
+      const res = await fetch(LEAD_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(payload),
+        mode: "cors",
+        keepalive: true,
+      });
+      return { ok: !!(res && res.ok), skipped:false };
+    }catch(e){
+      return { ok:false, skipped:false, error: String(e) };
+    }
+  }
+
+  async function logLeadAndToast(message, channel){
+    const payload = {
+      message,
+      channel: channel || "",
+      page: location.pathname || "/",
+      ts: new Date().toISOString(),
+      ua: navigator.userAgent,
+    };
+    saveLeadLocal(payload);
+    const r = await saveLeadRemote(payload);
+    if (r.skipped){
+      showToast("Откроем мессенджер — нажми «Отправить». (Логи заявок: подключим по инструкции)");
+    }else if (r.ok){
+      showToast("✅ Заявка сохранена. Сейчас откроется мессенджер.");
+      goal("lead_saved");
+    }else{
+      showToast("Откроем мессенджер — нажми «Отправить». (Лид не сохранился на сервере)");
+    }
+  }
+
 
   // ====== Year in footer ======
   const y = $("#year");
@@ -267,12 +346,12 @@
       openVKWithText(buildLeadMessage(leadForm2));
     });
   }
-  $("#sendTg")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm)) return; openTelegramWithText(buildLeadMessage(leadForm)); });
-  $("#sendVk")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; await openVKWithText(buildLeadMessage(leadForm)); });
-  $("#sendTg2")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm2)) return; openTelegramWithText(buildLeadMessage(leadForm2)); });
-  $("#sendVk2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; await openVKWithText(buildLeadMessage(leadForm2)); });
-$("#sendMax")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm)) return; openMaxWithText(buildLeadMessage(leadForm)); });
-  $("#sendMax2")?.addEventListener("click", ()=> { if (!ensureLeadValid(leadForm2)) return; openMaxWithText(buildLeadMessage(leadForm2)); });
+  $("#sendTg")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; const msg = buildLeadMessage(leadForm); goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); });
+  $("#sendVk")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; const msg = buildLeadMessage(leadForm); goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); });
+  $("#sendTg2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; const msg = buildLeadMessage(leadForm2); goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); });
+  $("#sendVk2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; const msg = buildLeadMessage(leadForm2); goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); });
+$("#sendMax")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; const msg = buildLeadMessage(leadForm); goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); });
+  $("#sendMax2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; const msg = buildLeadMessage(leadForm2); goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); });
   $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
 
   // ====== Static template to Telegram (fallback) ======
@@ -583,9 +662,9 @@ function renderModelsModal(categoryKey){
       const msg = (msgKey === "time")
         ? "Здравствуйте! Подскажите, пожалуйста, по срокам ремонта. Устройство: ____. Проблема: ____."
         : "Здравствуйте!";
-      if (type === "tg") openTelegramWithText(msg);
-      if (type === "vk") await openVKWithText(msg);
-      if (type === "max") await openMaxWithText(msg);
+      if (type === "tg") { goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); }
+      if (type === "vk") { goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); }
+      if (type === "max") { goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); }
       return;
     }
 
@@ -618,9 +697,9 @@ function renderModelsModal(categoryKey){
       ].filter(Boolean).join("\n");
 
       const type = cs.getAttribute("data-courier-send");
-      if (type === "tg") openTelegramWithText(msg);
-      if (type === "vk") await openVKWithText(msg);
-      if (type === "max") await openMaxWithText(msg);
+      if (type === "tg") { goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); }
+      if (type === "vk") { goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); }
+      if (type === "max") { goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); }
       return;
     }
 
@@ -746,9 +825,9 @@ function renderModelsModal(categoryKey){
       ].filter(Boolean).join("\n");
 
       const type = ms.getAttribute("data-model-send");
-      if (type === "tg") openTelegramWithText(msg);
-      if (type === "vk") await openVKWithText(msg);
-      if (type === "max") await openMaxWithText(msg);
+      if (type === "tg") { goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); }
+      if (type === "vk") { goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); }
+      if (type === "max") { goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); }
       return;
     }
   });
@@ -830,6 +909,22 @@ function renderModelsModal(categoryKey){
   }
 
 
+
+  // ====== Global click tracking ======
+  document.addEventListener("click", (e)=>{
+    const a = e.target.closest("a");
+    if (!a) return;
+    const href = (a.getAttribute("href") || "").trim();
+    if (!href) return;
+    if (href.startsWith("tel:")) goal("click_tel");
+    if (href.includes("t.me/")) goal("click_tg");
+    if (href.includes("vk.com/")) goal("click_vk");
+    if (href.includes("max.ru/")) goal("click_max");
+    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
+    if (href.includes("2gis")) goal("open_reviews_2gis");
+  });
+
+
 })();
 
   // ====== Lightbox (works gallery) ======
@@ -883,6 +978,22 @@ function renderModelsModal(categoryKey){
   bind('.btn-tg', ()=>{ const m=buildMsg(); if(m) window.open('https://t.me/share/url?text='+encodeURIComponent(m),'_blank'); });
   bind('.btn-vk', ()=>{ const m=buildMsg(); if(m) window.open('https://vk.com/share.php?comment='+encodeURIComponent(m),'_blank'); });
   bind('.btn-max', ()=>{ const m=buildMsg(); if(m) window.open('https://max.ru','_blank'); });
+
+  // ====== Global click tracking ======
+  document.addEventListener("click", (e)=>{
+    const a = e.target.closest("a");
+    if (!a) return;
+    const href = (a.getAttribute("href") || "").trim();
+    if (!href) return;
+    if (href.startsWith("tel:")) goal("click_tel");
+    if (href.includes("t.me/")) goal("click_tg");
+    if (href.includes("vk.com/")) goal("click_vk");
+    if (href.includes("max.ru/")) goal("click_max");
+    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
+    if (href.includes("2gis")) goal("open_reviews_2gis");
+  });
+
+
 })();
 
 
@@ -969,6 +1080,22 @@ function renderModelsModal(categoryKey){
     hideReviewsEverywhere();
   }
 
+
+  // ====== Global click tracking ======
+  document.addEventListener("click", (e)=>{
+    const a = e.target.closest("a");
+    if (!a) return;
+    const href = (a.getAttribute("href") || "").trim();
+    if (!href) return;
+    if (href.startsWith("tel:")) goal("click_tel");
+    if (href.includes("t.me/")) goal("click_tg");
+    if (href.includes("vk.com/")) goal("click_vk");
+    if (href.includes("max.ru/")) goal("click_max");
+    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
+    if (href.includes("2gis")) goal("open_reviews_2gis");
+  });
+
+
 })();
 
 
@@ -1038,4 +1165,20 @@ function renderModelsModal(categoryKey){
   update();
   dev.addEventListener("change", () => { fillProblems(); update(); });
   prob.addEventListener("change", update);
+
+  // ====== Global click tracking ======
+  document.addEventListener("click", (e)=>{
+    const a = e.target.closest("a");
+    if (!a) return;
+    const href = (a.getAttribute("href") || "").trim();
+    if (!href) return;
+    if (href.startsWith("tel:")) goal("click_tel");
+    if (href.includes("t.me/")) goal("click_tg");
+    if (href.includes("vk.com/")) goal("click_vk");
+    if (href.includes("max.ru/")) goal("click_max");
+    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
+    if (href.includes("2gis")) goal("open_reviews_2gis");
+  });
+
+
 })();
