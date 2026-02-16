@@ -89,22 +89,21 @@ ym(106611877, "init", {
 
 <link rel="stylesheet" href="styles.css?v=20260210-15"/>
 <script>
-(function(){
-  try{
-    var p = window.location.pathname || "";
-    if (/\/index\.html$/i.test(p)){
-      var target = p.replace(/index\.html$/i,"");
-      if (!target) target = "/";
-      window.location.replace(window.location.origin + target + window.location.search + window.location.hash);
-    }
-  }catch(e){}
-})();
+  // Clean URL: redirect /index.html -> /
+  (function () {
+    try {
+      if (location.pathname && location.pathname.endsWith('/index.html')) {
+        location.replace(location.origin + '/');
+      }
+    } catch (e) {}
+  })();
 </script>
+
 </head>
 <body>
 <!-- Sticky Header --> <header class="site-header" id="top"> <div class="nav-bar"> <!-- REVIEWS_BLOCK_START (hidden-fallback) -->
-<div class="container container--wide nav-bar__row"> <a aria-label="В ремонте" class="brand brand--new" href="/"> <span aria-hidden="true" class="brand__mark"></span> <span class="brand__text"> <span class="brand__name">В</span> <span class="brand__sub">ремонте</span> </span> </a> <nav class="nav"> <a href="/#services">Услуги</a> <a href="/#devices">Устройства</a> <a href="/#process">Как работаем</a>
-      <a href="/#workshop">Мастерская</a> <a href="/#reviews">Отзывы</a> <a href="/#find">Контакты</a> <a href="/#faq">FAQ</a> </nav> <div class="nav-cta"><a class="btn btn--chip btn-vk" href="https://vk.com/vremonte161" rel="noopener" target="_blank">VK</a><a class="btn btn--chip btn-tg" href="https://t.me/vremonte761" rel="noopener" target="_blank">Telegram</a><a class="btn btn--primary btn-max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" rel="noopener" target="_blank">MAX</a><a class="btn btn--soft btn-call" href="tel:+79255156161">Позвонить</a></div> <button type="button" aria-expanded="false" aria-label="Меню" class="burger" id="burger"> <span></span><span></span><span></span> </button> </div> <div aria-hidden="true" class="mobile-nav" id="mobileNav"> <a href="/#services">Услуги</a> <a href="/#devices">Устройства</a> <a href="/#process">Как работаем</a> <a href="/#reviews">Отзывы</a> <a href="/#find">Контакты</a> <a href="/#faq">FAQ</a> <div class="mobile-nav__cta">
+<div class="container container--wide nav-bar__row"> <a aria-label="В ремонте" class="brand brand--new" href="index.html"> <span aria-hidden="true" class="brand__mark"></span> <span class="brand__text"> <span class="brand__name">В</span> <span class="brand__sub">ремонте</span> </span> </a> <nav class="nav"> <a href="index.html#services">Услуги</a> <a href="index.html#devices">Устройства</a> <a href="index.html#process">Как работаем</a>
+      <a href="index.html#workshop">Мастерская</a> <a href="index.html#reviews">Отзывы</a> <a href="index.html#find">Контакты</a> <a href="index.html#faq">FAQ</a> </nav> <div class="nav-cta"><a class="btn btn--chip btn-vk" href="https://vk.com/vremonte161" rel="noopener" target="_blank">VK</a><a class="btn btn--chip btn-tg" href="https://t.me/vremonte761" rel="noopener" target="_blank">Telegram</a><a class="btn btn--primary btn-max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" rel="noopener" target="_blank">MAX</a><a class="btn btn--soft btn-call" href="tel:+79255156161">Позвонить</a></div> <button type="button" aria-expanded="false" aria-label="Меню" class="burger" id="burger"> <span></span><span></span><span></span> </button> </div> <div aria-hidden="true" class="mobile-nav" id="mobileNav"> <a href="index.html#services">Услуги</a> <a href="index.html#devices">Устройства</a> <a href="index.html#process">Как работаем</a> <a href="index.html#reviews">Отзывы</a> <a href="index.html#find">Контакты</a> <a href="index.html#faq">FAQ</a> <div class="mobile-nav__cta">
   <a class="btn btn--chip btn-vk" href="https://vk.com/vremonte161" rel="noopener" target="_blank">VK</a>
   <a class="btn btn--chip btn-tg" href="https://t.me/vremonte761" rel="noopener" target="_blank">Telegram</a>
   <a class="btn btn--primary btn-max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" rel="noopener" target="_blank">MAX</a>
@@ -135,6 +134,7 @@ ym(106611877, "init", {
 <h1 class="hero__title"> Ремонт техники в <span class="grad">Ростове‑на‑Дону</span>
 </h1>
 <p class="hero__desc">Ремонт телефонов <span class="muted">(iPhone / Android)</span>, ноутбуков и ПК, телевизоров, кофемашин, принтеров, пылесосов Dyson и другой техники в <b>Ростове‑на‑Дону</b> (Левенцовка).<br/>Бесплатная диагностика при ремонте, <b>согласуем цену до начала работ</b> и выдаём устройство только после проверки.<br/><span class="hero__note">*Сроки зависят от сложности и наличия запчастей</span></p>
+<div class="urgency">⚡ Сегодня осталось <b>4 слота</b> на срочный ремонт — напишите, чтобы закрепить время.</div>
 <div class="hero__cta">
 <a class="btn btn--primary" href="#lead">Узнать цену</a>
 <a class="btn btn--soft" href="services.html">Все услуги</a>
@@ -400,6 +400,100 @@ ym(106611877, "init", {
 <p class="prices__footnote">*Бесплатно при последующем ремонте. Если ремонт нецелесообразен — согласуем варианты.</p>
 </div>
 </section>
+
+<section class="section" id="quickprice">
+  <div class="container">
+    <div class="head reveal head--split">
+      <div>
+        <h2>Примерная стоимость за 30 секунд</h2>
+        <p>Выберите устройство и проблему — покажем ориентир и предложим написать в мессенджер.</p>
+      </div>
+      <div class="head__note">Диагностика <b>0 ₽</b> при ремонте. Цена согласуется <b>до начала работ</b>.</div>
+    </div>
+
+    <div class="calcCard reveal">
+      <div class="calcGrid">
+        <div class="field">
+          <span>Устройство</span>
+          <select id="qpDevice" aria-label="Устройство">
+            <option value="phone">Телефон</option>
+            <option value="pc">Ноутбук / ПК</option>
+            <option value="tv">Телевизор</option>
+            <option value="coffee">Кофемашина</option>
+            <option value="printer">Принтер</option>
+            <option value="dyson">Dyson</option>
+          </select>
+        </div>
+        <div class="field">
+          <span>Проблема</span>
+          <select id="qpProblem" aria-label="Проблема"></select>
+        </div>
+        <div class="calcPrice" aria-live="polite">
+          <div class="calcPrice__val" id="qpPrice">от 1800 ₽</div>
+          <div class="calcPrice__desc" id="qpDesc">Чистка/замена разъёма.</div>
+        </div>
+      </div>
+
+      <div class="calcActions">
+        <a class="btn btn--primary btn-max" id="qpMax" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">Отправить в MAX</a>
+        <a class="btn btn--soft btn-tg" id="qpTg" href="https://t.me/vremonte761" target="_blank" rel="noopener">Отправить в Telegram</a>
+        <a class="btn btn--chip btn-call" href="tel:+79255156161">Позвонить</a>
+      </div>
+
+      <div class="hint">*Ориентир. Точную цену скажем после диагностики. Запчасти — по наличию.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="cases">
+  <div class="container">
+    <div class="head reveal head--split">
+      <div>
+        <h2>Кейсы: что делали недавно</h2>
+        <p>Пара реальных примеров — чтобы было понятно по срокам, стоимости и подходу.</p>
+      </div>
+      <div class="head__note">Гарантия на работы и запчасти — <b>до 12 месяцев</b>.</div>
+    </div>
+
+    <div class="casesGrid reveal">
+      <article class="caseCard">
+        <div class="caseCard__top">
+          <div class="caseCard__title">iPhone • замена дисплея</div>
+          <div class="caseCard__meta">Срок: 1–2 часа • Гарантия: 6–12 мес</div>
+        </div>
+        <div class="caseCard__body">Разбит экран — заменили модуль, проверили TrueTone/датчики, тест перед выдачей.</div>
+        <div class="caseCard__cta">
+          <a class="btn btn--soft btn--small" href="/remont-telefonov.html">Подробнее</a>
+          <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+        </div>
+      </article>
+
+      <article class="caseCard">
+        <div class="caseCard__top">
+          <div class="caseCard__title">TV • нет изображения/полосы</div>
+          <div class="caseCard__meta">Срок: 1–3 дня • Диагностика 0 ₽ при ремонте</div>
+        </div>
+        <div class="caseCard__body">Проверили подсветку и питание, устранили причину, прогон под нагрузкой.</div>
+        <div class="caseCard__cta">
+          <a class="btn btn--soft btn--small" href="remont-tv.html">Подробнее</a>
+          <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+        </div>
+      </article>
+
+      <article class="caseCard">
+        <div class="caseCard__top">
+          <div class="caseCard__title">Кофемашина • не греет / ошибка</div>
+          <div class="caseCard__meta">Срок: 1–2 дня • Гарантия до 12 мес</div>
+        </div>
+        <div class="caseCard__body">Диагностика нагрева и датчиков, ремонт узла, тест приготовления.</div>
+        <div class="caseCard__cta">
+          <a class="btn btn--soft btn--small" href="remont-kofemashin.html">Подробнее</a>
+          <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
 <!-- PROCESS -->
 <section class="section" id="process">
 <div class="container">
@@ -491,7 +585,7 @@ ym(106611877, "init", {
 
         <div class="workshop__cta">
           <a class="btn btn--primary" href="#form">Задать вопрос мастеру</a>
-          <a class="btn btn--soft" href="/#reviews">Отзывы клиентов</a>
+          <a class="btn btn--soft" href="index.html#reviews">Отзывы клиентов</a>
         </div>
       </div>
     </div>
@@ -762,5 +856,11 @@ ym(106611877, "init", {
 </div>
 </div>
 <script src="script.js?v=20260210-15" defer></script>
+<div class="stickyContact" aria-label="Быстрая связь">
+  <a class="stickyContact__btn stickyContact__btn--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">MAX</a>
+  <a class="stickyContact__btn stickyContact__btn--tg" href="https://t.me/vremonte761" target="_blank" rel="noopener">Telegram</a>
+  <a class="stickyContact__btn stickyContact__btn--wa" href="https://wa.me/79255156161" target="_blank" rel="noopener">WhatsApp</a>
+  <a class="stickyContact__btn stickyContact__btn--call" href="tel:+79255156161">Звонок</a>
+</div>
 </body>
 </html>
