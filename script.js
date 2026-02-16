@@ -970,3 +970,119 @@ function renderModelsModal(categoryKey){
   }
 
 })();
+
+
+// VREMONTE 2.0: Sticky CTA + Calculator + Certificates modal
+const MAX_LINK = "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8";
+const TG_LINK = "https://t.me/vremonte761";
+const WA_LINK = "https://wa.me/79255156161";
+
+// Sticky CTA (mobile)
+(function initStickyCta(){
+  if (document.getElementById("stickyCta")) return;
+  const el = document.createElement("div");
+  el.className = "stickyCta";
+  el.id = "stickyCta";
+  el.innerHTML = `
+    <div class="stickyCta__row">
+      <a class="stickyCta__btn stickyCta__btn--max" href="${MAX_LINK}" target="_blank" rel="noopener">MAX</a>
+      <a class="stickyCta__btn stickyCta__btn--tg" href="${TG_LINK}" target="_blank" rel="noopener">Telegram</a>
+      <a class="stickyCta__btn stickyCta__btn--wa" href="${WA_LINK}" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="stickyCta__btn stickyCta__btn--call" href="tel:+79255156161">Звонок</a>
+    </div>`;
+  document.body.appendChild(el);
+})();
+
+// Certificates modal
+(function initImgModal(){
+  if (document.getElementById("imgModal")) return;
+  const modal = document.createElement("div");
+  modal.className = "imgModal";
+  modal.id = "imgModal";
+  modal.setAttribute("aria-hidden","true");
+  modal.innerHTML = `
+    <div class="imgModal__back" data-close="1"></div>
+    <div class="imgModal__panel" role="dialog" aria-modal="true">
+      <button class="btn btn--small btn--ghost imgModal__close" data-close="1" type="button">✕</button>
+      <img id="imgModalImg" src="" alt="Сертификат"/>
+    </div>`;
+  document.body.appendChild(modal);
+  const close = () => { modal.setAttribute("aria-hidden","true"); document.getElementById("imgModalImg").src=""; };
+  modal.addEventListener("click", (e)=>{ if (e.target && e.target.dataset && e.target.dataset.close) close(); });
+  document.addEventListener("keydown", (e)=>{ if (e.key === "Escape") close(); });
+  document.addEventListener("click", (e)=>{
+    const btn = e.target && e.target.closest ? e.target.closest("[data-cert]") : null;
+    if (!btn) return;
+    const src = btn.getAttribute("data-cert");
+    if (!src) return;
+    document.getElementById("imgModalImg").src = src;
+    modal.setAttribute("aria-hidden","false");
+  });
+})();
+
+// Calculator (only on index where elements exist)
+(function initCalc(){
+  const deviceEl = document.getElementById("calcDevice");
+  const problemEl = document.getElementById("calcProblem");
+  const priceEl = document.getElementById("calcPrice");
+  const noteEl = document.getElementById("calcNote");
+  const btnMax = document.getElementById("calcSendMax");
+  const btnTg = document.getElementById("calcSendTg");
+  if (!deviceEl || !problemEl || !priceEl || !btnMax || !btnTg) return;
+
+  const data = {
+    phone: [
+      {k:"screen", t:"Разбит экран / замена дисплея", p:"от 4 500 ₽", n:"Зависит от модели и качества дисплея."},
+      {k:"battery", t:"Быстро разряжается / замена АКБ", p:"от 2 500 ₽", n:"Подберём АКБ и проверим заряд."},
+      {k:"water", t:"После воды / не включается", p:"от 1 500 ₽", n:"Чистка + диагностика платы."},
+      {k:"charge", t:"Не заряжается / разъём питания", p:"от 1 800 ₽", n:"Чистка/замена разъёма."}
+    ],
+    laptop: [
+      {k:"no_power", t:"Не включается", p:"от 1 500 ₽", n:"Диагностика питания и платы."},
+      {k:"charge", t:"Не заряжается", p:"от 1 500 ₽", n:"Разъём, контроллер, питание."},
+      {k:"slow", t:"Тормозит / апгрейд SSD", p:"от 2 000 ₽", n:"Подберём SSD, перенесём систему."},
+      {k:"overheat", t:"Перегрев / шумит", p:"от 1 500 ₽", n:"Чистка + термопаста."}
+    ],
+    tv: [
+      {k:"backlight", t:"Нет подсветки / темный экран", p:"от 3 500 ₽", n:"Замена LED-подсветки."},
+      {k:"no_image", t:"Есть звук, нет изображения", p:"от 2 500 ₽", n:"Диагностика платы/матрицы."},
+      {k:"power", t:"Не включается / питание", p:"от 2 000 ₽", n:"Блок питания, цепи питания."}
+    ],
+    coffee: [
+      {k:"leak", t:"Протечка", p:"от 1 800 ₽", n:"Уплотнения, трубки, помпа."},
+      {k:"heat", t:"Ошибка / не греет", p:"от 2 500 ₽", n:"ТЭН/термоблок, датчики."},
+      {k:"clean", t:"Чистка / декальцинация", p:"от 1 500 ₽", n:"Профилактика и обслуживание."}
+    ],
+    printer: [
+      {k:"jam", t:"Зажёвывает бумагу", p:"от 1 200 ₽", n:"Ролики/узлы подачи."},
+      {k:"faint", t:"Плохо печатает", p:"от 1 200 ₽", n:"Чистка/картридж/узлы печати."},
+      {k:"service", t:"Обслуживание", p:"от 1 000 ₽", n:"Профилактика, настройка."}
+    ],
+    dyson: [
+      {k:"battery", t:"Слабый заряд / АКБ", p:"от 2 500 ₽", n:"Диагностика и замена аккумулятора."},
+      {k:"power", t:"Не включается", p:"от 2 000 ₽", n:"Плата, кнопка, питание."},
+      {k:"motor", t:"Падает мощность", p:"от 2 000 ₽", n:"Фильтры/двигатель/датчики."}
+    ]
+  };
+
+  const fillProblems = () => {
+    const items = data[deviceEl.value] || [];
+    problemEl.innerHTML = items.map(i => `<option value="${i.k}">${i.t}</option>`).join("");
+    updateResult();
+  };
+
+  const updateResult = () => {
+    const items = data[deviceEl.value] || [];
+    const it = items.find(x => x.k === problemEl.value) || items[0];
+    if (!it) return;
+    priceEl.textContent = it.p;
+    noteEl.textContent = it.n || "Точный ценник — после бесплатной диагностики.";
+    const msg = encodeURIComponent(`Здравствуйте! Хочу узнать стоимость ремонта.\nУстройство: ${deviceEl.options[deviceEl.selectedIndex].text}\nПроблема: ${it.t}\nАдрес: Ткачева 22`);
+    btnMax.href = `${MAX_LINK}?text=${msg}`;
+    btnTg.href = `${TG_LINK}?text=${msg}`;
+  };
+
+  deviceEl.addEventListener("change", fillProblems);
+  problemEl.addEventListener("change", updateResult);
+  fillProblems();
+})();
