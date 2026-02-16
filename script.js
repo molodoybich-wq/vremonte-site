@@ -46,7 +46,7 @@
   // Lead saving (serverless webhook). Leave empty if не используете.
   // Как работает: сайт отправляет JSON на ваш webhook, а webhook пересылает в Telegram и/или сохраняет в таблицу/CRM.
   // Инструкции и готовые примеры: docs/telegram-leads.md
-  const LEAD_ENDPOINT = ""; // например: https://<ваш-домен>/lead
+  const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbxqaJfhNC5MbGbUCOPRola4NTWCp784hVHrOYuJyjROqRUmlEhBxHLfgD1qDBKLsYll/exec"; // например: https://<ваш-домен>/lead
 
 
   // ====== Helpers ======
@@ -135,10 +135,10 @@
         method: "POST",
         headers: { "Content-Type":"application/json" },
         body: JSON.stringify(payload),
-        mode: "cors",
+        mode: "no-cors",
         keepalive: true,
       });
-      return { ok: !!(res && res.ok), skipped:false };
+      return { ok: true, skipped:false };
     }catch(e){
       return { ok:false, skipped:false, error: String(e) };
     }
