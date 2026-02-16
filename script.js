@@ -144,24 +144,29 @@
     }
   }
 
-  async function logLeadAndToast(message, channel){
+  async function logLeadAndToast(lead, channel){
     const payload = {
-      message,
+      page: location.href || "",
       channel: channel || "",
-      page: location.pathname || "/",
+      message: (lead && lead.message) ? lead.message : (typeof lead === "string" ? lead : ""),
+      device: (lead && lead.device) ? lead.device : "",
+      problem: (lead && lead.problem) ? lead.problem : "",
+      contact: (lead && lead.contact) ? lead.contact : "",
       ts: new Date().toISOString(),
       ua: navigator.userAgent,
     };
     saveLeadLocal(payload);
     const r = await saveLeadRemote(payload);
     if (r.skipped){
-      showToast("Откроем мессенджер — нажми «Отправить». (Логи заявок: подключим по инструкции)");
+      showToast("Откроем мессенджер — нажми «Отправить». (Webhook не подключён)");
     }else if (r.ok){
-      showToast("✅ Заявка сохранена. Сейчас откроется мессенджер.");
+      showToast("✅ Заявка улетела вам в Telegram. Сейчас откроется мессенджер.");
       goal("lead_saved");
     }else{
-      showToast("Откроем мессенджер — нажми «Отправить». (Лид не сохранился на сервере)");
+      showToast("Откроем мессенджер — нажми «Отправить». (Webhook не сработал)");
     }
+  }
+
   }
 
 
@@ -326,6 +331,16 @@
       alert("Заполни, пожалуйста: Устройство и Проблема.");
       return false;
     }
+
+
+  function extractLeadFields(formEl){
+    if (!formEl) return { device:"", problem:"", contact:"" };
+    const device = (formEl.querySelector('[name="device"]')?.value || "").trim();
+    const problem = (formEl.querySelector('[name="issue"]')?.value || "").trim();
+    const contact = (formEl.querySelector('[name="contact"]')?.value || "").trim();
+    return { device, problem, contact };
+  }
+
     return true;
   }
 
