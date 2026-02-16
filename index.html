@@ -2,7 +2,8 @@
 <html lang="ru" class="no-js">
 <head>
 
-  <meta charset="utf-8"/>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#0b1022"/>
 
@@ -86,18 +87,18 @@ ym(106611877, "init", {
 </noscript>
 <!-- /Yandex.Metrika counter -->
 
-<link rel="stylesheet" href="styles.css?v=20260216-01"/>
-<script data-cleanurl="1">
-  (function(){
-    try{
-      var p = location.pathname || "";
-      if (p.endsWith("/index.html") || p === "/index.html") {
-        var q = location.search || "";
-        var h = location.hash || "";
-        location.replace("/" + q + h);
-      }
-    }catch(e){}
-  })();
+<link rel="stylesheet" href="styles.css?v=20260210-15"/>
+<script>
+(function(){
+  try{
+    var p = window.location.pathname || "";
+    if (/\/index\.html$/i.test(p)){
+      var target = p.replace(/index\.html$/i,"");
+      if (!target) target = "/";
+      window.location.replace(window.location.origin + target + window.location.search + window.location.hash);
+    }
+  }catch(e){}
+})();
 </script>
 </head>
 <body>
@@ -123,7 +124,7 @@ ym(106611877, "init", {
 </div>
 <main id="top">
 <!-- HERO -->
-<section class="hero hero--photo">
+<section class="hero">
 <div class="hero__bg"></div>
 <div class="container hero__grid">
 <div class="hero__left reveal">
@@ -278,62 +279,6 @@ ym(106611877, "init", {
 </div>
 </section>
 
-<section class="section" id="team">
-  <div class="container">
-    <div class="head reveal">
-      <div>
-        
-<!-- REVIEWS_BLOCK_END --><h2>Наши мастера</h2>
-        <p>Команда сервисного центра. Нажмите «Сертификат», чтобы посмотреть подтверждение квалификации.</p>
-      </div>
-    </div>
-
-    <div class="showcase__grid">
-      <article class="person reveal">
-        <img class="person__img" src="masters/vladislav.jpg" alt="Мастер Владислав" loading="lazy"/>
-        <div class="person__body">
-          <div class="person__name">Владислав</div>
-          <div class="person__role">Платы / ТВ / бытовая техника</div>
-          <button class="chip chip--link" data-modal-img="masters/cert-vladislav.jpg" type="button">Сертификат</button>
-        </div>
-      </article>
-
-      <article class="person reveal">
-        <img class="person__img" src="masters/vasiliy.jpg" alt="Мастер Василий" loading="lazy"/>
-        <div class="person__body">
-          <div class="person__name">Василий</div>
-          <div class="person__role">Диагностика / ремонт электроники</div>
-          <button class="chip chip--link" data-modal-img="masters/cert-vasiliy.jpg" type="button">Сертификат</button>
-        </div>
-      </article>
-
-      <article class="person reveal">
-        <img class="person__img" src="masters/artemiy.jpg" alt="Мастер Артемий" loading="lazy"/>
-        <div class="person__body">
-          <div class="person__name">Артемий</div>
-          <div class="person__role">Телефоны / ноутбуки / микропайка</div>
-          <button class="chip chip--link" data-modal-img="masters/cert-artemiy.jpg" type="button">Сертификат</button>
-        </div>
-      </article>
-    </div>
-
-    <div class="head reveal" style="margin-top:22px">
-      <div>
-        <h2>Наши клиенты</h2>
-        <p>Нам доверяют частные клиенты и организации. Ниже — примеры.</p>
-      </div>
-    </div>
-
-    <div class="clientsGrid">
-      <div class="clientCard reveal">
-        <img src="assets/clients/clients_1.jpg" alt="Наши клиенты — коллаж 1" loading="lazy"/>
-      </div>
-      <div class="clientCard reveal">
-        <img src="assets/clients/clients_2.jpg" alt="Наши клиенты — коллаж 2" loading="lazy"/>
-      </div>
-    </div>
-  </div>
-</section>
 <!-- SERVICES -->
 <section class="section" id="services">
 <div class="container">
@@ -456,103 +401,6 @@ ym(106611877, "init", {
 </div>
 </section>
 <!-- PROCESS -->
-<section class="trust reveal" id="trust">
-  <div class="container">
-    <div class="sectionHead">
-      <h2>Почему нам доверяют</h2>
-      <p class="muted">Работаем аккуратно, согласовываем цену до ремонта и даём гарантию.</p>
-    </div>
-    <div class="trust__grid">
-      <div class="trustCard"><div class="trustCard__n">8+</div><div class="trustCard__t">лет опыта</div><div class="trustCard__d">ремонтируем технику каждый день</div></div>
-      <div class="trustCard"><div class="trustCard__n">5000+</div><div class="trustCard__t">ремонтов</div><div class="trustCard__d">телефоны, ТВ, ПК, кофемашины</div></div>
-      <div class="trustCard"><div class="trustCard__n">90%</div><div class="trustCard__t">в день обращения</div><div class="trustCard__d">если запчасть в наличии</div></div>
-      <div class="trustCard"><div class="trustCard__n">до 12 мес</div><div class="trustCard__t">гарантия</div><div class="trustCard__d">на работы и запчасти</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="calc reveal" id="calc">
-  <div class="container">
-    <div class="sectionHead">
-      <h2>Примерная стоимость за 30 секунд</h2>
-      <p class="muted">Выберите устройство и проблему — покажем ориентир и предложим написать в мессенджер.</p>
-    </div>
-
-    <div class="calcBox">
-      <div class="calcBox__row">
-        <label class="field">
-          <span class="field__label">Устройство</span>
-          <select id="calcDevice" class="field__control">
-            <option value="phone">Телефон</option>
-            <option value="laptop">Ноутбук / ПК</option>
-            <option value="tv">Телевизор</option>
-            <option value="coffee">Кофемашина</option>
-            <option value="printer">Принтер</option>
-            <option value="dyson">Dyson</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span class="field__label">Проблема</span>
-          <select id="calcProblem" class="field__control"></select>
-        </label>
-
-        <div class="calcBox__result">
-          <div class="calcBox__price" id="calcPrice">—</div>
-          <div class="calcBox__note muted" id="calcNote">Точный ценник — после бесплатной диагностики.</div>
-        </div>
-      </div>
-
-      <div class="calcBox__actions">
-        <a class="btn btn--primary" id="calcSendMax" href="#" target="_blank" rel="noopener">Отправить в MAX</a>
-        <a class="btn btn--soft" id="calcSendTg" href="#" target="_blank" rel="noopener">Отправить в Telegram</a>
-        <a class="btn btn--ghost" href="tel:+79255156161">Позвонить</a>
-      </div>
-
-      <div class="calcBox__foot muted">Диагностика — бесплатно. Согласуем стоимость до ремонта.</div>
-    </div>
-  </div>
-</section>
-
-<section class="masters reveal" id="masters">
-  <div class="container">
-    <div class="sectionHead">
-      <h2>Наши мастера</h2>
-      <p class="muted">Команда с опытом. По клику — сертификат.</p>
-    </div>
-    <div class="masters__grid">
-      <button class="masterCard" type="button" data-cert="masters/cert-artemiy.jpg">
-        <img src="tild3337-3438-4039-a663-613433636135/block2_master.jpg" alt="Мастер Артемий" loading="lazy"/>
-        <div class="masterCard__meta"><b>Артемий</b><span>Телефоны / пайка · 6 лет</span></div>
-      </button>
-      <button class="masterCard" type="button" data-cert="masters/cert-vasiliy.jpg">
-        <img src="tild3337-3438-4039-a663-613433636135/block2_master.jpg" alt="Мастер Василий" loading="lazy"/>
-        <div class="masterCard__meta"><b>Василий</b><span>ТВ / подсветка · 8 лет</span></div>
-      </button>
-      <button class="masterCard" type="button" data-cert="masters/cert-vladislav.jpg">
-        <img src="tild3337-3438-4039-a663-613433636135/block2_master.jpg" alt="Мастер Владислав" loading="lazy"/>
-        <div class="masterCard__meta"><b>Владислав</b><span>Кофемашины · 7 лет</span></div>
-      </button>
-      <button class="masterCard" type="button" data-cert="masters/cert-viktor.jpg">
-        <img src="tild3337-3438-4039-a663-613433636135/block2_master.jpg" alt="Мастер Виктор" loading="lazy"/>
-        <div class="masterCard__meta"><b>Виктор</b><span>ПК/ноутбуки · 9 лет</span></div>
-      </button>
-    </div>
-  </div>
-</section>
-
-<section class="clients reveal" id="clients">
-  <div class="container">
-    <div class="sectionHead">
-      <h2>Нам доверяют</h2>
-      <p class="muted">Обслуживаем частных клиентов и организации.</p>
-    </div>
-    <div class="clients__row">
-      <img src="assets/clients/clients_1.jpg" alt="Клиенты" loading="lazy"/>
-      <img src="assets/clients/clients_2.jpg" alt="Клиенты" loading="lazy"/>
-    </div>
-  </div>
-</section>
 <section class="section" id="process">
 <div class="container">
 <div class="head reveal">
@@ -913,6 +761,6 @@ ym(106611877, "init", {
 <div class="uimodal__content" id="uiModalContent"></div>
 </div>
 </div>
-<script src="script.js?v=20260216-01" defer></script>
+<script src="script.js?v=20260210-15" defer></script>
 </body>
 </html>
