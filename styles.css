@@ -458,6 +458,9 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 }
 .review p{ margin: 8px 0 0; color: var(--muted); }
 .review__btns{ display:flex; gap: 10px; flex-wrap:wrap; margin-top: 12px; }
+.reviews__list{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+.reviews__list .review-card{ margin:0; }
+
 
 .miniinfo{ margin-top: 12px; display:flex; flex-wrap:wrap; gap: 10px; }
 .miniinfo__item{
