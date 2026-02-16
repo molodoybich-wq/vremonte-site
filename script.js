@@ -93,13 +93,12 @@
     const url = `${LINKS.tg}?text=${encodeURIComponent(text || "")}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
-  async function openVKWithText(text){
-    // VK не всегда поддерживает автоподстановку текста — копируем в буфер и открываем чат/сообщество
-    if (text) await copyToClipboard(text);
+  function openVKWithText(text){
+    if (text) { copyToClipboard(text); }
     window.open(LINKS.vk, "_blank", "noopener,noreferrer");
   }
-  async function openMaxWithText(text){
-    if (text) await copyToClipboard(text);
+  function openMaxWithText(text){
+    if (text) { copyToClipboard(text); }
     window.open(LINKS.max, "_blank", "noopener,noreferrer");
   }
 
@@ -295,7 +294,7 @@
   });
 
   // ====== Lead message builder ======
-  function buildLeadMessage(formEl, extra){
+  function buildLead(formEl, extra){
     const getVal = (nameOrId) => {
       if (!formEl) return "";
       const byId = formEl.querySelector(`#${nameOrId}`);
@@ -313,14 +312,20 @@
 
     const parts = [];
     parts.push("Здравствуйте! Заявка с сайта «В ремонте».");
-    if (device) parts.push(`Устройство: ${device}`);
-    if (problem) parts.push(`Проблема: ${problem}`);
-    if (urgency) parts.push(`Срочность: ${urgency}`);
-    if (contact) parts.push(`Контакт: ${contact}`);
+    if (device) parts.push("Устройство: " + device);
+    if (problem) parts.push("Проблема: " + problem);
+    if (urgency) parts.push("Срочность: " + urgency);
+    if (contact) parts.push("Контакт: " + contact);
     if (extra) parts.push(extra);
     parts.push("");
     parts.push("Отправлено с сайта vremonte61.online");
-    return parts.join("\n");
+
+    return {
+      device,
+      problem,
+      contact,
+      message: parts.join("\n")
+    };
   }
 
   function ensureLeadValid(formEl){
@@ -350,7 +355,7 @@
     leadForm.addEventListener("submit",(e)=>{
       e.preventDefault();
       if (!ensureLeadValid(leadForm)) return;
-      openVKWithText(buildLeadMessage(leadForm));
+      openVKWithText(buildLead(leadForm).message);
     });
   }
   const leadForm2 = $("#leadForm2");
@@ -358,15 +363,51 @@
     leadForm2.addEventListener("submit",(e)=>{
       e.preventDefault();
       if (!ensureLeadValid(leadForm2)) return;
-      openVKWithText(buildLeadMessage(leadForm2));
+      openVKWithText(buildLead(leadForm2).message);
     });
   }
-  $("#sendTg")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; const msg = buildLeadMessage(leadForm); goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); });
-  $("#sendVk")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; const msg = buildLeadMessage(leadForm); goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); });
-  $("#sendTg2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; const msg = buildLeadMessage(leadForm2); goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); });
-  $("#sendVk2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; const msg = buildLeadMessage(leadForm2); goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); });
-$("#sendMax")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm)) return; const msg = buildLeadMessage(leadForm); goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); });
-  $("#sendMax2")?.addEventListener("click", async ()=> { if (!ensureLeadValid(leadForm2)) return; const msg = buildLeadMessage(leadForm2); goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); });
+  $("#sendTg")?.addEventListener("click", () => {
+    if (!ensureLeadValid(leadForm)) return;
+    const lead = buildLead(leadForm);
+    goal("form_submit_attempt");
+    openTelegramWithText(lead.message);
+    logLeadAndToast(lead, "tg");
+  });
+  $("#sendVk")?.addEventListener("click", () => {
+    if (!ensureLeadValid(leadForm)) return;
+    const lead = buildLead(leadForm);
+    goal("form_submit_attempt");
+    openVKWithText(lead.message);
+    logLeadAndToast(lead, "vk");
+  });
+  $("#sendTg2")?.addEventListener("click", () => {
+    if (!ensureLeadValid(leadForm2)) return;
+    const lead = buildLead(leadForm2);
+    goal("form_submit_attempt");
+    openTelegramWithText(lead.message);
+    logLeadAndToast(lead, "tg");
+  });
+  $("#sendVk2")?.addEventListener("click", () => {
+    if (!ensureLeadValid(leadForm2)) return;
+    const lead = buildLead(leadForm2);
+    goal("form_submit_attempt");
+    openVKWithText(lead.message);
+    logLeadAndToast(lead, "vk");
+  });
+$("#sendMax")?.addEventListener("click", () => {
+    if (!ensureLeadValid(leadForm)) return;
+    const lead = buildLead(leadForm);
+    goal("form_submit_attempt");
+    openMaxWithText(lead.message);
+    logLeadAndToast(lead, "max");
+  });
+  $("#sendMax2")?.addEventListener("click", () => {
+    if (!ensureLeadValid(leadForm2)) return;
+    const lead = buildLead(leadForm2);
+    goal("form_submit_attempt");
+    openMaxWithText(lead.message);
+    logLeadAndToast(lead, "max");
+  });
   $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
 
   // ====== Static template to Telegram (fallback) ======
@@ -677,9 +718,9 @@ function renderModelsModal(categoryKey){
       const msg = (msgKey === "time")
         ? "Здравствуйте! Подскажите, пожалуйста, по срокам ремонта. Устройство: ____. Проблема: ____."
         : "Здравствуйте!";
-      if (type === "tg") { goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); }
-      if (type === "vk") { goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); }
-      if (type === "max") { goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); }
+      if (type === "tg") { goal("form_submit_attempt"); openTelegramWithText(msg); logLeadAndToast({message: msg}, "tg"); }
+      if (type === "vk") { goal("form_submit_attempt"); openVKWithText(msg); logLeadAndToast({message: msg}, "vk"); }
+      if (type === "max") { goal("form_submit_attempt"); openMaxWithText(msg); logLeadAndToast({message: msg}, "max"); }
       return;
     }
 
@@ -712,9 +753,9 @@ function renderModelsModal(categoryKey){
       ].filter(Boolean).join("\n");
 
       const type = cs.getAttribute("data-courier-send");
-      if (type === "tg") { goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); }
-      if (type === "vk") { goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); }
-      if (type === "max") { goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); }
+      if (type === "tg") { goal("form_submit_attempt"); openTelegramWithText(msg); logLeadAndToast({message: msg}, "tg"); }
+      if (type === "vk") { goal("form_submit_attempt"); openVKWithText(msg); logLeadAndToast({message: msg}, "vk"); }
+      if (type === "max") { goal("form_submit_attempt"); openMaxWithText(msg); logLeadAndToast({message: msg}, "max"); }
       return;
     }
 
@@ -840,9 +881,9 @@ function renderModelsModal(categoryKey){
       ].filter(Boolean).join("\n");
 
       const type = ms.getAttribute("data-model-send");
-      if (type === "tg") { goal("form_submit_attempt"); await logLeadAndToast(msg,"tg"); openTelegramWithText(msg); }
-      if (type === "vk") { goal("form_submit_attempt"); await logLeadAndToast(msg,"vk"); await openVKWithText(msg); }
-      if (type === "max") { goal("form_submit_attempt"); await logLeadAndToast(msg,"max"); await openMaxWithText(msg); }
+      if (type === "tg") { goal("form_submit_attempt"); openTelegramWithText(msg); logLeadAndToast({message: msg}, "tg"); }
+      if (type === "vk") { goal("form_submit_attempt"); openVKWithText(msg); logLeadAndToast({message: msg}, "vk"); }
+      if (type === "max") { goal("form_submit_attempt"); openMaxWithText(msg); logLeadAndToast({message: msg}, "max"); }
       return;
     }
   });
@@ -990,9 +1031,9 @@ function renderModelsModal(categoryKey){
     return `Заявка с сайта\nУстройство: ${d}\nПроблема: ${p}${c?`\nКонтакт: ${c}`:''}`;
   };
   const bind = (cls, fn) => { const b=form.querySelector(cls); if(b) b.addEventListener('click', fn); };
-  bind('.btn-tg', ()=>{ const m=buildMsg(); if(m) window.open('https://t.me/share/url?text='+encodeURIComponent(m),'_blank'); });
-  bind('.btn-vk', ()=>{ const m=buildMsg(); if(m) window.open('https://vk.com/share.php?comment='+encodeURIComponent(m),'_blank'); });
-  bind('.btn-max', ()=>{ const m=buildMsg(); if(m) window.open('https://max.ru','_blank'); });
+  bind('.btn-tg', ()=>{ const d=getVal('input[name="device"], #leadDevice2, #leadDevice'); const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem'); const c=getVal('input[name="contact"], #leadContact2, #leadContact'); const m=buildMsg(); if(!m) return; window.open('https://t.me/share/url?text='+encodeURIComponent(m),'_blank'); logLeadAndToast({message:m, device:d, problem:p, contact:c}, 'tg'); });
+  bind('.btn-vk', ()=>{ const d=getVal('input[name="device"], #leadDevice2, #leadDevice'); const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem'); const c=getVal('input[name="contact"], #leadContact2, #leadContact'); const m=buildMsg(); if(!m) return; window.open('https://vk.com/share.php?comment='+encodeURIComponent(m),'_blank'); logLeadAndToast({message:m, device:d, problem:p, contact:c}, 'vk'); });
+  bind('.btn-max', ()=>{ const d=getVal('input[name="device"], #leadDevice2, #leadDevice'); const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem'); const c=getVal('input[name="contact"], #leadContact2, #leadContact'); const m=buildMsg(); if(!m) return; window.open(LINKS.max,'_blank','noopener,noreferrer'); copyToClipboard(m); logLeadAndToast({message:m, device:d, problem:p, contact:c}, 'max'); });
 
   // ====== Global click tracking ======
   document.addEventListener("click", (e)=>{
