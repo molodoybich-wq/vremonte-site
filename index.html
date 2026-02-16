@@ -87,7 +87,7 @@ ym(106611877, "init", {
 </noscript>
 <!-- /Yandex.Metrika counter -->
 
-<link rel="stylesheet" href="styles.css?v=20260210-15"/>
+<link rel="stylesheet" href="styles.css?v=20260216-qp2"/>
 <script>
   // Clean URL: redirect /index.html -> /
   (function () {
@@ -406,37 +406,53 @@ ym(106611877, "init", {
     <div class="head reveal head--split">
       <div>
         <h2>Примерная стоимость за 30 секунд</h2>
-        <p>Выберите устройство и проблему — покажем ориентир и предложим написать в мессенджер.</p>
+        <p>Выберите устройство и проблему — покажем ориентир и сразу предложим написать в мессенджер.</p>
       </div>
       <div class="head__note">Диагностика <b>0 ₽</b> при ремонте. Цена согласуется <b>до начала работ</b>.</div>
     </div>
 
-    <div class="calcCard reveal">
-      <div class="calcGrid">
-        <div class="field">
-          <span>Устройство</span>
-          <select id="qpDevice" aria-label="Устройство">
-            <option value="phone">Телефон</option>
-            <option value="pc">Ноутбук / ПК</option>
-            <option value="tv">Телевизор</option>
-            <option value="coffee">Кофемашина</option>
-            <option value="printer">Принтер</option>
-            <option value="dyson">Dyson</option>
-          </select>
+    <div class="calcCard calcCard--premium reveal">
+      <div class="calcGrid calcGrid--premium">
+        <div class="calcFields">
+          <label class="field field--select">
+            <span>Устройство</span>
+            <select id="qpDevice" aria-label="Устройство">
+              <option value="phone">Телефон</option>
+              <option value="pc">Ноутбук / ПК</option>
+              <option value="tv">Телевизор</option>
+              <option value="coffee">Кофемашина</option>
+              <option value="printer">Принтер</option>
+              <option value="dyson">Dyson</option>
+            </select>
+          </label>
+
+          <label class="field field--select">
+            <span>Проблема</span>
+            <select id="qpProblem" aria-label="Проблема"></select>
+          </label>
+
+          <div class="calcMiniNote">
+            <span class="dot"></span>
+            <span>Срок и цена зависят от модели и состояния. Ориентир — без “сюрпризов”.</span>
+          </div>
         </div>
-        <div class="field">
-          <span>Проблема</span>
-          <select id="qpProblem" aria-label="Проблема"></select>
-        </div>
-        <div class="calcPrice" aria-live="polite">
+
+        <div class="calcPrice calcPrice--premium" aria-live="polite">
+          <div class="calcPrice__kicker">Ориентир</div>
           <div class="calcPrice__val" id="qpPrice">от 1800 ₽</div>
           <div class="calcPrice__desc" id="qpDesc">Чистка/замена разъёма.</div>
+
+          <div class="calcBadges">
+            <span class="miniBadge">✅ Согласуем цену</span>
+            <span class="miniBadge">🛡️ Гарантия</span>
+            <span class="miniBadge">🔎 Диагностика 0 ₽*</span>
+          </div>
         </div>
       </div>
 
-      <div class="calcActions">
-        <a class="btn btn--primary btn-max" id="qpMax" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">Отправить в MAX</a>
-        <a class="btn btn--soft btn-tg" id="qpTg" href="https://t.me/vremonte761" target="_blank" rel="noopener">Отправить в Telegram</a>
+      <div class="calcActions calcActions--premium">
+        <a class="btn btn--primary btn-max" id="qpMax" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">Написать в MAX</a>
+        <a class="btn btn--soft btn-tg" id="qpTg" href="https://t.me/vremonte761" target="_blank" rel="noopener">Написать в Telegram</a>
         <a class="btn btn--chip btn-call" href="tel:+79255156161">Позвонить</a>
       </div>
 
@@ -450,50 +466,76 @@ ym(106611877, "init", {
     <div class="head reveal head--split">
       <div>
         <h2>Кейсы: что делали недавно</h2>
-        <p>Пара реальных примеров — чтобы было понятно по срокам, стоимости и подходу.</p>
+        <p>Коротко и по делу — чтобы было понятно по срокам, стоимости и подходу.</p>
       </div>
       <div class="head__note">Гарантия на работы и запчасти — <b>до 12 месяцев</b>.</div>
     </div>
 
-    <div class="casesGrid reveal">
-      <article class="caseCard">
-        <div class="caseCard__top">
-          <div class="caseCard__title">iPhone • замена дисплея</div>
-          <div class="caseCard__meta">Срок: 1–2 часа • Гарантия: 6–12 мес</div>
-        </div>
-        <div class="caseCard__body">Разбит экран — заменили модуль, проверили TrueTone/датчики, тест перед выдачей.</div>
-        <div class="caseCard__cta">
-          <a class="btn btn--soft btn--small" href="/remont-telefonov.html">Подробнее</a>
-          <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
-        </div>
-      </article>
-
-      <article class="caseCard">
-        <div class="caseCard__top">
-          <div class="caseCard__title">TV • нет изображения/полосы</div>
-          <div class="caseCard__meta">Срок: 1–3 дня • Диагностика 0 ₽ при ремонте</div>
-        </div>
-        <div class="caseCard__body">Проверили подсветку и питание, устранили причину, прогон под нагрузкой.</div>
-        <div class="caseCard__cta">
-          <a class="btn btn--soft btn--small" href="remont-tv.html">Подробнее</a>
-          <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+    <div class="casesGrid casesGrid--premium reveal">
+      <article class="caseCard caseCard--premium">
+        <a class="caseCard__media" href="/remont-telefonov.html" aria-label="Подробнее: замена дисплея">
+          <img loading="lazy" src="examples/phone/display.webp" alt="Замена дисплея телефона в мастерской"/>
+          <span class="casePill">📱 Телефон</span>
+        </a>
+        <div class="caseCard__content">
+          <div class="caseCard__title">Замена дисплея (iPhone/Android)</div>
+          <div class="caseCard__meta">
+            <span class="miniBadge">⏱ 1–2 часа</span>
+            <span class="miniBadge">🛡 6–12 мес</span>
+          </div>
+          <div class="caseCard__body">Разбит экран — меняем модуль, проверяем датчики/камера/TrueTone (если поддерживается), тест перед выдачей.</div>
+          <div class="caseCard__cta">
+            <a class="btn btn--soft btn--small" href="/remont-telefonov.html">Подробнее</a>
+            <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+          </div>
         </div>
       </article>
 
-      <article class="caseCard">
-        <div class="caseCard__top">
-          <div class="caseCard__title">Кофемашина • не греет / ошибка</div>
-          <div class="caseCard__meta">Срок: 1–2 дня • Гарантия до 12 мес</div>
+      <article class="caseCard caseCard--premium">
+        <a class="caseCard__media" href="remont-tv.html" aria-label="Подробнее: ремонт ТВ">
+          <img loading="lazy" src="examples/tv/noimage.webp" alt="Ремонт телевизора: нет изображения / полосы"/>
+          <span class="casePill">📺 Телевизор</span>
+        </a>
+        <div class="caseCard__content">
+          <div class="caseCard__title">Нет изображения / полосы</div>
+          <div class="caseCard__meta">
+            <span class="miniBadge">⏱ 1–3 дня</span>
+            <span class="miniBadge">🔎 0 ₽*</span>
+          </div>
+          <div class="caseCard__body">Проверяем подсветку и питание, устраняем причину, делаем прогон под нагрузкой перед выдачей.</div>
+          <div class="caseCard__cta">
+            <a class="btn btn--soft btn--small" href="remont-tv.html">Подробнее</a>
+            <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+          </div>
         </div>
-        <div class="caseCard__body">Диагностика нагрева и датчиков, ремонт узла, тест приготовления.</div>
-        <div class="caseCard__cta">
-          <a class="btn btn--soft btn--small" href="remont-kofemashin.html">Подробнее</a>
-          <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+      </article>
+
+      <article class="caseCard caseCard--premium">
+        <a class="caseCard__media" href="remont-kofemashin.html" aria-label="Подробнее: ремонт кофемашины">
+          <img loading="lazy" src="examples/coffee/heat.webp" alt="Ремонт кофемашины: не греет / ошибка"/>
+          <span class="casePill">☕ Кофемашина</span>
+        </a>
+        <div class="caseCard__content">
+          <div class="caseCard__title">Не греет / ошибка</div>
+          <div class="caseCard__meta">
+            <span class="miniBadge">⏱ 1–2 дня</span>
+            <span class="miniBadge">🛡 до 12 мес</span>
+          </div>
+          <div class="caseCard__body">Диагностика нагрева и датчиков, ремонт узла (ТЭН/термодатчики/цепи питания), тест приготовления.</div>
+          <div class="caseCard__cta">
+            <a class="btn btn--soft btn--small" href="remont-kofemashin.html">Подробнее</a>
+            <a class="btn btn--primary btn--small" href="#lead">Узнать цену</a>
+          </div>
         </div>
       </article>
     </div>
+
+    <div class="casesFoot reveal">
+      <span class="muted">*Диагностика бесплатно при последующем ремонте. Если ремонт нецелесообразен — согласуем варианты.</span>
+    </div>
   </div>
 </section>
+
 <!-- PROCESS -->
 <section class="section" id="process">
 <div class="container">
@@ -855,7 +897,7 @@ ym(106611877, "init", {
 <div class="uimodal__content" id="uiModalContent"></div>
 </div>
 </div>
-<script src="script.js?v=20260210-15" defer></script>
+<script src="script.js?v=20260216-qp2" defer></script>
 <div class="stickyContact" aria-label="Быстрая связь">
   <a class="stickyContact__btn stickyContact__btn--max" href="https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8" target="_blank" rel="noopener">MAX</a>
   <a class="stickyContact__btn stickyContact__btn--tg" href="https://t.me/vremonte761" target="_blank" rel="noopener">Telegram</a>

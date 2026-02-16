@@ -970,3 +970,72 @@ function renderModelsModal(categoryKey){
   }
 
 })();
+
+
+
+/* === Quick price calculator (homepage) === */
+(() => {
+  const dev = document.getElementById("qpDevice");
+  const prob = document.getElementById("qpProblem");
+  const price = document.getElementById("qpPrice");
+  const desc = document.getElementById("qpDesc");
+  const maxBtn = document.getElementById("qpMax");
+  const tgBtn = document.getElementById("qpTg");
+  if (!dev || !prob || !price || !desc) return;
+
+  const DATA = {
+    phone: [
+      { v:"screen", t:"Разбит экран / замена дисплея", p:"от 2500 ₽", d:"Замена модуля, проверка, тест перед выдачей." },
+      { v:"battery", t:"Быстро разряжается / замена АКБ", p:"от 1000 ₽", d:"Установка нового аккумулятора и проверка тока." },
+      { v:"water", t:"После воды / не включается", p:"от 1800 ₽", d:"Чистка, диагностика, восстановление цепей." },
+      { v:"charge", t:"Не заряжается / разъём питания", p:"от 1800 ₽", d:"Чистка/замена разъёма, пайка при необходимости." },
+    ],
+    pc: [
+      { v:"nofi", t:"Не ловит Wi‑Fi / драйвер/модуль", p:"от 900 ₽", d:"Диагностика, настройка, замена модуля при необходимости." },
+      { v:"slow", t:"Тормозит / установка SSD", p:"от 1500 ₽", d:"Перенос системы/установка, чистка, оптимизация." },
+      { v:"power", t:"Не включается / питание", p:"от 1800 ₽", d:"Диагностика цепей питания, ремонт платы." },
+    ],
+    tv: [
+      { v:"backlight", t:"Подсветка / тусклая картинка", p:"от 2500 ₽", d:"Замена линеек подсветки, тест." },
+      { v:"noimg", t:"Нет изображения / полосы", p:"от 1800 ₽", d:"Диагностика матрицы/шлейфов/платы." },
+      { v:"psu", t:"Питание / разъёмы", p:"от 1800 ₽", d:"Ремонт платы питания/разъёмов, проверка." },
+    ],
+    coffee: [
+      { v:"leak", t:"Протечка", p:"от 1500 ₽", d:"Замена уплотнений/шлангов, тест на герметичность." },
+      { v:"heat", t:"Ошибка / не греет", p:"от 1800 ₽", d:"Диагностика нагрева, датчиков, ремонт узла." },
+      { v:"clean", t:"Чистка / декальцинация", p:"от 1200 ₽", d:"Промывка, удаление накипи, профилактика." },
+    ],
+    printer: [
+      { v:"paper", t:"Замятие бумаги", p:"от 900 ₽", d:"Чистка/ремонт тракта подачи, тест." },
+      { v:"faint", t:"Печатает бледно", p:"от 900 ₽", d:"Профилактика, диагностика узлов, расходники." },
+      { v:"service", t:"Не видит картридж / ошибка", p:"от 1000 ₽", d:"Диагностика, восстановление контактов/узлов." },
+    ],
+    dyson: [
+      { v:"battery", t:"Быстро разряжается / АКБ", p:"от 1500 ₽", d:"Диагностика и замена аккумулятора." },
+      { v:"power", t:"Не включается", p:"от 1800 ₽", d:"Диагностика платы/питания, ремонт." },
+      { v:"loss", t:"Потеря мощности", p:"от 900 ₽", d:"Чистка, диагностика фильтров/трактов." },
+    ],
+  };
+
+  function fillProblems() {
+    const items = DATA[dev.value] || [];
+    prob.innerHTML = items.map(it => `<option value="${it.v}">${it.t}</option>`).join("");
+  }
+
+  function update() {
+    const items = DATA[dev.value] || [];
+    const it = items.find(x => x.v === prob.value) || items[0];
+    if (!it) return;
+    price.textContent = it.p;
+    desc.textContent = it.d;
+
+    const msg = encodeURIComponent(`Здравствуйте! Хочу узнать стоимость. Устройство: ${dev.options[dev.selectedIndex].text}. Проблема: ${it.t}.`);
+    if (maxBtn) maxBtn.href = `https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8?text=${msg}`;
+    if (tgBtn) tgBtn.href = `https://t.me/vremonte761?text=${msg}`;
+  }
+
+  fillProblems();
+  update();
+  dev.addEventListener("change", () => { fillProblems(); update(); });
+  prob.addEventListener("change", update);
+})();
