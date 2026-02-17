@@ -1,1235 +1,289 @@
 (() => {
   "use strict";
 
-  // Mobile nav (one source of truth)
-  const burger = document.getElementById("burger");
-  const mobileNav = document.getElementById("mobileNav");
-  const setMenu = (open) => {
-  if (!burger || !mobileNav) return;
-  const isOpen = !!open;
-  burger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  mobileNav.setAttribute("aria-hidden", isOpen ? "false" : "true");
-  mobileNav.classList.toggle("is-open", isOpen);
-  document.body.classList.toggle("menu-open", isOpen);
-};
-  if (burger && mobileNav) {
-    burger.addEventListener("click", () => {
-      const isOpen = burger.getAttribute("aria-expanded") === "true";
-      setMenu(!isOpen);
-    });
-    mobileNav.addEventListener("click", (e) => {
-      if (e.target && e.target.closest && e.target.closest("a")) setMenu(false);
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setMenu(false);
-    });
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 980) setMenu(false);
-    });
-  }
+  const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxqaJfhNC5MbGbUCOPRola4NTWCp784hVHrOYuJyjROqRUmlEhBxHLfgD1qDBKLsYll/exec";
+  const TG_SHARE = "https://t.me/share/url";
+  const TG_USER = "vremonte761";
+  const VK_URL = "https://vk.com/vremonte161";
+  const MAX_LINK = "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8";
+  const PHONE = "+79255156161";
 
-  // Mark JS enabled (used by CSS for reveal fallback / no-js)
-  document.documentElement.classList.add("js");
-  document.documentElement.classList.remove("no-js");
-
-  // ====== CONFIG ======
-  const LINKS = {
-    phone: "tel:+79255156161",
-    tgUser: "vremonte761",
-    tg: "https://t.me/vremonte761",
-    vk: "https://vk.com/vremonte161",
-    max: "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8",
-  };
-
-  const METRIKA_ID = 106611877;
-
-  // Lead saving (serverless webhook). Leave empty if не используете.
-  // Как работает: сайт отправляет JSON на ваш webhook, а webhook пересылает в Telegram и/или сохраняет в таблицу/CRM.
-  // Инструкции и готовые примеры: docs/telegram-leads.md
-  const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbxqaJfhNC5MbGbUCOPRola4NTWCp784hVHrOYuJyjROqRUmlEhBxHLfgD1qDBKLsYll/exec"; // например: https://<ваш-домен>/lead
-
-
-  // ====== Helpers ======
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const t = (s) => (typeof s === "string" ? s.trim() : "");
 
-  function escHtml(s){
-    return String(s || "")
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/\"/g,"&quot;")
-      .replace(/'/g,"&#039;");
+  function ymGoal(name){
+    try {
+      if (typeof window.ym === "function") {
+        // id метрики у тебя 106611877
+        window.ym(106611877, "reachGoal", name);
+      }
+    } catch(_){}
   }
 
-
-  // ====== Analytics helpers (Yandex Metrika) ======
-  function goal(name, params){
-    try{
-      if (typeof window.ym === "function") window.ym(METRIKA_ID, "reachGoal", name, params || {});
-    }catch(_){}
-  }
-
-
-  async function copyToClipboard(text){
-    try{
-      await navigator.clipboard.writeText(text);
+  function copyToClipboard(text){
+    try {
+      navigator.clipboard.writeText(text);
       return true;
-    }catch(_){
-      // fallback
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.select();
-      try{ document.execCommand("copy"); }catch(_2){}
-      ta.remove();
-      return true;
-    }
-  }
-
-  function openTelegramWithText(text){
-    const url = `${LINKS.tg}?text=${encodeURIComponent(text || "")}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
-  function openVKWithText(text){
-    if (text) { copyToClipboard(text); }
-    window.open(LINKS.vk, "_blank", "noopener,noreferrer");
-  }
-  function openMaxWithText(text){
-    if (text) { copyToClipboard(text); }
-    window.open(LINKS.max, "_blank", "noopener,noreferrer");
-  }
-
-
-  // ====== Lead save (optional) ======
-  function showToast(message){
-    let t = document.getElementById("toast");
-    if (!t){
-      t = document.createElement("div");
-      t.id = "toast";
-      t.className = "toast";
-      document.body.appendChild(t);
-    }
-    t.textContent = message;
-    t.classList.add("show");
-    window.clearTimeout(showToast._timer);
-    showToast._timer = window.setTimeout(()=>t.classList.remove("show"), 3200);
-  }
-
-  function saveLeadLocal(payload){
-    try{
-      const key = "vremonte_leads";
-      const arr = JSON.parse(localStorage.getItem(key) || "[]");
-      arr.push(payload);
-      localStorage.setItem(key, JSON.stringify(arr.slice(-200))); // keep last 200
-    }catch(_){}
-  }
-
-  async function saveLeadRemote(payload){
-    if (!LEAD_ENDPOINT) return { ok:false, skipped:true };
-    try{
-      const res = await fetch(LEAD_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(payload),
-        mode: "no-cors",
-        keepalive: true,
-      });
-      return { ok: true, skipped:false };
-    }catch(e){
-      return { ok:false, skipped:false, error: String(e) };
-    }
-  }
-
-  async function logLeadAndToast(lead, channel){
-    const payload = {
-      page: location.href || "",
-      channel: channel || "",
-      message: (lead && lead.message) ? lead.message : (typeof lead === "string" ? lead : ""),
-      device: (lead && lead.device) ? lead.device : "",
-      problem: (lead && lead.problem) ? lead.problem : "",
-      contact: (lead && lead.contact) ? lead.contact : "",
-      ts: new Date().toISOString(),
-      ua: navigator.userAgent,
-    };
-    saveLeadLocal(payload);
-    const r = await saveLeadRemote(payload);
-    if (r.skipped){
-      showToast("Откроем мессенджер — нажми «Отправить». (Webhook не подключён)");
-    }else if (r.ok){
-      showToast("✅ Заявка улетела вам в Telegram. Сейчас откроется мессенджер.");
-      goal("lead_saved");
-    }else{
-      showToast("Откроем мессенджер — нажми «Отправить». (Webhook не сработал)");
-    }
-  }
-
-  // ====== Year in footer ======
-  const y = $("#year");
-  if (y) y.textContent = String(new Date().getFullYear());
-
-  // ====== Smooth anchors ======
-  document.addEventListener("click", (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute("href");
-    if (!id || id === "#") return;
-    const el = document.querySelector(id);
-    if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior:"smooth", block:"start" });
-    setMenu(false);
-  });
-
-
-  // Issue quick chips (fills nearest "Проблема" input)
-  document.addEventListener("click", (e)=>{
-    const chip = e.target.closest("[data-issue]");
-    if (!chip) return;
-    const val = chip.getAttribute("data-issue") || chip.textContent.trim();
-    // Prefer focused input, otherwise try common ids
-    const active = document.activeElement;
-    const candidates = [
-      active && active.tagName === "INPUT" ? active : null,
-      $("#quickIssue"),
-      $("#leadProblem"),
-      $("#mIssue")
-    ].filter(Boolean);
-    const input = candidates.find(i=> i && i instanceof HTMLInputElement);
-    if (input){
-      input.value = val;
-      input.dispatchEvent(new Event("input", {bubbles:true}));
-      input.focus();
-    }
-  });
-  // ====== Reveal animation (safe) ======
-  const revealEls = $$(".reveal");
-  if ("IntersectionObserver" in window){
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { if (en.isIntersecting) en.target.classList.add("in"); });
-    }, { threshold: 0.12 });
-    revealEls.forEach(el => io.observe(el));
-  }else{
-    revealEls.forEach(el => el.classList.add("in"));
-  }
-
-  // ====== FAQ accordion ======
-  const faq = $("#faqList");
-  if (faq){
-    faq.addEventListener("click", (e) => {
-      const btn = e.target.closest(".qa__q");
-      if (!btn) return;
-      const box = btn.closest(".qa");
-      if (!box) return;
-      box.classList.toggle("open");
-    });
-  }
-
-  // ====== UI Modal (create if missing) ======
-  function ensureUiModal(){
-    let uiModal = $("#uiModal");
-    let uiModalContent = $("#uiModalContent");
-    if (uiModal && uiModalContent) return { uiModal, uiModalContent };
-
-    uiModal = document.createElement("div");
-    uiModal.id = "uiModal";
-    uiModal.className = "uimodal";
-    uiModal.setAttribute("aria-hidden","true");
-    uiModal.innerHTML = `
-      <div class="uimodal__backdrop" data-close="1"></div>
-      <div class="uimodal__panel" role="dialog" aria-modal="true">
-        <button class="uimodal__close" type="button" data-close="1" aria-label="Закрыть">✕</button>
-        <div id="uiModalContent"></div>
-      </div>`;
-    document.body.appendChild(uiModal);
-    uiModalContent = $("#uiModalContent");
-    return { uiModal, uiModalContent };
-  }
-
-  function openUiModal(html){
-    const { uiModal, uiModalContent } = ensureUiModal();
-    uiModalContent.innerHTML = html;
-    uiModal.classList.add("open");
-    uiModal.setAttribute("aria-hidden","false");
-    document.body.classList.add("modal-open");
-  }
-  function closeUiModal(){
-    const uiModal = $("#uiModal");
-    if (!uiModal) return;
-    uiModal.classList.remove("open");
-    uiModal.setAttribute("aria-hidden","true");
-    document.body.classList.remove("modal-open");
-  }
-
-  // close handlers
-  document.addEventListener("click", (e)=>{
-    const uiModal = $("#uiModal");
-    if (!uiModal || !uiModal.classList.contains("open")) return;
-    const t = e.target;
-    if (t && t.dataset && t.dataset.close === "1") closeUiModal();
-  });
-  document.addEventListener("keydown", (e)=>{
-    const uiModal = $("#uiModal");
-    if (e.key === "Escape" && uiModal && uiModal.classList.contains("open")) closeUiModal();
-  });
-
-  // Открытие картинок (сертификаты/логотипы) в модалке
-  document.addEventListener("click", (e)=>{
-    const btn = e.target.closest?.("[data-modal-img]");
-    if (!btn) return;
-    const src = btn.getAttribute("data-modal-img");
-    const title = btn.getAttribute("data-modal-title") || "";
-    if (!src) return;
-    openUiModal(`
-      <div class="uimodal__title">${title}</div>
-      <div class="uimodal__imgwrap">
-        <img src="${src}" alt="${title}" loading="lazy" />
-      </div>
-    `);
-  });
-
-  // ====== Lead message builder ======
-  function buildLead(formEl, extra){
-    const getVal = (nameOrId) => {
-      if (!formEl) return "";
-      const byId = formEl.querySelector(`#${nameOrId}`);
-      if (byId && "value" in byId) return String(byId.value || "").trim();
-      const byName = formEl.querySelector(`[name="${nameOrId}"]`);
-      if (byName && "value" in byName) return String(byName.value || "").trim();
-      return "";
-    };
-
-    const device = getVal("device");
-    const problem = getVal("issue");
-    const urgencyEl = formEl.querySelector('[name="urgent"]');
-    const urgency = urgencyEl ? String(urgencyEl.value || "").trim() : "";
-    const contact = getVal("contact");
-
-    const parts = [];
-    parts.push("Здравствуйте! Заявка с сайта «В ремонте».");
-    if (device) parts.push("Устройство: " + device);
-    if (problem) parts.push("Проблема: " + problem);
-    if (urgency) parts.push("Срочность: " + urgency);
-    if (contact) parts.push("Контакт: " + contact);
-    if (extra) parts.push(extra);
-    parts.push("");
-    parts.push("Отправлено с сайта vremonte61.online");
-
-    return {
-      device,
-      problem,
-      contact,
-      message: parts.join("\n")
-    };
-  }
-
-  function ensureLeadValid(formEl){
-    if (!formEl) return false;
-    const dev = (formEl.querySelector('[name="device"]')?.value || "").trim();
-    const iss = (formEl.querySelector('[name="issue"]')?.value || "").trim();
-    if (!dev || !iss){
-      alert("Заполни, пожалуйста: Устройство и Проблема.");
+    } catch(_) {
       return false;
     }
-    return true;
   }
 
-  function extractLeadFields(formEl){
-    if (!formEl) return { device:"", problem:"", contact:"" };
-    const device = (formEl.querySelector('[name="device"]')?.value || "").trim();
-    const problem = (formEl.querySelector('[name="issue"]')?.value || "").trim();
-    const contact = (formEl.querySelector('[name="contact"]')?.value || "").trim();
-    return { device, problem, contact };
+  function buildLeadMessage(lead){
+    const lines = [
+      "Заявка с сайта vremonte61.online",
+      lead.device ? `Устройство: ${lead.device}` : null,
+      lead.problem ? `Проблема: ${lead.problem}` : null,
+      lead.urgency ? `Срочность: ${lead.urgency}` : null,
+      lead.contact ? `Контакт: ${lead.contact}` : null,
+      lead.page ? `Страница: ${lead.page}` : null,
+    ].filter(Boolean);
+    return lines.join("\n");
   }
 
-  // Lead form actions  // Lead form actions
-  const leadForm = $("#leadForm");
-  if (leadForm){
-    leadForm.addEventListener("submit",(e)=>{
-      e.preventDefault();
-      if (!ensureLeadValid(leadForm)) return;
-      openVKWithText(buildLead(leadForm).message);
+  function collectLead(fromForm){
+    const device = t(fromForm?.querySelector('[name="device"]')?.value);
+    const problem = t(fromForm?.querySelector('[name="issue"],[name="problem"]')?.value);
+    const contact = t(fromForm?.querySelector('[name="contact"]')?.value);
+    // у тебя select name="urgent"
+    const urgency = t(fromForm?.querySelector('[name="urgent"],[name="urgency"],select')?.value);
+
+    return {
+      device, problem, contact, urgency,
+      page: location.href,
+      ts: Date.now()
+    };
+  }
+
+  async function sendLeadToGAS(lead, channel){
+    try {
+      const payload = { ...lead, channel };
+      const res = await fetch(GAS_WEBAPP_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      });
+      const data = await res.json().catch(() => ({}));
+      return !!(res.ok && data && data.ok === true);
+    } catch (e) {
+      console.warn("[lead] GAS send failed", e);
+      return false;
+    }
+  }
+
+  function openTelegram(text){
+    // делаем share url + text
+    const url = TG_SHARE + "?url=" + encodeURIComponent(location.href) + "&text=" + encodeURIComponent(text);
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  function openVK(text){
+    // VK универсально: копируем текст, открываем страницу/чат
+    copyToClipboard(text);
+    window.open(VK_URL, "_blank", "noopener,noreferrer");
+  }
+
+  function openMAX(text){
+    const url = MAX_LINK + (MAX_LINK.includes("?") ? "&" : "?") + "text=" + encodeURIComponent(text);
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  function bindBurger(){
+    const burger = $("#burger");
+    const mobileNav = $("#mobileNav");
+    if (!burger || !mobileNav) return;
+
+    burger.addEventListener("click", () => {
+      const open = burger.getAttribute("aria-expanded") === "true";
+      burger.setAttribute("aria-expanded", String(!open));
+      mobileNav.classList.toggle("is-open", !open);
+      mobileNav.setAttribute("aria-hidden", String(open));
+      ymGoal("burger_toggle");
+    });
+
+    $$("#mobileNav a").forEach(a => {
+      a.addEventListener("click", () => {
+        burger.setAttribute("aria-expanded", "false");
+        mobileNav.classList.remove("is-open");
+        mobileNav.setAttribute("aria-hidden", "true");
+      });
     });
   }
-  const leadForm2 = $("#leadForm2");
-  if (leadForm2){
-    leadForm2.addEventListener("submit",(e)=>{
-      e.preventDefault();
-      if (!ensureLeadValid(leadForm2)) return;
-      openVKWithText(buildLead(leadForm2).message);
-    });
-  }
-  $("#sendTg")?.addEventListener("click", () => {
-    if (!ensureLeadValid(leadForm)) return;
-    const lead = buildLead(leadForm);
-    goal("form_submit_attempt");
-    openTelegramWithText(lead.message);
-    logLeadAndToast(lead, "tg");
-  });
-  $("#sendVk")?.addEventListener("click", () => {
-    if (!ensureLeadValid(leadForm)) return;
-    const lead = buildLead(leadForm);
-    goal("form_submit_attempt");
-    openVKWithText(lead.message);
-    logLeadAndToast(lead, "vk");
-  });
-  $("#sendTg2")?.addEventListener("click", () => {
-    if (!ensureLeadValid(leadForm2)) return;
-    const lead = buildLead(leadForm2);
-    goal("form_submit_attempt");
-    openTelegramWithText(lead.message);
-    logLeadAndToast(lead, "tg");
-  });
-  $("#sendVk2")?.addEventListener("click", () => {
-    if (!ensureLeadValid(leadForm2)) return;
-    const lead = buildLead(leadForm2);
-    goal("form_submit_attempt");
-    openVKWithText(lead.message);
-    logLeadAndToast(lead, "vk");
-  });
-$("#sendMax")?.addEventListener("click", () => {
-    if (!ensureLeadValid(leadForm)) return;
-    const lead = buildLead(leadForm);
-    goal("form_submit_attempt");
-    openMaxWithText(lead.message);
-    logLeadAndToast(lead, "max");
-  });
-  $("#sendMax2")?.addEventListener("click", () => {
-    if (!ensureLeadValid(leadForm2)) return;
-    const lead = buildLead(leadForm2);
-    goal("form_submit_attempt");
-    openMaxWithText(lead.message);
-    logLeadAndToast(lead, "max");
-  });
-  $("#maxOpenM")?.addEventListener("click", ()=> window.open(LINKS.max, "_blank", "noopener,noreferrer"));
 
-  // ====== Static template to Telegram (fallback) ======
-  function openTemplateToTG(text){
-    openTelegramWithText(text || "Здравствуйте!");
-  }
-
-  // ====== Modals content ======
-  function openTimeModal(){
-    openUiModal(`
-      <h3>Срок ремонта</h3>
-      <p class="muted">Срок зависит от модели, сложности неисправности и наличия запчастей.</p>
-      <ul class="ul">
-        <li><b>Типовые работы</b> (разъём, чистка, простые замены) — часто в день обращения.</li>
-        <li><b>Средняя сложность</b> — обычно 1–3 дня.</li>
-        <li><b>Сложный ремонт / плата</b> или редкие запчасти — дольше, согласуем после диагностики.</li>
-      </ul>
-      <div class="actions">
-        <button class="btn btn--tg" type="button" data-send="tg" data-msg="time">Написать в Telegram</button>
-        <button class="btn btn--vk" type="button" data-send="vk" data-msg="time">VK</button>
-        <button class="btn btn--max" type="button" data-send="max" data-msg="time">MAX</button>
-      </div>
-    `);
-  }
-
-  function openCourierModal(){
-    openUiModal(`
-      <h3>Курьер / доставка</h3>
-      <p class="muted">Заполни поля — мы сформируем сообщение и откроем выбранный мессенджер.</p>
-
-      <form class="form" id="courierForm" style="margin-top:10px">
-        <label class="field">
-          <span>Адрес забора / доставки</span>
-          <input name="addr" placeholder="Город, улица, дом, подъезд, этаж" required>
-        </label>
-        <label class="field">
-          <span>Когда удобно</span>
-          <input name="when" placeholder="Сегодня после 18:00 / Завтра 12–15" required>
-        </label>
-        <label class="field">
-          <span>Устройство</span>
-          <input name="dev" placeholder="Напр.: ТВ Samsung / iPhone 13 / кофемашина Philips" required>
-        </label>
-        <label class="field">
-          <span>Проблема</span>
-          <input name="issue" placeholder="Коротко опиши неисправность" required>
-        </label>
-        <label class="field">
-          <span>Комментарий (необязательно)</span>
-          <input name="comment" placeholder="Код домофона, ориентир, и т.д.">
-        </label>
-
-        <div class="actions">
-          <button class="btn btn--tg" type="button" data-courier-send="tg">Отправить в Telegram</button>
-          <button class="btn btn--vk" type="button" data-courier-send="vk">VK</button>
-          <button class="btn btn--max" type="button" data-courier-send="max">MAX</button>
-        </div>
-      </form>
-    `);
-  }
-
-  const MODEL_DATA = {
-    phone: {
-      title: "Телефоны",
-      // used by phone-specific renderer
-      iPhoneGroups: [
-        { name:"iPhone 6–8", items:["iPhone 6","iPhone 6 Plus","iPhone 6s","iPhone 6s Plus","iPhone SE (1)","iPhone 7","iPhone 7 Plus","iPhone 8","iPhone 8 Plus"] },
-        { name:"iPhone X–11", items:["iPhone X","iPhone XR","iPhone XS","iPhone XS Max","iPhone 11","iPhone 11 Pro","iPhone 11 Pro Max","iPhone SE (2)"] },
-        { name:"iPhone 12–13", items:["iPhone 12 mini","iPhone 12","iPhone 12 Pro","iPhone 12 Pro Max","iPhone 13 mini","iPhone 13","iPhone 13 Pro","iPhone 13 Pro Max","iPhone SE (3)"] },
-        { name:"iPhone 14–15", items:["iPhone 14","iPhone 14 Plus","iPhone 14 Pro","iPhone 14 Pro Max","iPhone 15","iPhone 15 Plus","iPhone 15 Pro","iPhone 15 Pro Max"] },
-        { name:"iPhone 16–17", items:["iPhone 16","iPhone 16 Plus","iPhone 16 Pro","iPhone 16 Pro Max","iPhone 17","iPhone 17 Plus","iPhone 17 Pro","iPhone 17 Pro Max"] },
-      ],
-      androidBrands: {
-        "Samsung": ["Galaxy A02/A03/A04","Galaxy A10/A20/A30","Galaxy A12/A13/A14","Galaxy A22/A23/A24","Galaxy A32/A33/A34","Galaxy A42/A52/A53/A54","Galaxy A72","Galaxy S20/S21/S22/S23/S24","Galaxy Note 10/20","Galaxy M12/M21/M31/M51"],
-        "Xiaomi": ["Mi 9/10/11","Xiaomi 11T/12T/13T","Xiaomi 12/13/14","Xiaomi Mix","Xiaomi (другая модель)"],
-        "Redmi": ["Redmi 9/10/11/12","Redmi Note 8/9/10/11/12/13","Redmi Note Pro (серии)","Redmi A1/A2"],
-        "POCO": ["POCO X3/X4/X5","POCO F3/F4/F5","POCO M3/M4/M5"],
-        "Honor": ["Honor 8X/9X","Honor 10/20/30/50/70/90","Honor X8/X9/X10","Honor Magic (серии)"],
-        "Huawei": ["P20/P30/P40","Mate 20/30/40","Nova (серии)","Y (серии)"],
-        "Realme": ["Realme C (серии)","Realme 7/8/9/10/11","Realme GT (серии)"],
-        "Tecno": ["Spark (серии)","Pova (серии)","Camon (серии)"],
-        "Infinix": ["Hot (серии)","Note (серии)","Zero (серии)"],
-        "OnePlus": ["OnePlus 8/9/10/11/12","Nord (серии)"],
-        "OPPO": ["A (серии)","Reno (серии)","Find (серии)"],
-        "Vivo": ["Y (серии)","V (серии)","X (серии)"],
-        "Google Pixel": ["Pixel 5/6/7/8","Pixel Pro (серии)"],
-        "Другое": ["Другая модель Android (укажу в тексте)"],
-      },
-      // fallback tabs (not used in new UI, but keep for compatibility)
-      tabs: [
-        { key:"apple", name:"Apple (iPhone)", items:["iPhone (выберу из списка)"] },
-        { key:"android", name:"Android", items:["Android (выберу из списка)"] },
-      ]
-    },
-    tv: {
-      title: "Телевизоры",
-      tabs: [
-        { key:"tv", name:"Бренды", items:["Samsung","LG","Sony","Philips","TCL","Hisense","Xiaomi","Haier","BBK","DEXP","Другое"] }
-      ]
-    },
-    coffee: {
-      title: "Кофемашины",
-      tabs: [
-        { key:"coffee", name:"Бренды", items:["DeLonghi","Philips","Saeco","Jura","Bosch","Krups","Nivona","Siemens","Melitta","Другое"] }
-      ]
-    },
-    print: {
-      title: "Принтеры",
-      tabs: [
-        { key:"print", name:"Бренды", items:["HP","Canon","Epson","Brother","Samsung","Xerox","Kyocera","Ricoh","Pantum","Другое"] }
-      ]
-    },
-    dyson: {
-      title: "Dyson / бытовая",
-      tabs: [
-        { key:"dyson", name:"Модели", items:["Dyson V6","Dyson V7","Dyson V8","Dyson V10","Dyson V11","Dyson V12","Dyson V15","Supersonic (фен)","Airwrap","Другое"] }
-      ]
-    },
-    pc: {
-      title: "ПК / ноутбуки",
-      tabs: [
-        { key:"laptop", name:"Ноутбуки", items:["ASUS","Acer","Lenovo","HP","MSI","Dell","Apple MacBook","Huawei","Honor","Другое"] },
-        { key:"pc", name:"ПК/моноблок", items:["Сборный ПК","Моноблок","Мини‑ПК","Другое"] }
-      ]
-    },
-    ps: {
-      title: "Приставки",
-      tabs: [
-        { key:"console", name:"Платформа", items:["PlayStation 4","PlayStation 5","Xbox One","Xbox Series","Nintendo Switch","Другое"] }
-      ]
-    },
-    water: { // общий список "что ремонтируем"
-      title: "Что ремонтируем",
-      tabs: [
-        { key:"phones", name:"Телефоны", items:["Apple (iPhone)","Android (Samsung/Xiaomi/… )"] },
-        { key:"tv", name:"Телевизоры", items:["Samsung","LG","Sony","Philips","TCL/Hisense","Другое"] },
-        { key:"coffee", name:"Кофемашины", items:["DeLonghi","Philips/Saeco","Jura","Bosch/Krups","Другое"] },
-        { key:"dyson", name:"Dyson/бытовая", items:["V6/V7/V8","V10/V11","V12/V15","Supersonic/Airwrap","Другое"] },
-        { key:"print", name:"Принтеры", items:["HP","Canon","Epson","Brother","Другое"] },
-        { key:"pc", name:"ПК/ноутбуки", items:["Ноутбуки","ПК/моноблок","Другое"] },
-        { key:"tablet", name:"Планшеты", items:["iPad","Samsung Tab","Huawei","Lenovo","Другое"] },
-      ]
-    }
-  };
-
-  
-  function renderPhoneModal(){
-    // Phone modal: Apple -> iPhone models; Android -> brand -> models (accordion-like)
-    const cfg = MODEL_DATA.phone;
-    const iPhoneGroups = cfg.iPhoneGroups || [];
-    const androidBrands = cfg.androidBrands || {};
-
-    const renderApple = () => {
-      const blocks = iPhoneGroups.map(g => `
-        <div class="card" style="padding:12px; margin-top:10px">
-          <b style="display:block; margin-bottom:8px">${escHtml(g.name)}</b>
-          <div class="modelgrid">
-            ${g.items.map(m => `<button type="button" class="modelitem" data-pick="${escHtml("Apple (iPhone) — " + m)}">${escHtml(m)}</button>`).join("")}
-          </div>
-        </div>
-      `).join("");
-      return `<div class="modelswrap" id="phoneList">${blocks}</div>`;
+  function bindToTop(){
+    const btn = $("#toTop");
+    if (!btn) return;
+    const onScroll = () => {
+      btn.classList.toggle("is-show", window.scrollY > 700);
     };
-
-    const renderAndroidBrands = () => `
-      <div class="modelswrap" id="phoneList">
-        <div class="modelgrid">
-          ${Object.keys(androidBrands).map(b => `<button type="button" class="modelitem" data-android-brand="${escHtml(b)}">${escHtml(b)}</button>`).join("")}
-        </div>
-        <div id="androidModels" style="margin-top:12px"></div>
-      </div>
-    `;
-
-    openUiModal(`
-      <h3>Телефоны</h3>
-      <p class="muted">Выбери платформу и модель — ниже появится список. Окно не «прыгает», можно листать вверх/вниз.</p>
-
-      <div class="chips" style="margin:10px 0 8px">
-        <button class="chip active" type="button" data-phone-tab="apple">Apple (iPhone)</button>
-        <button class="chip" type="button" data-phone-tab="android">Android</button>
-      </div>
-
-      <div id="phoneTabBody">
-        ${renderApple()}
-      </div>
-
-      <div class="card" style="margin-top:12px">
-        <label class="field">
-          <span>Выбрано</span>
-          <input id="mPicked" placeholder="Выбери модель выше" readonly>
-        </label>
-
-        <label class="field" style="margin-top:10px">
-          <span>Проблема</span>
-          <input id="mIssue" placeholder="Разбит дисплей / не заряжается / нет сети…" required>
-        </label>
-
-        <div class="row" style="margin-top:10px">
-          <label class="field">
-            <span>Срочность</span>
-            <select id="mUrgency">
-              <option>Не срочно</option>
-              <option>Сегодня</option>
-              <option>Срочно</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Контакт (по желанию)</span>
-            <input id="mContact" placeholder="+7... или @telegram">
-          </label>
-        </div>
-
-        <div class="actions" style="margin-top:12px">
-          <button class="btn btn--tg" type="button" data-model-send="tg" data-cat="phone">Отправить в Telegram</button>
-          <button class="btn btn--vk" type="button" data-model-send="vk" data-cat="phone">VK</button>
-          <button class="btn btn--max" type="button" data-model-send="max" data-cat="phone">MAX</button>
-        </div>
-      </div>
-    `);
-
-    // bind tab switching (delegated by doc click handler below)
-    // Android brand click handled by global delegation too.
-    function setPhoneTab(tab){
-      const body = $("#phoneTabBody");
-      if (!body) return;
-      if (tab === "android") body.innerHTML = renderAndroidBrands();
-      else body.innerHTML = renderApple();
-      // reset android models area if any
-      $("#androidModels")?.replaceChildren();
-    }
-    // store function on modal for later use
-    const panel = $(".uimodal__panel");
-    if (panel) panel.dataset.phoneTab = "apple";
-    // initial pick placeholder
-  }
-
-function renderModelsModal(categoryKey){
-    if (categoryKey === "phone") return renderPhoneModal();
-    const data = MODEL_DATA[categoryKey] || MODEL_DATA.water;
-    const tabs = data.tabs || [];
-    const tabButtons = tabs.map((t,i)=>`
-      <button class="chip ${i===0?'active':''}" type="button" data-tab="${escHtml(t.key)}">${escHtml(t.name)}</button>
-    `).join("");
-
-    const firstKey = tabs[0]?.key || "tab";
-    const listHtml = (key)=>{
-      const tab = tabs.find(t=>t.key===key) || tabs[0];
-      const items = tab?.items || [];
-      return `<div class="modelgrid">
-        ${items.map(it=>`<button type="button" class="modelitem" data-pick="${escHtml(it)}">${escHtml(it)}</button>`).join("")}
-      </div>`;
-    };
-
-    openUiModal(`
-      <h3>${escHtml(data.title)}</h3>
-      <p class="muted">Выбери категорию/бренд/модель, опиши проблему — сформируем сообщение.</p>
-
-      <div class="chips" style="margin:10px 0 8px">
-        ${tabButtons}
-      </div>
-
-      <div id="modelsList" class="modelswrap">
-        ${listHtml(firstKey)}
-      </div>
-
-      <div class="card" style="margin-top:12px">
-        <label class="field">
-          <span>Выбрано</span>
-          <input id="mPicked" placeholder="Выбери пункт выше" readonly>
-        </label>
-
-        <label class="field" style="margin-top:10px">
-          <span>Проблема</span>
-          <input id="mIssue" placeholder="Не включается / нет изображения / не заряжается…" required>
-        </label>
-
-        <div class="row" style="margin-top:10px">
-          <label class="field">
-            <span>Срочность</span>
-            <select id="mUrgency">
-              <option>Не срочно</option>
-              <option>Сегодня</option>
-              <option>Срочно</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Контакт (по желанию)</span>
-            <input id="mContact" placeholder="+7... или @telegram">
-          </label>
-        </div>
-
-        <div class="actions" style="margin-top:12px">
-          <button class="btn btn--tg" type="button" data-model-send="tg" data-cat="${escHtml(categoryKey||'water')}">Отправить в Telegram</button>
-          <button class="btn btn--vk" type="button" data-model-send="vk" data-cat="${escHtml(categoryKey||'water')}">VK</button>
-          <button class="btn btn--max" type="button" data-model-send="max" data-cat="${escHtml(categoryKey||'water')}">MAX</button>
-        </div>
-      </div>
-    `);
-  }
-
-  // ====== Modal button actions (event delegation) ======
-  document.addEventListener("click", async (e)=>{
-    // Time modal send
-    const send = e.target.closest("[data-send]");
-    if (send){
-      const type = send.getAttribute("data-send");
-      const msgKey = send.getAttribute("data-msg");
-      const msg = (msgKey === "time")
-        ? "Здравствуйте! Подскажите, пожалуйста, по срокам ремонта. Устройство: ____. Проблема: ____."
-        : "Здравствуйте!";
-      if (type === "tg") { goal("form_submit_attempt"); openTelegramWithText(msg); logLeadAndToast({message: msg}, "tg"); }
-      if (type === "vk") { goal("form_submit_attempt"); openVKWithText(msg); logLeadAndToast({message: msg}, "vk"); }
-      if (type === "max") { goal("form_submit_attempt"); openMaxWithText(msg); logLeadAndToast({message: msg}, "max"); }
-      return;
-    }
-
-    // Courier modal send
-    const cs = e.target.closest("[data-courier-send]");
-    if (cs){
-      const form = $("#courierForm");
-      if (!form) return;
-      const fd = new FormData(form);
-      const addr = String(fd.get("addr")||"").trim();
-      const when = String(fd.get("when")||"").trim();
-      const dev = String(fd.get("dev")||"").trim();
-      const issue = String(fd.get("issue")||"").trim();
-      const comment = String(fd.get("comment")||"").trim();
-
-      if (!addr || !when || !dev || !issue){
-        alert("Заполни обязательные поля.");
-        return;
-      }
-
-      const msg = [
-        "Здравствуйте! Нужен курьер / доставка.",
-        `Адрес: ${addr}`,
-        `Когда удобно: ${when}`,
-        `Устройство: ${dev}`,
-        `Проблема: ${issue}`,
-        comment ? `Комментарий: ${comment}` : null,
-        "",
-        "Отправлено с сайта vremonte61.online"
-      ].filter(Boolean).join("\n");
-
-      const type = cs.getAttribute("data-courier-send");
-      if (type === "tg") { goal("form_submit_attempt"); openTelegramWithText(msg); logLeadAndToast({message: msg}, "tg"); }
-      if (type === "vk") { goal("form_submit_attempt"); openVKWithText(msg); logLeadAndToast({message: msg}, "vk"); }
-      if (type === "max") { goal("form_submit_attempt"); openMaxWithText(msg); logLeadAndToast({message: msg}, "max"); }
-      return;
-    }
-
-    // Models tab switch
-    const tabBtn = e.target.closest("[data-tab]");
-    if (tabBtn){
-      const key = tabBtn.getAttribute("data-tab");
-      const title = $("#uiModalContent h3")?.textContent || "";
-      // find dataset by title match (simple)
-      let data = null;
-      for (const k in MODEL_DATA){
-        if (MODEL_DATA[k].title === title){ data = MODEL_DATA[k]; break; }
-      }
-      if (!data) return;
-      const tab = data.tabs.find(t=>t.key===key) || data.tabs[0];
-      const list = $("#modelsList");
-      if (!list) return;
-      list.innerHTML = `<div class="modelgrid">
-        ${(tab.items||[]).map(it=>`<button type="button" class="modelitem" data-pick="${escHtml(it)}">${escHtml(it)}</button>`).join("")}
-      </div>`;
-      // UI toggle active-ish
-      $$(".chips [data-tab]").forEach(b=>b.classList.remove("active"));
-      tabBtn.classList.add("active");
-      return;
-    }
-
-    
-    // Phone modal: switch Apple/Android tabs
-    const ptab = e.target.closest("[data-phone-tab]");
-    if (ptab){
-      const tab = ptab.getAttribute("data-phone-tab") || "apple";
-      const body = $("#phoneTabBody");
-      if (!body) return;
-      // toggle chip styles
-      $$(".chips [data-phone-tab]").forEach(b=>b.classList.remove("active"));
-      ptab.classList.add("active");
-
-      // Re-render using lightweight templates stored in renderPhoneModal scope by regenerating via openByKey route
-      // (We simply swap inner HTML based on tab, using inline helpers defined in renderPhoneModal via dataset flags)
-      // Here we rebuild minimal content to avoid modal resize jumps.
-      if (tab === "android"){
-        body.innerHTML = `<div class="modelswrap" id="phoneList">
-          <div class="modelgrid">
-            ${Object.keys(MODEL_DATA.phone.androidBrands).map(b => `<button type="button" class="modelitem" data-android-brand="${escHtml(b)}">${escHtml(b)}</button>`).join("")}
-          </div>
-          <div id="androidModels" style="margin-top:12px"></div>
-        </div>`;
-      } else {
-        body.innerHTML = `<div class="modelswrap" id="phoneList">
-          ${MODEL_DATA.phone.iPhoneGroups.map(g => `
-            <div class="card" style="padding:12px; margin-top:10px">
-              <b style="display:block; margin-bottom:8px">${escHtml(g.name)}</b>
-              <div class="modelgrid">
-                ${g.items.map(m => `<button type="button" class="modelitem" data-pick="${escHtml("Apple (iPhone) — " + m)}">${escHtml(m)}</button>`).join("")}
-              </div>
-            </div>
-          `).join("")}
-        </div>`;
-      }
-      return;
-    }
-
-    // Android brand click -> show models below (without modal jumping)
-    const ab = e.target.closest("[data-android-brand]");
-    if (ab){
-      const brand = ab.getAttribute("data-android-brand") || "";
-      const wrap = $("#androidModels");
-      if (!wrap) return;
-      const models = (MODEL_DATA.phone.androidBrands && MODEL_DATA.phone.androidBrands[brand]) ? MODEL_DATA.phone.androidBrands[brand] : [];
-      wrap.innerHTML = `
-        <div class="card" style="padding:12px">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
-            <b>${escHtml(brand)}</b>
-            <button type="button" class="btn btn--small btn--soft" data-android-back="1">Назад к брендам</button>
-          </div>
-          <div class="modelgrid" style="margin-top:10px">
-            ${models.map(m => `<button type="button" class="modelitem" data-pick="${escHtml("Android — " + brand + " — " + m)}">${escHtml(m)}</button>`).join("")}
-          </div>
-        </div>
-      `;
-      // gentle scroll to the revealed area
-      wrap.scrollIntoView({ behavior:"smooth", block:"nearest" });
-      return;
-    }
-
-    const aback = e.target.closest("[data-android-back]");
-    if (aback){
-      const wrap = $("#androidModels");
-      if (wrap) wrap.innerHTML = "";
-      return;
-    }
-
-// Pick model item
-    const pick = e.target.closest("[data-pick]");
-    if (pick){
-      const v = pick.getAttribute("data-pick") || "";
-      const inp = $("#mPicked");
-      if (inp) inp.value = v;
-      return;
-    }
-
-    // Send model request
-    const ms = e.target.closest("[data-model-send]");
-    if (ms){
-      const picked = $("#mPicked")?.value?.trim() || "";
-      const issue = $("#mIssue")?.value?.trim() || "";
-      const urgency = $("#mUrgency")?.value || "";
-      const contact = $("#mContact")?.value?.trim() || "";
-      if (!picked || !issue){
-        alert("Выбери модель/пункт и опиши проблему.");
-        return;
-      }
-      const cat = ms.getAttribute("data-cat") || "water";
-      const msg = [
-        "Здравствуйте! Хочу узнать стоимость ремонта.",
-        `Категория: ${MODEL_DATA[cat]?.title || "Техника"}`,
-        `Модель/пункт: ${picked}`,
-        `Проблема: ${issue}`,
-        urgency ? `Срочность: ${urgency}` : null,
-        contact ? `Контакт: ${contact}` : null,
-        "",
-        "Отправлено с сайта vremonte61.online"
-      ].filter(Boolean).join("\n");
-
-      const type = ms.getAttribute("data-model-send");
-      if (type === "tg") { goal("form_submit_attempt"); openTelegramWithText(msg); logLeadAndToast({message: msg}, "tg"); }
-      if (type === "vk") { goal("form_submit_attempt"); openVKWithText(msg); logLeadAndToast({message: msg}, "vk"); }
-      if (type === "max") { goal("form_submit_attempt"); openMaxWithText(msg); logLeadAndToast({message: msg}, "max"); }
-      return;
-    }
-  });
-
-  // ====== Chips & buttons mapping ======
-  function openByKey(key){
-    // chips on hero
-    if (key === "time") return openTimeModal();
-    if (key === "pickup") return openCourierModal();
-    if (key === "water") return renderModelsModal("water");
-    if (key === "tv") return renderModelsModal("tv");
-    if (key === "coffee") return renderModelsModal("coffee");
-    if (key === "print") return renderModelsModal("print");
-
-    if (key === "price"){
-      return openTemplateToTG("Здравствуйте! Хочу узнать ориентировочную стоимость ремонта.\nКатегория: ____\nМарка/модель: ____\nПроблема: ____\n\nОтправлено с сайта vremonte61.online");
-    }
-  }
-
-  // delegate click for [data-template]
-  document.addEventListener("click", (e)=>{
-    const b = e.target.closest("[data-template]");
-    if (!b) return;
-    const key = b.getAttribute("data-template");
-    if (!key) return;
-    e.preventDefault();
-    openByKey(key);
-  });
-
-  // 'Узнать цену' buttons in services (data-service)
-  document.addEventListener("click", (e)=>{
-    const b = e.target.closest("[data-service]");
-    if (!b) return;
-    const key = b.getAttribute("data-service");
-    // Instead of opening TG immediately, open models modal (as requested)
-    // Map service -> category
-    const map = { phone:"phone", pc:"pc", tv:"tv", ps:"ps", coffee:"coffee", dyson:"dyson" };
-    const cat = map[key] || "water";
-    e.preventDefault();
-    if (cat === "phone") renderPhoneModal(); else renderModelsModal(cat);
-  });
-
-  // ToTop (if exists)
-  const toTop = $("#toTop");
-  if (toTop){
-    const onScroll = () => { if (window.scrollY > 600) toTop.classList.add("show"); else toTop.classList.remove("show"); };
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    toTop.addEventListener("click", ()=> window.scrollTo({ top:0, behavior:"smooth" }));
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   }
-  // Copy helpers
-  const copyBtns = document.querySelectorAll("[data-copy]");
-  if (copyBtns && copyBtns.length) {
-    const templates = {
-      courier: "Здравствуйте! Нужен курьер.\nУстройство: ____\nМодель: ____\nПроблема: ____\nАдрес забора: ____\nУдобное время: ____\nКонтактный телефон: ____"
+
+  function bindCookie(){
+    const banner = $("#cookieBanner");
+    const accept = $("#cookieAccept");
+    const close = $("#cookieClose");
+    if (!banner) return;
+
+    const key = "cookie_ok_v1";
+    if (localStorage.getItem(key) === "1") {
+      banner.style.display = "none";
+      return;
+    }
+
+    const hide = () => {
+      banner.style.display = "none";
+      localStorage.setItem(key, "1");
+      ymGoal("cookie_accept");
     };
-    copyBtns.forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const key = btn.getAttribute("data-copy");
-        const text = templates[key] || "";
-        if (!text) return;
-        try {
-          await navigator.clipboard.writeText(text);
-          btn.textContent = "Скопировано ✓";
-          setTimeout(() => (btn.textContent = "Скопировать текст"), 1500);
-        } catch (e) {
-          // Fallback
-          const ta = document.createElement("textarea");
-          ta.value = text;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand("copy");
-          ta.remove();
-          btn.textContent = "Скопировано ✓";
-          setTimeout(() => (btn.textContent = "Скопировать текст"), 1500);
-        }
+
+    accept?.addEventListener("click", hide);
+    close?.addEventListener("click", () => {
+      banner.style.display = "none";
+      ymGoal("cookie_close");
+    });
+  }
+
+  function bindFAQ(){
+    $$("#faqList .qa").forEach(qa => {
+      const q = $(".qa__q", qa);
+      const a = $(".qa__a", qa);
+      if (!q || !a) return;
+      a.style.display = "none";
+      q.addEventListener("click", () => {
+        const open = a.style.display !== "none";
+        a.style.display = open ? "none" : "block";
+        qa.classList.toggle("is-open", !open);
       });
     });
   }
 
+  function bindIssueChips(){
+    const chipsWrap = document.querySelector("[data-issue-chips]");
+    if (!chipsWrap) return;
+    chipsWrap.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-issue]");
+      if (!btn) return;
+      const issue = t(btn.getAttribute("data-issue"));
+      const form = btn.closest("form");
+      const problemInput = form?.querySelector('[name="issue"],[name="problem"]');
+      if (problemInput) problemInput.value = issue;
 
+      // visual selected
+      $$(".chip--mini", chipsWrap).forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    });
+  }
 
-  // ====== Global click tracking ======
-  document.addEventListener("click", (e)=>{
-    const a = e.target.closest("a");
-    if (!a) return;
-    const href = (a.getAttribute("href") || "").trim();
-    if (!href) return;
-    if (href.startsWith("tel:")) goal("click_tel");
-    if (href.includes("t.me/")) goal("click_tg");
-    if (href.includes("vk.com/")) goal("click_vk");
-    if (href.includes("max.ru/")) goal("click_max");
-    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
-    if (href.includes("2gis")) goal("open_reviews_2gis");
-  });
-
-
-
-
-  // ====== Lightbox (works gallery) ======
-  const workImgs = Array.from(document.querySelectorAll(".workcard img"));
-  if (workImgs.length) {
-    const lb = document.createElement("div");
-    lb.className = "lightbox";
-    lb.innerHTML = `
-      <div class="lightbox__panel" role="dialog" aria-modal="true" aria-label="Просмотр фото">
-        <div class="lightbox__top">
-          <div class="lightbox__title">Фото процесса</div>
-          <button class="lightbox__close" type="button" aria-label="Закрыть">✕</button>
-        </div>
-        <div class="lightbox__imgwrap">
-          <img class="lightbox__img" alt="" src="" />
-        </div>
-      </div>
-    `;
-    document.body.appendChild(lb);
-    const imgEl = lb.querySelector(".lightbox__img");
-    const closeBtn = lb.querySelector(".lightbox__close");
-    const close = () => lb.classList.remove("is-open");
-    closeBtn.addEventListener("click", close);
-    lb.addEventListener("click", (e) => { if (e.target === lb) close(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-
-    workImgs.forEach((img) => {
-      img.style.cursor = "zoom-in";
-      img.addEventListener("click", () => {
-        imgEl.src = img.currentSrc || img.src;
-        imgEl.alt = img.alt || "Фото процесса";
-        lb.classList.add("is-open");
+  function bindQuickServiceButtons(){
+    $$(".quick__btn").forEach(b => {
+      b.addEventListener("click", () => {
+        const service = b.getAttribute("data-service");
+        const map = {
+          phone: "Телефон",
+          pc: "ПК / ноутбук",
+          tv: "Телевизор",
+          coffee: "Кофемашина",
+          printer: "Принтер",
+          dyson: "Dyson",
+          ps: "Приставка"
+        };
+        const form = $("#leadForm") || $("#leadForm2");
+        if (form) {
+          const device = form.querySelector('[name="device"]');
+          if (device) device.value = map[service] || "";
+        }
+        const leadSection = document.getElementById("lead");
+        if (leadSection) leadSection.scrollIntoView({ behavior: "smooth" });
       });
     });
   }
 
-// Hotfix: bottom lead form handlers
+  function bindLeadButtons(){
+    // две формы: leadForm (в первом экране) и leadForm2 (внизу)
+    const forms = [$("#leadForm"), $("#leadForm2")].filter(Boolean);
 
-(function(){
-  const form = document.querySelector('.lead-bottom, #bottomLeadForm, .footer .lead-form');
-  if(!form) return;
-  const getVal = sel => (form.querySelector(sel)?.value || '').trim();
-  const buildMsg = () => {
-    const d=getVal('input[name="device"], #leadDevice2, #leadDevice');
-    const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem');
-    const c=getVal('input[name="contact"], #leadContact2, #leadContact');
-    if(!d || !p){ alert('Укажите устройство и проблему'); return null; }
-    return `Заявка с сайта\nУстройство: ${d}\nПроблема: ${p}${c?`\nКонтакт: ${c}`:''}`;
-  };
-  const bind = (cls, fn) => { const b=form.querySelector(cls); if(b) b.addEventListener('click', fn); };
-  bind('.btn-tg', ()=>{ const d=getVal('input[name="device"], #leadDevice2, #leadDevice'); const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem'); const c=getVal('input[name="contact"], #leadContact2, #leadContact'); const m=buildMsg(); if(!m) return; window.open('https://t.me/share/url?text='+encodeURIComponent(m),'_blank'); logLeadAndToast({message:m, device:d, problem:p, contact:c}, 'tg'); });
-  bind('.btn-vk', ()=>{ const d=getVal('input[name="device"], #leadDevice2, #leadDevice'); const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem'); const c=getVal('input[name="contact"], #leadContact2, #leadContact'); const m=buildMsg(); if(!m) return; window.open('https://vk.com/share.php?comment='+encodeURIComponent(m),'_blank'); logLeadAndToast({message:m, device:d, problem:p, contact:c}, 'vk'); });
-  bind('.btn-max', ()=>{ const d=getVal('input[name="device"], #leadDevice2, #leadDevice'); const p=getVal('textarea[name="problem"], #leadProblem2, #leadProblem'); const c=getVal('input[name="contact"], #leadContact2, #leadContact'); const m=buildMsg(); if(!m) return; window.open(LINKS.max,'_blank','noopener,noreferrer'); copyToClipboard(m); logLeadAndToast({message:m, device:d, problem:p, contact:c}, 'max'); });
+    function wire(form, tgBtnId, vkBtnId, maxBtnId){
+      const tgBtn = document.getElementById(tgBtnId);
+      const vkBtn = document.getElementById(vkBtnId);
+      const mxBtn = document.getElementById(maxBtnId);
 
-  // ====== Global click tracking ======
-  document.addEventListener("click", (e)=>{
-    const a = e.target.closest("a");
-    if (!a) return;
-    const href = (a.getAttribute("href") || "").trim();
-    if (!href) return;
-    if (href.startsWith("tel:")) goal("click_tel");
-    if (href.includes("t.me/")) goal("click_tg");
-    if (href.includes("vk.com/")) goal("click_vk");
-    if (href.includes("max.ru/")) goal("click_max");
-    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
-    if (href.includes("2gis")) goal("open_reviews_2gis");
-  });
-
-
-})();
-
-
-
-// Popular problems modal (main page)
-(function(){
-  const openBtn = document.getElementById('openProblems');
-  const modal = document.getElementById('problemsModal');
-  if (!openBtn || !modal) return;
-
-  const close = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
-  const open = () => { modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; };
-
-  openBtn.addEventListener('click', open);
-  modal.addEventListener('click', (e) => {
-    const t = e.target;
-    if (t && (t.dataset && t.dataset.close === 'true')) close();
-  });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-
-  // --- Hide "Отзывы" blocks everywhere (keep markup but don't show) ---
-  const hideReviewsEverywhere = () => {
-    // 1) Hide normal review sections by known selectors
-    document.querySelectorAll('.reviews, .section-reviews, #reviews, .reviews-section').forEach((el) => {
-      el.style.display = 'none';
-    });
-
-    // 2) Hide "inline" review blocks on service/problem pages where there is only <h2>Отзывы</h2> + content
-    const headings = Array.from(document.querySelectorAll('h2, h3'))
-      .filter((h) => (h.textContent || '').trim() === 'Отзывы');
-
-    headings.forEach((h) => {
-      // If it's already inside a dedicated reviews section, that section is hidden above.
-      const dedicated = h.closest('section');
-      if (dedicated && (dedicated.id === 'reviews' || (dedicated.className || '').toLowerCase().includes('reviews'))) {
-        dedicated.style.display = 'none';
-        return;
-      }
-
-      // Hide from the heading until the next "process" block / next main section heading
-      const nodesToHide = [h];
-      let n = h.nextSibling;
-
-      const isStopNode = (node) => {
-        if (!node || node.nodeType !== 1) return false;
-        const el = node;
-        if (el.matches('section.process-section, section#process, section[data-section="process"]')) return true;
-        if (el.matches('section.card.process-section, section.card.mt-lg.process-section')) return true;
-        if (el.matches('h2, h3')) {
-          const t = (el.textContent || '').trim();
-          if (t === 'Как проходит ремонт' || t === 'Как работаем' || t === 'Процесс ремонта') return true;
+      const validate = () => {
+        const lead = collectLead(form);
+        if (!lead.device || !lead.problem) {
+          alert("Заполни, пожалуйста: Устройство и Проблема.");
+          return null;
         }
-        return false;
+        return lead;
       };
 
-      while (n) {
-        if (isStopNode(n)) break;
-        nodesToHide.push(n);
-        n = n.nextSibling;
-      }
-
-      nodesToHide.forEach((node) => {
-        if (node.nodeType === 1) {
-          node.style.display = 'none';
-        } else if (node.nodeType === 3) {
-          node.textContent = '';
-        }
+      tgBtn?.addEventListener("click", async () => {
+        const lead = validate(); if (!lead) return;
+        const msg = buildLeadMessage(lead);
+        ymGoal("send_tg");
+        sendLeadToGAS(lead, "TELEGRAM"); // не ждём
+        openTelegram(msg);
       });
+
+      vkBtn?.addEventListener("click", async () => {
+        const lead = validate(); if (!lead) return;
+        const msg = buildLeadMessage(lead);
+        ymGoal("send_vk");
+        sendLeadToGAS(lead, "VK");
+        openVK(msg);
+        alert("Текст заявки скопирован. Вставь его в сообщение VK и отправь ✅");
+      });
+
+      mxBtn?.addEventListener("click", async () => {
+        const lead = validate(); if (!lead) return;
+        const msg = buildLeadMessage(lead);
+        ymGoal("send_max");
+        sendLeadToGAS(lead, "MAX");
+        openMAX(msg);
+      });
+    }
+
+    // верхняя форма
+    wire($("#leadForm"), "sendTg", "sendVk", "sendMax");
+    // нижняя форма
+    wire($("#leadForm2"), "sendTg2", "sendVk2", "sendMax2");
+  }
+
+  function bindGlobalClicks(){
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
+      const href = t(a.getAttribute("href") || "");
+      if (!href) return;
+      if (href.startsWith("tel:")) ymGoal("click_tel");
+      if (href.includes("t.me/")) ymGoal("click_tg");
+      if (href.includes("vk.com/")) ymGoal("click_vk");
+      if (href.includes("max.ru/")) ymGoal("click_max");
+      if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) ymGoal("open_map");
+      if (href.includes("2gis")) ymGoal("open_reviews_2gis");
     });
-
-    // 3) Safety: hide leftover Yandex review CTA buttons if they slipped outside
-    document.querySelectorAll('a').forEach((a) => {
-      const t = (a.textContent || '').trim();
-      if (/Смотреть отзывы|Оставить отзыв/i.test(t) && /yandex\.ru\/maps/i.test(a.href || '')) {
-        a.style.display = 'none';
-      }
-    });
-  };
-
-  // Run now and after DOM is ready (some pages load script in <head>)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hideReviewsEverywhere);
-  } else {
-    hideReviewsEverywhere();
   }
 
+  function setYear(){
+    const y = document.getElementById("year");
+    if (y) y.textContent = String(new Date().getFullYear());
+  }
 
-  // ====== Global click tracking ======
-  document.addEventListener("click", (e)=>{
-    const a = e.target.closest("a");
-    if (!a) return;
-    const href = (a.getAttribute("href") || "").trim();
-    if (!href) return;
-    if (href.startsWith("tel:")) goal("click_tel");
-    if (href.includes("t.me/")) goal("click_tg");
-    if (href.includes("vk.com/")) goal("click_vk");
-    if (href.includes("max.ru/")) goal("click_max");
-    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
-    if (href.includes("2gis")) goal("open_reviews_2gis");
+  document.addEventListener("DOMContentLoaded", () => {
+    setYear();
+    bindBurger();
+    bindToTop();
+    bindCookie();
+    bindFAQ();
+    bindIssueChips();
+    bindQuickServiceButtons();
+    bindLeadButtons();
+    bindGlobalClicks();
   });
-
-
-})();
-
-
-
-/* === Quick price calculator (homepage) === */
-(() => {
-  const dev = document.getElementById("qpDevice");
-  const prob = document.getElementById("qpProblem");
-  const price = document.getElementById("qpPrice");
-  const desc = document.getElementById("qpDesc");
-  const maxBtn = document.getElementById("qpMax");
-  const tgBtn = document.getElementById("qpTg");
-  if (!dev || !prob || !price || !desc) return;
-
-  const DATA = {
-    phone: [
-      { v:"screen", t:"Разбит экран / замена дисплея", p:"от 2500 ₽", d:"Замена модуля, проверка, тест перед выдачей." },
-      { v:"battery", t:"Быстро разряжается / замена АКБ", p:"от 1000 ₽", d:"Установка нового аккумулятора и проверка тока." },
-      { v:"water", t:"После воды / не включается", p:"от 1800 ₽", d:"Чистка, диагностика, восстановление цепей." },
-      { v:"charge", t:"Не заряжается / разъём питания", p:"от 1800 ₽", d:"Чистка/замена разъёма, пайка при необходимости." },
-    ],
-    pc: [
-      { v:"nofi", t:"Не ловит Wi‑Fi / драйвер/модуль", p:"от 900 ₽", d:"Диагностика, настройка, замена модуля при необходимости." },
-      { v:"slow", t:"Тормозит / установка SSD", p:"от 1500 ₽", d:"Перенос системы/установка, чистка, оптимизация." },
-      { v:"power", t:"Не включается / питание", p:"от 1800 ₽", d:"Диагностика цепей питания, ремонт платы." },
-    ],
-    tv: [
-      { v:"backlight", t:"Подсветка / тусклая картинка", p:"от 2500 ₽", d:"Замена линеек подсветки, тест." },
-      { v:"noimg", t:"Нет изображения / полосы", p:"от 1800 ₽", d:"Диагностика матрицы/шлейфов/платы." },
-      { v:"psu", t:"Питание / разъёмы", p:"от 1800 ₽", d:"Ремонт платы питания/разъёмов, проверка." },
-    ],
-    coffee: [
-      { v:"leak", t:"Протечка", p:"от 1500 ₽", d:"Замена уплотнений/шлангов, тест на герметичность." },
-      { v:"heat", t:"Ошибка / не греет", p:"от 1800 ₽", d:"Диагностика нагрева, датчиков, ремонт узла." },
-      { v:"clean", t:"Чистка / декальцинация", p:"от 1200 ₽", d:"Промывка, удаление накипи, профилактика." },
-    ],
-    printer: [
-      { v:"paper", t:"Замятие бумаги", p:"от 900 ₽", d:"Чистка/ремонт тракта подачи, тест." },
-      { v:"faint", t:"Печатает бледно", p:"от 900 ₽", d:"Профилактика, диагностика узлов, расходники." },
-      { v:"service", t:"Не видит картридж / ошибка", p:"от 1000 ₽", d:"Диагностика, восстановление контактов/узлов." },
-    ],
-    dyson: [
-      { v:"battery", t:"Быстро разряжается / АКБ", p:"от 1500 ₽", d:"Диагностика и замена аккумулятора." },
-      { v:"power", t:"Не включается", p:"от 1800 ₽", d:"Диагностика платы/питания, ремонт." },
-      { v:"loss", t:"Потеря мощности", p:"от 900 ₽", d:"Чистка, диагностика фильтров/трактов." },
-    ],
-  };
-
-  function fillProblems() {
-    const items = DATA[dev.value] || [];
-    prob.innerHTML = items.map(it => `<option value="${it.v}">${it.t}</option>`).join("");
-  }
-
-  function update() {
-    const items = DATA[dev.value] || [];
-    const it = items.find(x => x.v === prob.value) || items[0];
-    if (!it) return;
-    price.textContent = it.p;
-    desc.textContent = it.d;
-
-    const msg = encodeURIComponent(`Здравствуйте! Хочу узнать стоимость. Устройство: ${dev.options[dev.selectedIndex].text}. Проблема: ${it.t}.`);
-    if (maxBtn) maxBtn.href = `https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8?text=${msg}`;
-    if (tgBtn) tgBtn.href = `https://t.me/vremonte761?text=${msg}`;
-  }
-
-  fillProblems();
-  update();
-  dev.addEventListener("change", () => { fillProblems(); update(); });
-  prob.addEventListener("change", update);
-
-  // ====== Global click tracking ======
-  document.addEventListener("click", (e)=>{
-    const a = e.target.closest("a");
-    if (!a) return;
-    const href = (a.getAttribute("href") || "").trim();
-    if (!href) return;
-    if (href.startsWith("tel:")) goal("click_tel");
-    if (href.includes("t.me/")) goal("click_tg");
-    if (href.includes("vk.com/")) goal("click_vk");
-    if (href.includes("max.ru/")) goal("click_max");
-    if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) goal("open_map");
-    if (href.includes("2gis")) goal("open_reviews_2gis");
-  });
-
-
 })();
