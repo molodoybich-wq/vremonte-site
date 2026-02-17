@@ -1,36 +1,33 @@
 (() => {
   "use strict";
 
+  // Google Apps Script Web App (exec)
   const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxqaJfhNC5MbGbUCOPRola4NTWCp784hVHrOYuJyjROqRUmlEhBxHLfgD1qDBKLsYll/exec";
+
   const TG_SHARE = "https://t.me/share/url";
-  const TG_USER = "vremonte761";
   const VK_URL = "https://vk.com/vremonte161";
   const MAX_LINK = "https://max.ru/u/f9LHodD0cOIcyLKszOi0I1wOwGuyOltplh3obPyqkL7_jwUK6DRgug2lKI8";
-  const PHONE = "+79255156161";
 
-  const $ = (sel, root=document) => root.querySelector(sel);
-  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const t = (s) => (typeof s === "string" ? s.trim() : "");
 
-  function ymGoal(name){
+  function ymGoal(name) {
     try {
-      if (typeof window.ym === "function") {
-        // id метрики у тебя 106611877
-        window.ym(106611877, "reachGoal", name);
-      }
-    } catch(_){}
+      if (typeof window.ym === "function") window.ym(106611877, "reachGoal", name);
+    } catch (_) {}
   }
 
-  function copyToClipboard(text){
+  function copyToClipboard(text) {
     try {
       navigator.clipboard.writeText(text);
       return true;
-    } catch(_) {
+    } catch (_) {
       return false;
     }
   }
 
-  function buildLeadMessage(lead){
+  function buildLeadMessage(lead) {
     const lines = [
       "Заявка с сайта vremonte61.online",
       lead.device ? `Устройство: ${lead.device}` : null,
@@ -42,55 +39,51 @@
     return lines.join("\n");
   }
 
-  function collectLead(fromForm){
+  function collectLead(fromForm) {
     const device = t(fromForm?.querySelector('[name="device"]')?.value);
     const problem = t(fromForm?.querySelector('[name="issue"],[name="problem"]')?.value);
     const contact = t(fromForm?.querySelector('[name="contact"]')?.value);
     // у тебя select name="urgent"
     const urgency = t(fromForm?.querySelector('[name="urgent"],[name="urgency"],select')?.value);
 
-    return {
-      device, problem, contact, urgency,
-      page: location.href,
-      ts: Date.now()
-    };
+    return { device, problem, contact, urgency, page: location.href, ts: Date.now() };
   }
 
-  async function sendLeadToGAS(lead, channel){
+  // ⭐ ВАЖНО: Apps Script часто блокируется CORS при application/json.
+  // Поэтому отправляем БЕЗ заголовков, в режиме no-cors — запрос уходит без preflight.
+  async function sendLeadToGAS(lead, channel) {
     try {
       const payload = { ...lead, channel };
-      const res = await fetch(GAS_WEBAPP_URL, {
+      await fetch(GAS_WEBAPP_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        mode: "no-cors",
         body: JSON.stringify(payload),
-        keepalive: true
+        keepalive: true,
       });
-      const data = await res.json().catch(() => ({}));
-      return !!(res.ok && data && data.ok === true);
+      return true;
     } catch (e) {
       console.warn("[lead] GAS send failed", e);
       return false;
     }
   }
 
-  function openTelegram(text){
-    // делаем share url + text
+  function openTelegram(text) {
     const url = TG_SHARE + "?url=" + encodeURIComponent(location.href) + "&text=" + encodeURIComponent(text);
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function openVK(text){
-    // VK универсально: копируем текст, открываем страницу/чат
+  function openVK(text) {
     copyToClipboard(text);
     window.open(VK_URL, "_blank", "noopener,noreferrer");
   }
 
-  function openMAX(text){
+  function openMAX(text) {
+    // если MAX не поддерживает параметр text — ничего страшного, просто откроется чат
     const url = MAX_LINK + (MAX_LINK.includes("?") ? "&" : "?") + "text=" + encodeURIComponent(text);
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function bindBurger(){
+  function bindBurger() {
     const burger = $("#burger");
     const mobileNav = $("#mobileNav");
     if (!burger || !mobileNav) return;
@@ -103,7 +96,7 @@
       ymGoal("burger_toggle");
     });
 
-    $$("#mobileNav a").forEach(a => {
+    $$("#mobileNav a").forEach((a) => {
       a.addEventListener("click", () => {
         burger.setAttribute("aria-expanded", "false");
         mobileNav.classList.remove("is-open");
@@ -112,20 +105,16 @@
     });
   }
 
-  function bindToTop(){
+  function bindToTop() {
     const btn = $("#toTop");
     if (!btn) return;
-    const onScroll = () => {
-      btn.classList.toggle("is-show", window.scrollY > 700);
-    };
+    const onScroll = () => btn.classList.toggle("is-show", window.scrollY > 700);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    btn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
   }
 
-  function bindCookie(){
+  function bindCookie() {
     const banner = $("#cookieBanner");
     const accept = $("#cookieAccept");
     const close = $("#cookieClose");
@@ -137,21 +126,21 @@
       return;
     }
 
-    const hide = () => {
+    const acceptFn = () => {
       banner.style.display = "none";
       localStorage.setItem(key, "1");
       ymGoal("cookie_accept");
     };
 
-    accept?.addEventListener("click", hide);
+    accept?.addEventListener("click", acceptFn);
     close?.addEventListener("click", () => {
       banner.style.display = "none";
       ymGoal("cookie_close");
     });
   }
 
-  function bindFAQ(){
-    $$("#faqList .qa").forEach(qa => {
+  function bindFAQ() {
+    $$("#faqList .qa").forEach((qa) => {
       const q = $(".qa__q", qa);
       const a = $(".qa__a", qa);
       if (!q || !a) return;
@@ -164,7 +153,7 @@
     });
   }
 
-  function bindIssueChips(){
+  function bindIssueChips() {
     const chipsWrap = document.querySelector("[data-issue-chips]");
     if (!chipsWrap) return;
     chipsWrap.addEventListener("click", (e) => {
@@ -175,14 +164,13 @@
       const problemInput = form?.querySelector('[name="issue"],[name="problem"]');
       if (problemInput) problemInput.value = issue;
 
-      // visual selected
-      $$(".chip--mini", chipsWrap).forEach(b => b.classList.remove("selected"));
+      $$(".chip--mini", chipsWrap).forEach((b) => b.classList.remove("selected"));
       btn.classList.add("selected");
     });
   }
 
-  function bindQuickServiceButtons(){
-    $$(".quick__btn").forEach(b => {
+  function bindQuickServiceButtons() {
+    $$(".quick__btn").forEach((b) => {
       b.addEventListener("click", () => {
         const service = b.getAttribute("data-service");
         const map = {
@@ -192,24 +180,23 @@
           coffee: "Кофемашина",
           printer: "Принтер",
           dyson: "Dyson",
-          ps: "Приставка"
+          ps: "Приставка",
         };
         const form = $("#leadForm") || $("#leadForm2");
         if (form) {
           const device = form.querySelector('[name="device"]');
           if (device) device.value = map[service] || "";
         }
-        const leadSection = document.getElementById("lead");
-        if (leadSection) leadSection.scrollIntoView({ behavior: "smooth" });
+        document.getElementById("lead")?.scrollIntoView({ behavior: "smooth" });
       });
     });
   }
 
-  function bindLeadButtons(){
-    // две формы: leadForm (в первом экране) и leadForm2 (внизу)
-    const forms = [$("#leadForm"), $("#leadForm2")].filter(Boolean);
+  function bindLeadButtons() {
+    const wire = (formId, tgBtnId, vkBtnId, maxBtnId) => {
+      const form = document.getElementById(formId);
+      if (!form) return;
 
-    function wire(form, tgBtnId, vkBtnId, maxBtnId){
       const tgBtn = document.getElementById(tgBtnId);
       const vkBtn = document.getElementById(vkBtnId);
       const mxBtn = document.getElementById(maxBtnId);
@@ -223,16 +210,18 @@
         return lead;
       };
 
-      tgBtn?.addEventListener("click", async () => {
-        const lead = validate(); if (!lead) return;
+      tgBtn?.addEventListener("click", () => {
+        const lead = validate();
+        if (!lead) return;
         const msg = buildLeadMessage(lead);
         ymGoal("send_tg");
         sendLeadToGAS(lead, "TELEGRAM"); // не ждём
         openTelegram(msg);
       });
 
-      vkBtn?.addEventListener("click", async () => {
-        const lead = validate(); if (!lead) return;
+      vkBtn?.addEventListener("click", () => {
+        const lead = validate();
+        if (!lead) return;
         const msg = buildLeadMessage(lead);
         ymGoal("send_vk");
         sendLeadToGAS(lead, "VK");
@@ -240,37 +229,21 @@
         alert("Текст заявки скопирован. Вставь его в сообщение VK и отправь ✅");
       });
 
-      mxBtn?.addEventListener("click", async () => {
-        const lead = validate(); if (!lead) return;
+      mxBtn?.addEventListener("click", () => {
+        const lead = validate();
+        if (!lead) return;
         const msg = buildLeadMessage(lead);
         ymGoal("send_max");
         sendLeadToGAS(lead, "MAX");
         openMAX(msg);
       });
-    }
+    };
 
-    // верхняя форма
-    wire($("#leadForm"), "sendTg", "sendVk", "sendMax");
-    // нижняя форма
-    wire($("#leadForm2"), "sendTg2", "sendVk2", "sendMax2");
+    wire("leadForm", "sendTg", "sendVk", "sendMax");
+    wire("leadForm2", "sendTg2", "sendVk2", "sendMax2");
   }
 
-  function bindGlobalClicks(){
-    document.addEventListener("click", (e) => {
-      const a = e.target.closest("a");
-      if (!a) return;
-      const href = t(a.getAttribute("href") || "");
-      if (!href) return;
-      if (href.startsWith("tel:")) ymGoal("click_tel");
-      if (href.includes("t.me/")) ymGoal("click_tg");
-      if (href.includes("vk.com/")) ymGoal("click_vk");
-      if (href.includes("max.ru/")) ymGoal("click_max");
-      if (href.includes("yandex.ru/profile") || href.includes("yandex.ru/maps")) ymGoal("open_map");
-      if (href.includes("2gis")) ymGoal("open_reviews_2gis");
-    });
-  }
-
-  function setYear(){
+  function setYear() {
     const y = document.getElementById("year");
     if (y) y.textContent = String(new Date().getFullYear());
   }
@@ -284,6 +257,5 @@
     bindIssueChips();
     bindQuickServiceButtons();
     bindLeadButtons();
-    bindGlobalClicks();
   });
 })();
