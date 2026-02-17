@@ -166,9 +166,6 @@
     }
   }
 
-  }
-
-
   // ====== Year in footer ======
   const y = $("#year");
   if (y) y.textContent = String(new Date().getFullYear());
@@ -336,7 +333,8 @@
       alert("Заполни, пожалуйста: Устройство и Проблема.");
       return false;
     }
-
+    return true;
+  }
 
   function extractLeadFields(formEl){
     if (!formEl) return { device:"", problem:"", contact:"" };
@@ -346,10 +344,7 @@
     return { device, problem, contact };
   }
 
-    return true;
-  }
-
-  // Lead form actions
+  // Lead form actions  // Lead form actions
   const leadForm = $("#leadForm");
   if (leadForm){
     leadForm.addEventListener("submit",(e)=>{
@@ -981,7 +976,7 @@ function renderModelsModal(categoryKey){
   });
 
 
-})();
+
 
   // ====== Lightbox (works gallery) ======
   const workImgs = Array.from(document.querySelectorAll(".workcard img"));
