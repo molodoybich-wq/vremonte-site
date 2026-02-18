@@ -2286,3 +2286,17 @@ select option, select optgroup{
   .heroV2__media{ grid-template-columns: 1fr; }
   .mediaCard img{ height: 150px; }
 }
+/* ===== FIX: скрываем mobile меню на ПК ===== */
+
+.mobile-nav {
+  display: none !important;
+}
+
+@media (max-width: 992px) {
+  .mobile-nav {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+}
