@@ -18,35 +18,6 @@
     } catch (_) {}
   }
 
-  // Небольшой тост (подтверждение) — чтобы пользователю было понятно, что заявка зафиксирована.
-  function toast(message) {
-    try {
-      let box = document.getElementById("leadToast");
-      if (!box) {
-        const style = document.createElement("style");
-        style.textContent = `
-          #leadToast{position:fixed;left:12px;right:12px;bottom:14px;z-index:9999;display:none;}
-          #leadToast .t{max-width:980px;margin:0 auto;border-radius:14px;padding:12px 14px;line-height:1.35;
-            background:rgba(15,20,35,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-            border:1px solid rgba(255,255,255,.12);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.35);
-            font-family:inherit;font-size:14px;}
-        `;
-        document.head.appendChild(style);
-        box = document.createElement("div");
-        box.id = "leadToast";
-        box.innerHTML = '<div class="t"></div>';
-        document.body.appendChild(box);
-        box.addEventListener("click", () => (box.style.display = "none"));
-      }
-      box.querySelector(".t").textContent = message;
-      box.style.display = "block";
-      clearTimeout(toast._t);
-      toast._t = setTimeout(() => {
-        box.style.display = "none";
-      }, 4500);
-    } catch (_) {}
-  }
-
   function copyToClipboard(text) {
     try {
       navigator.clipboard.writeText(text);
@@ -81,44 +52,19 @@
   // ⭐ ВАЖНО: Apps Script часто блокируется CORS при application/json.
   // Поэтому отправляем БЕЗ заголовков, в режиме no-cors — запрос уходит без preflight.
   async function sendLeadToGAS(lead, channel) {
-    const payload = { ...lead, channel };
-    const body = JSON.stringify(payload);
-
-    // 1) Основной способ: POST no-cors (без preflight)
     try {
+      const payload = { ...lead, channel };
       await fetch(GAS_WEBAPP_URL, {
         method: "POST",
         mode: "no-cors",
-        body,
+        body: JSON.stringify(payload),
         keepalive: true,
       });
+      return true;
     } catch (e) {
-      console.warn("[lead] GAS fetch failed", e);
+      console.warn("[lead] GAS send failed", e);
+      return false;
     }
-
-    // 2) Резерв: sendBeacon (часто надёжнее при закрытии вкладки)
-    try {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([body], { type: "text/plain;charset=utf-8" });
-        navigator.sendBeacon(GAS_WEBAPP_URL, blob);
-      }
-    } catch (_) {}
-
-    // 3) Резерв: GET-пинг (если в Apps Script реализован doGet) — короткие параметры
-    try {
-      const q = new URLSearchParams({
-        channel: String(channel || ""),
-        device: String(lead.device || "").slice(0, 80),
-        problem: String(lead.problem || "").slice(0, 160),
-        contact: String(lead.contact || "").slice(0, 80),
-        page: String(lead.page || "").slice(0, 180),
-        ts: String(lead.ts || Date.now()),
-      });
-      fetch(GAS_WEBAPP_URL + "?" + q.toString(), { mode: "no-cors", keepalive: true }).catch(() => {});
-    } catch (_) {}
-
-    // Нельзя гарантированно проверить успех из-за no-cors, поэтому считаем отправку "принятой".
-    return true;
   }
 
   function openTelegram(text) {
@@ -270,7 +216,6 @@
         const msg = buildLeadMessage(lead);
         ymGoal("send_tg");
         sendLeadToGAS(lead, "TELEGRAM"); // не ждём
-        toast("Заявка зафиксирована ✅ Сейчас откроется Telegram. Если чат не открылся — позвони: 8 925 515‑61‑61");
         openTelegram(msg);
       });
 
@@ -281,7 +226,6 @@
         ymGoal("send_vk");
         sendLeadToGAS(lead, "VK");
         openVK(msg);
-        toast("Заявка зафиксирована ✅ Текст скопирован — вставь в VK и отправь.");
         alert("Текст заявки скопирован. Вставь его в сообщение VK и отправь ✅");
       });
 
@@ -291,7 +235,6 @@
         const msg = buildLeadMessage(lead);
         ymGoal("send_max");
         sendLeadToGAS(lead, "MAX");
-        toast("Заявка зафиксирована ✅ Сейчас откроется MAX. Если чат не открылся — позвони: 8 925 515‑61‑61");
         openMAX(msg);
       });
     };
@@ -305,7 +248,96 @@
     if (y) y.textContent = String(new Date().getFullYear());
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  
+  // Quick Price (Оценка стоимости за 30 секунд)
+  function bindQuickPrice() {
+    const deviceEl = document.getElementById("qpDevice");
+    const problemEl = document.getElementById("qpProblem");
+    const priceEl = document.getElementById("qpPrice");
+    const descEl = document.getElementById("qpDesc");
+
+    if (!deviceEl || !problemEl || !priceEl || !descEl) return;
+
+    const DATA = {
+      phone: [
+        { id:"charge", label:"Не заряжается / разъём", price:"от 1800 ₽", desc:"Чистка/замена разъёма, диагностика цепей питания." },
+        { id:"screen", label:"Разбит экран / нет изображения", price:"от 2500 ₽", desc:"Замена дисплея (подбор качества под бюджет)." },
+        { id:"battery", label:"Быстро садится / батарея", price:"от 1900 ₽", desc:"Замена АКБ + проверка контроллера/тока утечки." },
+        { id:"no_power", label:"Не включается", price:"от 1500 ₽", desc:"Диагностика питания, восстановление после падений/влаги." },
+        { id:"sound", label:"Динамик/микрофон", price:"от 1200 ₽", desc:"Чистка/замена модуля, восстановление контактов." },
+        { id:"camera", label:"Камера/FaceID", price:"от 1500 ₽", desc:"Диагностика шлейфов/модулей, восстановление после ударов." }
+      ],
+      pc: [
+        { id:"charge", label:"Не заряжается / разъём питания", price:"от 2000 ₽", desc:"Разъём, цепи питания, контроллер зарядки." },
+        { id:"no_boot", label:"Не включается / не грузится", price:"от 1500 ₽", desc:"Диагностика платы, RAM/SSD, прошивка BIOS." },
+        { id:"overheat", label:"Перегрев / шумит", price:"от 1500 ₽", desc:"Чистка, термопаста, профилактика системы охлаждения." },
+        { id:"screen", label:"Нет изображения / полосы", price:"от 1800 ₽", desc:"Шлейф/матрица, видеочип, подсветка." },
+        { id:"wifi", label:"Wi‑Fi/сеть", price:"от 1200 ₽", desc:"Драйверы, модуль Wi‑Fi, диагностика антенн." }
+      ],
+      tv: [
+        { id:"backlight", label:"Нет подсветки / темный экран", price:"от 3000 ₽", desc:"Замена подсветки + проверка драйвера/питания." },
+        { id:"no_image", label:"Нет изображения, есть звук", price:"от 2500 ₽", desc:"Диагностика подсветки/матрицы/платы T‑CON." },
+        { id:"no_power", label:"Не включается", price:"от 2000 ₽", desc:"Блок питания, плата управления, разъёмы." },
+        { id:"hdmi", label:"HDMI/входы", price:"от 2000 ₽", desc:"Ремонт портов, пайка, восстановление дорожек." }
+      ],
+      coffee: [
+        { id:"leak", label:"Протекает", price:"от 1800 ₽", desc:"Уплотнения, патрубки, профилактика." },
+        { id:"heat", label:"Не греет / ошибка нагрева", price:"от 2000 ₽", desc:"ТЭН/термодатчики, электроника, диагностика." },
+        { id:"no_water", label:"Не подает воду", price:"от 1800 ₽", desc:"Помпа, засоры, клапаны, декальцинация." },
+        { id:"error", label:"Ошибка / не делает кофе", price:"от 1500 ₽", desc:"Диагностика узлов, чистка, настройка." }
+      ],
+      printer: [
+        { id:"no_print", label:"Не печатает / полосит", price:"от 1500 ₽", desc:"Чистка, подача, диагностика картриджа/печки." },
+        { id:"paper", label:"Не захватывает бумагу", price:"от 1500 ₽", desc:"Ролики, подача, узлы захвата." },
+        { id:"jam", label:"Зажевывает / ошибки", price:"от 1500 ₽", desc:"Профилактика тракта, датчики, калибровка." }
+      ],
+      dyson: [
+        { id:"no_power", label:"Не включается", price:"от 1500 ₽", desc:"Диагностика питания, платы, кнопки/контакты." },
+        { id:"power_loss", label:"Теряет мощность", price:"от 1200 ₽", desc:"Чистка, фильтры, турбина, герметичность." },
+        { id:"off", label:"Выключается", price:"от 1500 ₽", desc:"АКБ/контакты, перегрев, плата управления." }
+      ]
+    };
+
+    function fillProblems() {
+      const key = deviceEl.value;
+      const list = DATA[key] || [];
+      problemEl.innerHTML = "";
+      if (!list.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Опишите проблему текстом";
+        problemEl.appendChild(opt);
+        priceEl.textContent = "по запросу";
+        descEl.textContent = "Напишите — подскажем цену и сроки.";
+        return;
+      }
+      list.forEach((p) => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = p.label;
+        problemEl.appendChild(opt);
+      });
+      // set first
+      setPrice();
+    }
+
+    function setPrice() {
+      const key = deviceEl.value;
+      const list = DATA[key] || [];
+      const found = list.find((p) => p.id === problemEl.value) || list[0];
+      if (!found) return;
+      priceEl.textContent = found.price;
+      descEl.textContent = found.desc;
+    }
+
+    deviceEl.addEventListener("change", fillProblems);
+    problemEl.addEventListener("change", setPrice);
+
+    // init
+    fillProblems();
+  }
+
+document.addEventListener("DOMContentLoaded", () => {
     setYear();
     bindBurger();
     bindToTop();
@@ -314,38 +346,6 @@
     bindIssueChips();
     bindQuickServiceButtons();
     bindLeadButtons();
+    bindQuickPrice();
   });
-})();
-
-// Lightbox (workshop gallery)
-(function(){
-  const lb = document.getElementById('lightbox');
-  if(!lb) return;
-  const img = lb.querySelector('.lightbox__img');
-  const closeBtn = lb.querySelector('.lightbox__close');
-  const open = (src, alt) => {
-    img.src = src;
-    img.alt = alt || '';
-    lb.classList.add('is-open');
-    lb.setAttribute('aria-hidden','false');
-    document.body.classList.add('modal-open');
-  };
-  const close = () => {
-    lb.classList.remove('is-open');
-    lb.setAttribute('aria-hidden','true');
-    img.src = '';
-    document.body.classList.remove('modal-open');
-  };
-  document.addEventListener('click', (e)=>{
-    const btn = e.target.closest('[data-lightbox]');
-    if(btn){
-      const src = btn.getAttribute('data-lightbox');
-      const im = btn.querySelector('img');
-      open(src, im ? im.alt : '');
-      return;
-    }
-    if(e.target === lb) close();
-  });
-  closeBtn && closeBtn.addEventListener('click', close);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 })();
