@@ -1,67 +1,63 @@
 <!DOCTYPE html>
+
 <html lang="ru">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Статус ремонта — В ремонте</title>
-  <meta name="description" content="Проверка статуса ремонта по номеру заявки. Ответим в Telegram/VK/MAX."/>
-  <link rel="canonical" href="https://vremonte61.online/status.html"/>
-  <link rel="stylesheet" href="styles.css?v=20260216-qp3"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Статус ремонта — В ремонте</title>
+<meta content="Проверка статуса ремонта по номеру заявки. Ответим в Telegram/VK/MAX." name="description"/>
+<link href="https://vremonte61.online/status.html" rel="canonical"/>
+<link href="styles.css?v=20260216-qp3" rel="stylesheet"/>
 </head>
 <body>
-  <header class="site-header" id="top">
-    <div class="nav-bar">
-      <div class="container container--wide nav-bar__row">
-        <a class="brand brand--new" href="/"><span class="brand__mark"></span><span class="brand__text"><span class="brand__name">В</span> <span class="brand__sub">ремонте</span></span></a>
-        <nav class="nav">
-          <a href="services.html">Услуги</a>
-          <a href="ceny.html">Цены</a>
-          <a href="kurer.html">Курьер</a>
-          <a href="guarantee.html">Гарантия</a>
-          <a href="/#find">Контакты</a>
-        </nav>
-        <div class="nav-cta">
-          <a class="btn btn--chip btn-tg" href="https://t.me/vremonte761" target="_blank" rel="noopener">Telegram</a>
-          <a class="btn btn--soft btn-call" href="tel:+79255156161">Позвонить</a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main class="container" style="padding-top:110px; padding-bottom:60px;">
-    <h1 style="margin:0 0 8px;">Статус ремонта</h1>
-    <p class="muted" style="max-width:820px;">
+<header class="site-header" id="top">
+<div class="nav-bar">
+<div class="container container--wide nav-bar__row">
+<a class="brand brand--new" href="/"><span class="brand__mark"></span><span class="brand__text"><span class="brand__name">В</span> <span class="brand__sub">ремонте</span></span></a>
+<nav class="nav">
+<a href="services.html">Услуги</a>
+<a href="ceny.html">Цены</a>
+<a href="kurer.html">Курьер</a>
+<a href="guarantee.html">Гарантия</a>
+<a href="/#find">Контакты</a>
+</nav>
+<div class="nav-cta">
+<a class="btn btn--chip btn-tg" href="https://t.me/vremonte761" rel="noopener" target="_blank">Telegram</a>
+<a class="btn btn--soft btn-call" href="tel:+79255156161">Позвонить</a>
+</div>
+</div>
+</div>
+</header>
+<main class="container" style="padding-top:110px; padding-bottom:60px;">
+<h1 style="margin:0 0 8px;">Статус ремонта</h1>
+<p class="muted" style="max-width:820px;">
       Пока это быстрый способ: вы отправляете номер заявки — мы отвечаем в мессенджере.
       (Позже можно подключить полноценный кабинет/трекер.)
     </p>
-
-    <div class="card" style="padding:18px; max-width:760px;">
-      <form id="statusForm" class="grid" style="display:grid; gap:12px;">
-        <label class="field">
-          <span>Номер заявки / квитанции</span>
-          <input name="order" required placeholder="Например: 1254">
-        </label>
-        <label class="field">
-          <span>Контакт (телефон или @ник)</span>
-          <input name="contact" placeholder="+7... или @telegram">
-        </label>
-        <label class="field">
-          <span>Комментарий (необязательно)</span>
-          <input name="comment" placeholder="Например: телевизор LG, сдавал вчера">
-        </label>
-
-        <div class="actions" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;">
-          <button class="btn btn--tg" type="button" data-ch="tg">Отправить в Telegram</button>
-          <button class="btn btn--vk" type="button" data-ch="vk">VK</button>
-          <button class="btn btn--max" type="button" data-ch="max">MAX</button>
-        </div>
-
-        <small class="muted">Сообщение будет подготовлено автоматически — останется нажать «Отправить» в мессенджере.</small>
-      </form>
-    </div>
-  </main>
-
-  <script>
+<div class="card" style="padding:18px; max-width:760px;">
+<form class="grid" id="statusForm" style="display:grid; gap:12px;">
+<label class="field">
+<span>Номер заявки / квитанции</span>
+<input name="order" placeholder="Например: 1254" required=""/>
+</label>
+<label class="field">
+<span>Контакт (телефон или @ник)</span>
+<input name="contact" placeholder="+7... или @telegram"/>
+</label>
+<label class="field">
+<span>Комментарий (необязательно)</span>
+<input name="comment" placeholder="Например: телевизор LG, сдавал вчера"/>
+</label>
+<div class="actions" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;">
+<button class="btn btn--tg" data-ch="tg" type="button">Отправить в Telegram</button>
+<button class="btn btn--vk" data-ch="vk" type="button">VK</button>
+<button class="btn btn--max" data-ch="max" type="button">MAX</button>
+</div>
+<small class="muted">Сообщение будет подготовлено автоматически — останется нажать «Отправить» в мессенджере.</small>
+</form>
+</div>
+</main>
+<script>
     // Мини-логика (без дублирования основного script.js?v=20260216-qp3)
     const LINKS = {
       tgUser: "vremonte761",

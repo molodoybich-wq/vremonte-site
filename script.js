@@ -81,19 +81,44 @@
   // ⭐ ВАЖНО: Apps Script часто блокируется CORS при application/json.
   // Поэтому отправляем БЕЗ заголовков, в режиме no-cors — запрос уходит без preflight.
   async function sendLeadToGAS(lead, channel) {
+    const payload = { ...lead, channel };
+    const body = JSON.stringify(payload);
+
+    // 1) Основной способ: POST no-cors (без preflight)
     try {
-      const payload = { ...lead, channel };
       await fetch(GAS_WEBAPP_URL, {
         method: "POST",
         mode: "no-cors",
-        body: JSON.stringify(payload),
+        body,
         keepalive: true,
       });
-      return true;
     } catch (e) {
-      console.warn("[lead] GAS send failed", e);
-      return false;
+      console.warn("[lead] GAS fetch failed", e);
     }
+
+    // 2) Резерв: sendBeacon (часто надёжнее при закрытии вкладки)
+    try {
+      if (navigator.sendBeacon) {
+        const blob = new Blob([body], { type: "text/plain;charset=utf-8" });
+        navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+      }
+    } catch (_) {}
+
+    // 3) Резерв: GET-пинг (если в Apps Script реализован doGet) — короткие параметры
+    try {
+      const q = new URLSearchParams({
+        channel: String(channel || ""),
+        device: String(lead.device || "").slice(0, 80),
+        problem: String(lead.problem || "").slice(0, 160),
+        contact: String(lead.contact || "").slice(0, 80),
+        page: String(lead.page || "").slice(0, 180),
+        ts: String(lead.ts || Date.now()),
+      });
+      fetch(GAS_WEBAPP_URL + "?" + q.toString(), { mode: "no-cors", keepalive: true }).catch(() => {});
+    } catch (_) {}
+
+    // Нельзя гарантированно проверить успех из-за no-cors, поэтому считаем отправку "принятой".
+    return true;
   }
 
   function openTelegram(text) {
@@ -290,4 +315,37 @@
     bindQuickServiceButtons();
     bindLeadButtons();
   });
+})();
+
+// Lightbox (workshop gallery)
+(function(){
+  const lb = document.getElementById('lightbox');
+  if(!lb) return;
+  const img = lb.querySelector('.lightbox__img');
+  const closeBtn = lb.querySelector('.lightbox__close');
+  const open = (src, alt) => {
+    img.src = src;
+    img.alt = alt || '';
+    lb.classList.add('is-open');
+    lb.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+  };
+  const close = () => {
+    lb.classList.remove('is-open');
+    lb.setAttribute('aria-hidden','true');
+    img.src = '';
+    document.body.classList.remove('modal-open');
+  };
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-lightbox]');
+    if(btn){
+      const src = btn.getAttribute('data-lightbox');
+      const im = btn.querySelector('img');
+      open(src, im ? im.alt : '');
+      return;
+    }
+    if(e.target === lb) close();
+  });
+  closeBtn && closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 })();
