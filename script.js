@@ -18,6 +18,35 @@
     } catch (_) {}
   }
 
+  // Небольшой тост (подтверждение) — чтобы пользователю было понятно, что заявка зафиксирована.
+  function toast(message) {
+    try {
+      let box = document.getElementById("leadToast");
+      if (!box) {
+        const style = document.createElement("style");
+        style.textContent = `
+          #leadToast{position:fixed;left:12px;right:12px;bottom:14px;z-index:9999;display:none;}
+          #leadToast .t{max-width:980px;margin:0 auto;border-radius:14px;padding:12px 14px;line-height:1.35;
+            background:rgba(15,20,35,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,.12);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.35);
+            font-family:inherit;font-size:14px;}
+        `;
+        document.head.appendChild(style);
+        box = document.createElement("div");
+        box.id = "leadToast";
+        box.innerHTML = '<div class="t"></div>';
+        document.body.appendChild(box);
+        box.addEventListener("click", () => (box.style.display = "none"));
+      }
+      box.querySelector(".t").textContent = message;
+      box.style.display = "block";
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => {
+        box.style.display = "none";
+      }, 4500);
+    } catch (_) {}
+  }
+
   function copyToClipboard(text) {
     try {
       navigator.clipboard.writeText(text);
@@ -216,6 +245,7 @@
         const msg = buildLeadMessage(lead);
         ymGoal("send_tg");
         sendLeadToGAS(lead, "TELEGRAM"); // не ждём
+        toast("Заявка зафиксирована ✅ Сейчас откроется Telegram. Если чат не открылся — позвони: 8 925 515‑61‑61");
         openTelegram(msg);
       });
 
@@ -226,6 +256,7 @@
         ymGoal("send_vk");
         sendLeadToGAS(lead, "VK");
         openVK(msg);
+        toast("Заявка зафиксирована ✅ Текст скопирован — вставь в VK и отправь.");
         alert("Текст заявки скопирован. Вставь его в сообщение VK и отправь ✅");
       });
 
@@ -235,6 +266,7 @@
         const msg = buildLeadMessage(lead);
         ymGoal("send_max");
         sendLeadToGAS(lead, "MAX");
+        toast("Заявка зафиксирована ✅ Сейчас откроется MAX. Если чат не открылся — позвони: 8 925 515‑61‑61");
         openMAX(msg);
       });
     };
