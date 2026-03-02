@@ -1278,12 +1278,16 @@ body.menu-open{
 }
 @media (max-width: 1200px){
   /* make dropdown mobile nav a full-screen overlay */
+  :root{ --header-h: 64px; }
   .mobile-nav{
     position: fixed;
-    inset: 0;
+    left: 0; right: 0;
+    top: calc(var(--header-h) + env(safe-area-inset-top));
+    bottom: 0;
+    height: auto;
     z-index: 2000;
     display: none;
-    padding: 86px 16px 20px;
+    padding: 16px 16px 20px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     background: rgba(6,10,20,.97);
