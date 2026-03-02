@@ -1,6 +1,15 @@
 (() => {
   "use strict";
 
+  // Enable JS mode (important for mobile header):
+  // In HTML we have <html class="no-js"> and CSS hides burger/menu for .no-js.
+  // If we don't remove it, on mobile the nav is hidden and burger is hidden too,
+  // so you see an empty dark bar.
+  try {
+    document.documentElement.classList.remove("no-js");
+    document.documentElement.classList.add("js");
+  } catch (_) {}
+
   // Google Apps Script Web App (exec)
   const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxqaJfhNC5MbGbUCOPRola4NTWCp784hVHrOYuJyjROqRUmlEhBxHLfgD1qDBKLsYll/exec";
 
@@ -88,21 +97,47 @@
     const mobileNav = $("#mobileNav");
     if (!burger || !mobileNav) return;
 
+    const closeMenu = () => {
+      burger.setAttribute("aria-expanded", "false");
+      mobileNav.classList.remove("is-open");
+      mobileNav.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("menu-open");
+    };
+
+    const openMenu = () => {
+      burger.setAttribute("aria-expanded", "true");
+      mobileNav.classList.add("is-open");
+      mobileNav.setAttribute("aria-hidden", "false");
+      document.body.classList.add("menu-open");
+    };
+
     burger.addEventListener("click", () => {
       const open = burger.getAttribute("aria-expanded") === "true";
-      burger.setAttribute("aria-expanded", String(!open));
-      mobileNav.classList.toggle("is-open", !open);
-      mobileNav.setAttribute("aria-hidden", String(open));
+      open ? closeMenu() : openMenu();
       ymGoal("burger_toggle");
     });
 
-    $$("#mobileNav a").forEach((a) => {
-      a.addEventListener("click", () => {
-        burger.setAttribute("aria-expanded", "false");
-        mobileNav.classList.remove("is-open");
-        mobileNav.setAttribute("aria-hidden", "true");
-      });
+    $$("#mobileNav a").forEach((a) => a.addEventListener("click", closeMenu));
+
+    // Close on ESC
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
     });
+
+    // Close on tap outside menu content (when overlay is open)
+    mobileNav.addEventListener("click", (e) => {
+      // Click on overlay background, not on a link/button
+      if (e.target === mobileNav) closeMenu();
+    });
+
+    // Safety: on resize to desktop, close overlay
+    window.addEventListener(
+      "resize",
+      () => {
+        if (window.innerWidth > 1200) closeMenu();
+      },
+      { passive: true }
+    );
   }
 
   function bindToTop() {
