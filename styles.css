@@ -2322,3 +2322,19 @@ select option, select optgroup{
   min-height:140px;
 }
 
+
+
+/* --- In-section mini navigation (problem pages) --- */
+.subnav{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0;padding:10px 12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:14px}
+.subnav__link{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:999px;text-decoration:none;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.02);color:inherit;font-size:14px}
+.subnav__link:hover{background:rgba(255,255,255,.06)}
+
+/* --- Related problems --- */
+.related{margin-top:22px}
+.relgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+@media(max-width:900px){.relgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.relgrid{grid-template-columns:1fr}}
+.relcard{display:block;padding:14px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);text-decoration:none;color:inherit}
+.relcard:hover{background:rgba(255,255,255,.06)}
+.relcard__title{font-weight:700;line-height:1.25}
+.relcard__meta{margin-top:6px;opacity:.75;font-size:13px}
