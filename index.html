@@ -27,32 +27,14 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "В ремонте",
-  "url": "https://vremonte61.online/",
-  "telephone": "+79255156161",
-  "image": "https://vremonte61.online/assets/entrance.webp",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "ул. Ткачева, 22",
-    "addressLocality": "Ростов-на-Дону",
-    "addressRegion": "Ростовская область",
-    "addressCountry": "RU"
-  },
-  "areaServed": [
-    "Ростов-на-Дону",
-    "Левенцовка",
-    "Западный район"
-  ],
-  "sameAs": [
-    "https://t.me/vremonte761",
-    "https://vk.com/vremonte161",
-    "https://yandex.ru/profile/229488310920"
-  ],
-  "department": [
+  "@graph": [
     {
       "@type": "LocalBusiness",
-      "name": "В ремонте — Ткачёва, 22",
+      "@id": "https://vremonte61.online/#tkacheva22",
+      "name": "В ремонте",
+      "url": "https://vremonte61.online/",
+      "telephone": "+79255156161",
+      "image": "https://vremonte61.online/assets/entrance.webp",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "ул. Ткачева, 22",
@@ -60,12 +42,35 @@
         "addressRegion": "Ростовская область",
         "addressCountry": "RU"
       },
-      "telephone": "+79255156161",
-      "url": "https://vremonte61.online/"
+      "areaServed": [
+        "Ростов-на-Дону",
+        "Левенцовка",
+        "Западный район"
+      ],
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "10:00",
+          "closes": "20:00"
+        }
+      ],
+      "hasMap": "https://yandex.ru/profile/229488310920?lang=ru"
     },
     {
       "@type": "LocalBusiness",
-      "name": "В ремонте — Заводская, 25",
+      "@id": "https://vremonte61.online/#zavodskaya25",
+      "name": "В ремонте — цех",
+      "url": "https://vremonte61.online/",
+      "telephone": "+79255156161",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "ул. Заводская, 25",
@@ -73,8 +78,25 @@
         "addressRegion": "Ростовская область",
         "addressCountry": "RU"
       },
-      "telephone": "+79255156161",
-      "url": "https://vremonte61.online/"
+      "parentOrganization": {
+        "@id": "https://vremonte61.online/#tkacheva22"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "10:00",
+          "closes": "20:00"
+        }
+      ]
     }
   ]
 }
@@ -303,7 +325,7 @@ ym(106611877, "init", {
 <div class="head reveal">
 <div>
 <h2>Как нас найти</h2>
-<p>Мы в Ростове‑на‑Дону (Левенцовка): ул. Ткачева, 22. Сложный ремонт и крупная техника — ул. Заводская, 25. Открой профиль в Яндекс.Картах или посмотри ориентир по фото.</p>
+<p>Мы в Ростове‑на‑Дону (Левенцовка): ул. Ткачева, 22. Сложный ремонт и крупная техника — ул. Заводская, 25. Часы работы: ежедневно 10:00–20:00. Открой профиль в Яндекс.Картах или посмотри ориентир по фото.</p>
 </div>
 </div>
 <div class="findgrid reveal">

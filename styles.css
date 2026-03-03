@@ -2338,3 +2338,31 @@ select option, select optgroup{
 .relcard:hover{background:rgba(255,255,255,.06)}
 .relcard__title{font-weight:700;line-height:1.25}
 .relcard__meta{margin-top:6px;opacity:.75;font-size:13px}
+
+/* Price hint (calculator-orientir) */
+.pricehint{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:rgba(255,255,255,.04);
+}
+.pricehint h2{ margin:0 0 8px; font-size:20px; }
+.pricehint .muted{ margin:0 0 12px; opacity:.85; }
+.phgrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:10px;
+}
+.phcard{
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+}
+.phcard__title{ font-weight:700; line-height:1.25; }
+.phcard__meta{ margin-top:6px; opacity:.85; font-size:14px; }
+
+@media (max-width:720px){
+  .phgrid{ grid-template-columns:1fr; }
+}
