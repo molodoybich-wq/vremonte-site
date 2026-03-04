@@ -141,12 +141,12 @@ img{ max-width:100%; height:auto; display:block; }
 .btn--soft{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22); }
 
 /* Messenger button variants */
-.btn--tg{ background: linear-gradient(135deg,#2AABEE,#229ED9); border-color: rgba(42,171,238,.65); color:#fff; }
-.btn--tg:hover{ filter: brightness(1.05); border-color: rgba(42,171,238,.85); background: linear-gradient(135deg,#35B6F0,#2AA3DD); }
-.btn--vk{ background: linear-gradient(135deg,#4C75A3,#3B5F8A); border-color: rgba(76,117,163,.65); color:#fff; }
-.btn--vk:hover{ filter: brightness(1.05); border-color: rgba(76,117,163,.85); background: linear-gradient(135deg,#577FB0,#436A96); }
-.btn--max{ background: linear-gradient(135deg,#7C3AED,#6D28D9); border-color: rgba(124,58,237,.65); color:#fff; }
-.btn--max:hover{ filter: brightness(1.05); border-color: rgba(124,58,237,.85); background: linear-gradient(135deg,#8B5CF6,#7C3AED); }
+.btn--tg{ background: rgba(46,167,255,.14); border-color: rgba(46,167,255,.35); }
+.btn--tg:hover{ background: rgba(46,167,255,.20); border-color: rgba(46,167,255,.50); }
+.btn--vk{ background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.35); }
+.btn--vk:hover{ background: rgba(34,197,94,.20); border-color: rgba(34,197,94,.50); }
+.btn--max{ background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.35); }
+.btn--max:hover{ background: rgba(59,130,246,.20); border-color: rgba(59,130,246,.50); }
 
 .btn--small{ padding: 10px 12px; border-radius: 14px; font-weight: 900; }
 .btn--wide{ width:100%; }
@@ -2440,38 +2440,36 @@ select option, select optgroup{
 }
 
 
-/* Большая кнопка "Позвонить" в форме */
-.btn--call{
-  position: relative;
-  background: linear-gradient(135deg,#22c55e,#16a34a);
-  border-color: rgba(34,197,94,.65);
-  color:#fff;
-  font-weight: 1000;
-  padding: 16px 14px;
-  border-radius: 18px;
-  box-shadow: 0 10px 28px rgba(34,197,94,.22);
-  animation: callPulse 2s infinite;
+/* ===== Messenger buttons upgrade ===== */
+.call-big{
+background:linear-gradient(135deg,#22c55e,#16a34a);
+color:#fff;
+font-weight:700;
+font-size:18px;
+text-align:center;
+margin-bottom:12px;
+animation:pulseCall 2s infinite;
+box-shadow:0 10px 25px rgba(34,197,94,.35);
 }
-.btn--call:hover{
-  background: linear-gradient(135deg,#2AD36A,#18B450);
-  border-color: rgba(34,197,94,.9);
-  box-shadow: 0 14px 34px rgba(34,197,94,.28);
+.call-big:hover{transform:scale(1.03);}
+
+.btn--tg{
+background:linear-gradient(135deg,#2AABEE,#229ED9)!important;
+color:#fff;
 }
-.btn--call .btn-badge{
-  margin-left: 10px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 1000;
-  background: rgba(255,255,255,.16);
-  border: 1px solid rgba(255,255,255,.22);
+
+.btn--vk{
+background:linear-gradient(135deg,#4C75A3,#3B5F8A)!important;
+color:#fff;
 }
-@keyframes callPulse{
-  0%{ box-shadow: 0 10px 28px rgba(34,197,94,.22), 0 0 0 0 rgba(34,197,94,.35); }
-  70%{ box-shadow: 0 10px 28px rgba(34,197,94,.22), 0 0 0 14px rgba(34,197,94,0); }
-  100%{ box-shadow: 0 10px 28px rgba(34,197,94,.22), 0 0 0 0 rgba(34,197,94,0); }
+
+.btn--max{
+background:linear-gradient(135deg,#7C3AED,#6D28D9)!important;
+color:#fff;
 }
-/* На мобильном скрываем бейдж, чтобы не съедал место */
-@media (max-width: 520px){
-  .btn--call .btn-badge{ display:none; }
+
+@keyframes pulseCall{
+0%{box-shadow:0 0 0 0 rgba(34,197,94,.6);}
+70%{box-shadow:0 0 0 14px rgba(34,197,94,0);}
+100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}
 }
