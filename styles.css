@@ -637,7 +637,7 @@ input:focus, select:focus{ border-color: rgba(6,182,212,.55); box-shadow: 0 0 0 
 }
 .leadbox h2{ margin:0; font-size: 28px; }
 .leadbox p{ margin: 8px 0 0; color: var(--muted); }
-.leadbox__mini{ margin-top: 12px; display:grid; gap: 6px; color: rgba(238,242,255,.86); font-weight: 900; }
+.leadbox__mini{ margin-top: 12px; display:grid; gap: 6px; color: rgba(238,242,255,.78); font-weight: 600; }
 
 .footer{
   margin-top: 18px;
@@ -2475,53 +2475,66 @@ color:#fff;
 }
 
 
-/* Visible phone number (header + hero) */
+/* ===== Premium phone UI (header + hero) ===== */
 .header-phone{
-  margin-left:10px;
-  display:inline-flex;
-  align-items:center;
-  padding:8px 12px;
-  border-radius:999px;
-  text-decoration:none;
-  font-weight:800;
-  letter-spacing:.2px;
-  color:#22c55e;
-  background:rgba(34,197,94,.12);
-  border:1px solid rgba(34,197,94,.22);
-  transition:transform .2s ease, background .2s ease, border-color .2s ease;
-  white-space:nowrap;
-}
-.header-phone:hover{
-  transform:translateY(-1px);
-  background:rgba(34,197,94,.18);
-  border-color:rgba(34,197,94,.3);
-}
-
-.hero-phone{
-  margin-top:12px;
   display:flex;
   align-items:center;
   gap:10px;
-  flex-wrap:wrap;
-}
-.hero-phone__link{
-  font-weight:900;
-  font-size:22px;
-  text-decoration:none;
-  color:#22c55e;
-  background:rgba(34,197,94,.12);
-  border:1px solid rgba(34,197,94,.22);
-  padding:8px 14px;
+  height:42px;
+  padding:0 14px;
   border-radius:999px;
-  transition:transform .2s ease, background .2s ease, border-color .2s ease;
+  text-decoration:none;
+  color:rgba(255,255,255,.92);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+  white-space:nowrap;
 }
-.hero-phone__link:hover{
-  transform:translateY(-1px);
-  background:rgba(34,197,94,.18);
-  border-color:rgba(34,197,94,.3);
+.header-phone:hover{
+  transform: translateY(-1px);
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.18);
+}
+.header-phone__icon{ font-size:16px; opacity:.9; transform: translateY(1px); }
+.header-phone__num{ font-weight:800; letter-spacing:.2px; }
+
+@media (max-width: 520px){
+  .header-phone{ padding:0 12px; gap:8px; }
+  .header-phone__num{ display:none; }
 }
 
-@media (max-width: 780px){
-  .header-phone{ display:none; } /* in header hide to avoid clutter; hero phone stays */
-  .hero-phone__link{ font-size:20px; }
+/* Hero subtle inline phone */
+.hero-contacts{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.hero-contacts__label{ opacity:.8; font-size:14px; }
+.hero-contacts__phone{
+  font-weight:800;
+  font-size:18px;
+  text-decoration:none;
+  color:rgba(255,255,255,.95);
+  padding:6px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+.hero-contacts__phone:hover{
+  transform: translateY(-1px);
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.18);
+}
+
+/* Hide aggressive "Скорее звони" badge if exists */
+.call-badge, .call-badge-top, .badge-call, .soon-call{ display:none !important; }
+
+/* Make call button premium (less neon) */
+.btn-call, .call-btn{
+  box-shadow: 0 10px 30px rgba(34,197,94,.22) !important;
 }
