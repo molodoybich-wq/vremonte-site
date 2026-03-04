@@ -1,4 +1,16 @@
-/* build:20260209-5 */
+/* build:20260209-6 */
+/* Local font (recommended): place Manrope variable font as:
+   /assets/fonts/Manrope-VariableFont_wght.woff2
+   This avoids зависания/блокировки Google Fonts у некоторых провайдеров.
+*/
+@font-face{
+  font-family:"Manrope";
+  src:url("/assets/fonts/Manrope-VariableFont_wght.woff2") format("woff2");
+  font-weight:100 900;
+  font-style:normal;
+  font-display:swap;
+}
+
 :root{
   --bg:#0b1022;
   --bg2:#070a16;
