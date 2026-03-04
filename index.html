@@ -119,7 +119,6 @@ ym(106611877, "init", {
 </script>
 <noscript>
 <div>
-<img alt="" src="https://mc.yandex.ru/watch/106611877" style="position:absolute; left:-9999px;"/>
 </div>
 </noscript>
 <!-- /Yandex.Metrika counter -->
@@ -328,7 +327,13 @@ ym(106611877, "init", {
 <div class="findgrid reveal">
 <a aria-label="Открыть организацию в Яндекс.Картах" class="mapcard" href="https://yandex.ru/profile/229488310920?lang=ru" rel="noopener" target="_blank">
 <div class="mapcard__frame">
-<iframe allowfullscreen="true" frameborder="0" height="340" loading="lazy" src="https://yandex.ru/map-widget/v1/?oid=229488310920&amp;z=16&amp;lang=ru_RU" width="100%"></iframe>
+
+<div class="map-lazy" id="mapLazy">
+  <button class="btn btn--soft map-lazy__btn" id="mapLoadBtn" type="button">Открыть карту</button>
+  <div class="map-lazy__hint">Если карта не загружается — откройте ссылку в Яндекс.Картах.</div>
+  <a class="map-lazy__link" href="https://yandex.ru/maps/org/singa_servis/229488310920" target="_blank" rel="noopener">Открыть в Яндекс.Картах</a>
+</div>
+
 </div>
 <div class="mapcard__hint">Открыть в Яндекс.Картах →</div>
 </a>

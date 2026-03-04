@@ -5,6 +5,17 @@
   // Enable JS-enhanced styles/behavior
   document.documentElement.classList.remove("no-js");
   document.documentElement.classList.add("js");
+  // Lazy-load Yandex map (avoid зависания/блокировки внешних доменов на старте)
+  const mapBtn = document.getElementById("mapLoadBtn");
+  if (mapBtn) {
+    mapBtn.addEventListener("click", () => {
+      const wrap = document.getElementById("mapLazy");
+      if (!wrap || wrap.dataset.loaded === "1") return;
+      wrap.dataset.loaded = "1";
+      wrap.innerHTML = '<iframe src="https://yandex.ru/map-widget/v1/?oid=229488310920&z=16&lang=ru_RU" loading="lazy" style="width:100%;height:360px;border:0;border-radius:18px;"></iframe>';
+    }, { passive: true });
+  }
+
 
   // Google Apps Script Web App (exec)
   const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxqaJfhNC5MbGbUCOPRola4NTWCp784hVHrOYuJyjROqRUmlEhBxHLfgD1qDBKLsYll/exec";
