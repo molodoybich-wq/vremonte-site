@@ -140,67 +140,6 @@ img{ max-width:100%; height:auto; display:block; }
 }
 .btn--soft{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22); }
 
-/* Call button (header) — more noticeable */
-.btn-call{
-  position: relative;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  border-color: rgba(34,197,94,.55);
-  color: #fff;
-  box-shadow: 0 10px 24px rgba(34,197,94,.22);
-  overflow: visible;
-  animation: callPulse 2.4s infinite;
-  will-change: transform, box-shadow;
-}
-
-.btn-call::before{
-  content: "📞";
-  font-size: 16px;
-  line-height: 1;
-}
-
-.btn-call::after{
-  content: "скорей звони";
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .2px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(34,197,94,.95);
-  color: rgba(3, 60, 28, 1);
-  border: 1px solid rgba(255,255,255,.35);
-  box-shadow: 0 10px 24px rgba(0,0,0,.18);
-  transform: rotate(8deg);
-}
-
-.btn-call:hover{
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 14px 32px rgba(34,197,94,.30);
-  animation: callPulse 2.4s infinite, callWiggle .35s ease-in-out;
-}
-
-@keyframes callPulse{
-  0%{ box-shadow: 0 10px 24px rgba(34,197,94,.22), 0 0 0 0 rgba(34,197,94,.35); }
-  65%{ box-shadow: 0 10px 24px rgba(34,197,94,.22), 0 0 0 12px rgba(34,197,94,0); }
-  100%{ box-shadow: 0 10px 24px rgba(34,197,94,.22), 0 0 0 0 rgba(34,197,94,0); }
-}
-
-@keyframes callWiggle{
-  0%{ transform: translateY(-2px) rotate(0deg) scale(1.03); }
-  25%{ transform: translateY(-2px) rotate(-2deg) scale(1.03); }
-  50%{ transform: translateY(-2px) rotate(2deg) scale(1.03); }
-  75%{ transform: translateY(-2px) rotate(-1deg) scale(1.03); }
-  100%{ transform: translateY(-2px) rotate(0deg) scale(1.03); }
-}
-
-/* On small screens hide the badge so it doesn't overlap */
-@media (max-width: 520px){
-  .btn-call::after{ display:none; }
-}
-
-
 /* Messenger button variants */
 .btn--tg{ background: rgba(46,167,255,.14); border-color: rgba(46,167,255,.35); }
 .btn--tg:hover{ background: rgba(46,167,255,.20); border-color: rgba(46,167,255,.50); }
@@ -2438,4 +2377,64 @@ select option, select optgroup{
 
 @media (max-width:720px){
   .phgrid{ grid-template-columns:1fr; }
+}
+
+/* === Call-to-action: green "Позвонить" button (added) === */
+.btn-call{
+  position: relative;
+  background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(22,163,74,.95));
+  border-color: rgba(34,197,94,.55);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(34,197,94,.18);
+  animation: callPulse 2.2s ease-in-out infinite;
+  will-change: transform, box-shadow;
+}
+
+.btn-call:hover{
+  transform: translateY(-1px) scale(1.03);
+  border-color: rgba(34,197,94,.85);
+  box-shadow: 0 14px 34px rgba(34,197,94,.28);
+}
+
+.btn-call:active{
+  transform: translateY(0) scale(1.01);
+}
+
+.btn-call::after{
+  content: "Скорее звони";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(34,197,94,.16);
+  border: 1px solid rgba(34,197,94,.35);
+  color: rgba(236,253,245,.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  letter-spacing: .02em;
+  pointer-events: none;
+}
+
+@keyframes callPulse{
+  0%{
+    box-shadow: 0 10px 24px rgba(34,197,94,.18), 0 0 0 0 rgba(34,197,94,.35);
+  }
+  70%{
+    box-shadow: 0 10px 24px rgba(34,197,94,.22), 0 0 0 14px rgba(34,197,94,0);
+  }
+  100%{
+    box-shadow: 0 10px 24px rgba(34,197,94,.18), 0 0 0 0 rgba(34,197,94,0);
+  }
+}
+
+@media (max-width: 560px){
+  .btn-call::after{ display:none; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .btn-call{ animation: none; }
 }
