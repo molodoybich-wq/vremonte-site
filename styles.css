@@ -2538,3 +2538,27 @@ color:#fff;
 .btn-call, .call-btn{
   box-shadow: 0 10px 30px rgba(34,197,94,.22) !important;
 }
+/* фикс чтобы шапка не ломала ширину */
+
+header .container{
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+gap:10px;
+}
+
+/* чтобы номер не выталкивал меню */
+
+.header-phone{
+max-width:180px;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+/* убираем горизонтальный скролл */
+
+body{
+overflow-x:hidden;
+}
